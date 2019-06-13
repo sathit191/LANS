@@ -10,6 +10,7 @@ namespace WebApplication1.Abstract
     public interface INormalRepository
     {
         IEnumerable<FTSetup> fTSetups { get; }
-        //IEnumerable<LotFTinMc > Lot { get; }
+        IEnumerable<LotFTinMc> LotFTinMcs { get; }
+        IEnumerable<FTWip> FTWips { get; }
     }
 }
