@@ -1,0 +1,161 @@
+﻿@model IEnumerable<WebApplication1.Models.FLdata>
+
+@{
+    ViewBag.Title = "Index2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<link href="https://fonts.googleapis.com/css?family=Kanit&display=swap" rel="stylesheet">
+<link href="~/Content/Site.css" rel="stylesheet" />
+<style>
+    table tr:not([class="OfflineStep"]):not([class="FurtherStep"]):hover td,
+    table tr:not([class="OfflineStep"]):not([class="FurtherStep"]):hover td a {
+        color: white;
+        font: bold;
+        background-color: lightblue !important; /**/
+    }
+
+    .col-md-1 {
+        margin-top: 10px;
+    }
+
+    .td {
+        text-align: center;
+        color: red;
+    }
+
+    .H2 {
+        font-family: 'Kanit', sans-serif;
+        color: goldenrod;
+    }
+</style>
+<h2 class="H2">ทดสอบ H2</h2>
+<p>
+    @Html.ActionLink("Go to Index", "Index3")
+</p>
+
+<table id="" class="table table-striped table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center" style=" vertical-align : middle;" rowspan="2">
+                MCNo
+            </th>
+            <th class=" text-center" style=" vertical-align : middle;" rowspan="2">
+                LotNo
+            </th>
+            <th class=" text-center" style=" vertical-align : middle;" rowspan="2">
+                Start time
+            </th>
+            <th class=" text-center" style=" vertical-align : middle;" rowspan="2">
+                End time
+            </th>
+
+            <th class=" text-center" style=" vertical-align : middle;" colspan="2">
+                Good Qty.
+            </th>
+
+            <th class=" text-center" style=" vertical-align : middle;" rowspan="2">
+                NG Qty.
+            </th>
+
+        </tr>
+        <tr>
+            <th class=" text-center" style=" vertical-align : middle;">
+                subGood1
+            </th>
+            <th class=" text-center" style=" vertical-align : middle;">
+                subGood2
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+         {
+            <tr class="text-center">
+                <td>
+                    @Html.DisplayFor(modelItem => item.MCNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LotNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Starttime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Endtime)
+                </td>
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Good)
+                </td>
+                <td></td>
+                
+                @if (Convert.ToInt32(item.NG) > 100)
+
+                {
+                    <td style="background-color:red;">
+                        @Html.DisplayFor(modelItem => item.NG)
+                    </td>
+                }
+                else
+                {
+                    <td style="background-color:green; ">
+                        @Html.DisplayFor(modelItem => item.NG)
+                    </td>
+                }
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>*@
+
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" />
+<link href="~/Content/select2.min.css" rel="stylesheet" />
+
+@section Scripts
+{
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/i18n/Thai.json"></script>
+    <link href="~/Scripts/datatable/dataTables.bootstrap.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "ordering": false,
+                "pageLength": 50,
+                "filter": false,
+                "bFilter": true,
+                "bLengthChange": false,
+                "scrollCollapse": true,
+                "scrollY": "650px",
+            });
+        });
+
+        //$(document).ready(function () {
+        //    $('#process').select2();
+        //    $('#package').select2();
+        //    $('#packgegroup').select2();
+        //    $('#device').select2();
+        //});
+    </script>
+
+    <script language="javascript">
+        function strauto() {
+            var text = document.getElementById('lot').value;
+            var str = new String(text);
+            var str = str.toUpperCase();
+            document.getElementById('lot').value = str;
+        }
+    </script>
+}

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebApplication1.Models.TransLot>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Index2")
+</p>
+<div class=" row">
+    <div class="col-sm-1">
+        LotNo
+    </div>
+    <div class="col-sm-2">
+        @Html.TextBox("lotFilter", null, new { @class = "form-control", @id = "lot", @onkeyup = "strauto()" })
+    </div>
+    <div class="form-actions center" style="margin: 0 20px 0 20px;padding-bottom: 0px;">
+        <input type="submit" class="btn btn-success" value="Success">
+        @*<input type="reset" class="btn" value="Clear">*@
+    </div>
+</div>
+<table class="table">
+    <tr>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.LotNo)
+        </th>
+        
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.LotNo)
+            </td>
+            
+        </tr>
+    }
+
+</table>
