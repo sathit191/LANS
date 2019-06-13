@@ -106,6 +106,9 @@ namespace WebApplication1.Concrete
 
                         }conn.Close();
                         List<FTWip> lstFTWips = FTWips();
+                        List<FTWip> lstFTWipOut = new List<FTWip>();
+                        //List<FTWip> lstFTWipOut = lstFTWips.Where(x => !lstFTSetup.Where(p => p.DeviceName == x.DeviceName).Any()).ToList();
+
 
                         var ColorList = lstFTWips.Select(x => new { x.DeviceName }).Distinct().ToList();
                         int countColor = 1;
@@ -131,17 +134,29 @@ namespace WebApplication1.Concrete
                             List<FTSetup> lstFTSetupAuto1 = lstFTSetup.Where(x => x.Flow == "AUTO" +J).OrderBy(x => x.MCNo).ToList(); //หาเครื่องกรอก Auto
                             List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" +J).OrderBy(x => x.Lot_no).ToList();
 
-                            var DevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
-                            foreach (var deviceName in DevicesList)
+                            var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
+
+
+                            var wipLotOutPlan = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
+
+                            foreach (var item in wipLotOutPlan)
+                            {
+                                lstFTWipOut.Add(item);
+                            }
+
+                            for (int i = 0; i < machineDevicesList.Count(); i++)
                             {
                                 
                             }
-                            foreach (var deviceName in DevicesList)
+
+                            foreach (var deviceName in machineDevicesList)
                             {
                                 
                                 List<FTSetup > McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
                                 List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
-                                List<FTWip> WipOtherDevice = lstFTWipsAuto1.Where(x => x.DeviceName != deviceName.DeviceName).ToList();
+
+                                //List<FTWip> WipOtherDevice = lstFTWipsAuto1.Where(x => !DevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
+
                                 int count = 1;
                                 foreach (var item in WipDevice)
                                 {
@@ -179,12 +194,14 @@ namespace WebApplication1.Concrete
 
                                     }
                                     mcData.LotQueue = lstFTWipsAuto;
-                                    mcData.LotOutPlan = WipOtherDevice;
+                                    //mcData.LotOutPlan = WipOtherDevice;
                                     countMc++;
                                 }
                             }
-                            
-                    } //lot wip add to Que
+                            var result = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
+                        } //lot wip add to Que
+                     
+
                        // lstFTWips.Where(x => x != lstFTSetup.ToList())
                         List<LotFTinMc> lotFTinMcs = LotFTinMcs();
 
@@ -232,6 +249,10 @@ namespace WebApplication1.Concrete
             }
         }
 
+        private void FTWipOutPlan( List<FTWip > lotOutPlan)
+        {
+
+        }
         private List<FTWip> FTWips()
         {
             

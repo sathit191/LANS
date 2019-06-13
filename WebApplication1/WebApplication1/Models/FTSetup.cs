@@ -37,8 +37,9 @@ namespace WebApplication1.Models
         public string Production_DelayLot { get; set; }
 
         public List<FTWip> LotQueue { get; set; }
+         
 
-        public List<FTWip> LotOutPlan { get; set; }
+        
         public string Mc_Color { get; set; }
 
         public enum State

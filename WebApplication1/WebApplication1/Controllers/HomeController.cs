@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication1.Abstract;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -19,12 +20,12 @@ namespace WebApplication1.Controllers
         
         public ActionResult Index3()
         {
+            
             return View(repository.fTSetups);
+
+            //return View(repository.fTSetups);
         }
-        public ActionResult Index4()
-        {
-            return View(repository.fTSetups);
-        }
+        
 
     }
 }

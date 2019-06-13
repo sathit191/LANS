@@ -16,5 +16,7 @@ namespace WebApplication1.Models
         public int Sequence { get; set; }
 
         public string S_Color { get; set; }
+
+
     }
 }
