@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using WebApplication1.Abstract;
 using WebApplication1.Models;
 
+
 namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
@@ -17,7 +18,12 @@ namespace WebApplication1.Controllers
             repository = repo;
         }
         // GET: Home
-        
+        public class Group<T1,T2>
+        {
+            public string Key { get; set; }
+            public string Key1 { get; set; }
+            public int Values { get; set; }
+        }
         public ActionResult Index3()
         {
 
@@ -59,12 +65,14 @@ namespace WebApplication1.Controllers
                 foreach (var item in wipLotOutPlan)
                 {
                     lstFTWipOut.Add(item);
-                }
-
-                for (int i = 0; i < machineDevicesList.Count(); i++)
-                {
 
                 }
+                
+                //// Group the FTWip by DeviceName
+                //var DeviceGrouped = from deviceGroup in lstFTWipOut
+                //                   group deviceGroup by deviceGroup.DeviceName into device
+                //                   select new Group<string, FTWip> { Key = device.Key, Values = device };
+
 
                 foreach (var deviceName in machineDevicesList)
                 {
@@ -161,7 +169,94 @@ namespace WebApplication1.Controllers
 
             //ViewData["listA"] = lstFTSetup;
             ViewBag.ftSetup = lstFTSetup;
-            ViewBag.lstFTWipOut = lstFTWipOut;
+
+            // Group the FTWip by DeviceName
+            var DeviceList = from Group in lstFTWipOut
+                                group Group by new {Group.JobName,Group.DeviceName} into list
+
+                                select new FTWipOutPlan { Flow = list.Key.JobName,  DeviceName =list.Key.DeviceName, Count = list.Count() };
+
+            List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
+            
+            foreach (var item in DeviceList)
+            {
+                outPlans.Add(item);
+            }
+
+            List<Flow> flows = new List<Flow>();
+            var DeviceGroup = lstFTWipOut.Select(p => new { p.DeviceName }).Distinct().ToList();
+
+            foreach (var item in DeviceGroup)
+            {
+                // List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
+                string name = item.DeviceName.ToString();
+                int A1 = 0;
+                int A2 = 0;
+                int A3 = 0;
+                int A4 = 0;
+                var addflow = new Flow { Name = name, A1 = A1, A2 = A2, A3 = A3, A4 = A4 };
+                flows.Add(addflow);
+
+                var lstDevice = DeviceList.Where(p => p.DeviceName == item.DeviceName).ToList();
+
+                foreach (var list in lstDevice)
+                {
+                    var row = flows.Where(p => p.Name == list.DeviceName).SingleOrDefault();
+
+                    if(list.Flow == "AUTO1")
+                    {
+                        row.A1 = list.Count;
+                    }
+                    else if(list.Flow == "AUTO2")
+                    {
+                        row.A2 = list.Count;
+                    }
+                    else if (list.Flow == "AUTO3")
+                    {
+                        row.A3 = list.Count;
+                    }
+                    else if (list.Flow == "AUTO4")
+                    {
+                        row.A4 = list.Count;
+                    }
+                }
+
+                var addData = flows.Where(p => p.Name == item.DeviceName).SingleOrDefault();
+
+                //string data = "[49.9, 71.5, 106.4, 129.2]";
+
+
+            }
+
+            var list2 = outPlans.Select(p=> new { p.Flow}).Distinct().ToList();
+
+            //var chart = flows.Select(p=>new { p.Data }).ToList();
+            //List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
+
+            //var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
+
+            ViewBag.lstFTWipOut = outPlans;
+
+            // @for(int i = 0; i < 4; i++)
+            //    {
+            //    string command = "{";
+
+            //    command += "name: '" + @Html.Raw(ViewBag.lstFlow[i].Name) + "',";
+            //    command += "data: [" + @Html.Raw(ViewBag.lstFlow[i].A1) + "," + @Html.Raw(ViewBag.lstFlow[i].A2) + ","
+            //                         + @Html.Raw(ViewBag.lstFlow[i].A3) + "," + @Html.Raw(ViewBag.lstFlow[i].A4) + "]},";
+            //}
+            string command = "";
+
+            foreach (var item in flows)
+            {
+                command += "{";
+                command += "name: '" + item.Name + "',";
+                command += "data: [" + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]},";
+            }
+
+            ViewBag.lstFlow = command;
+           // ViewBag.lstFTWipOut2 = lstFTWipOut;
+
             return View();
 
             //return View(repository.fTSetups);
