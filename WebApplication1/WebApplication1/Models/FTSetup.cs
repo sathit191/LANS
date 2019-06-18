@@ -37,6 +37,8 @@ namespace WebApplication1.Models
         public string Production_DelayLot { get; set; }
 
         public List<FTWip> LotQueue { get; set; }
+
+        public int? OverPlan { get; set; }
          
 
         

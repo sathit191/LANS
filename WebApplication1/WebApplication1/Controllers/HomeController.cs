@@ -80,8 +80,6 @@ namespace WebApplication1.Controllers
                     List<FTSetup> McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
                     List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
 
-                    //List<FTWip> WipOtherDevice = lstFTWipsAuto1.Where(x => !DevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
-
                     int count = 1;
                     foreach (var item in WipDevice)
                     {
@@ -99,6 +97,7 @@ namespace WebApplication1.Controllers
 
 
                     int countMc = 1;
+                    int lotOverShows = 0 ;
                     foreach (var mcData in McDevice.ToArray()) //เอาลอ็อตเข้าQue
                     {
                         List<FTWip> lstFTWipsAuto = new List<FTWip>();
@@ -116,9 +115,14 @@ namespace WebApplication1.Controllers
                                 fTWip.Lot_no = "";
                                 lstFTWipsAuto.Add(fTWip);
                             }
+                            if(lstFTWipsAuto1OnMc.Count()-4 > 0)
+                            {
+                                lotOverShows = lstFTWipsAuto1OnMc.Count() - 4;
+                            }
 
                         }
                         mcData.LotQueue = lstFTWipsAuto;
+                        mcData.OverPlan = lotOverShows;
                         //mcData.LotOutPlan = WipOtherDevice;
                         countMc++;
                     }
@@ -126,8 +130,6 @@ namespace WebApplication1.Controllers
                 var result = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
             } //lot wip add to Que
 
-
-            // lstFTWips.Where(x => x != lstFTSetup.ToList())
             List<LotFTinMc> lotFTinMcs = (List<LotFTinMc>)repository.LotFTinMcs;
 
             foreach (var item in lstFTSetup)
@@ -230,21 +232,8 @@ namespace WebApplication1.Controllers
 
             var list2 = outPlans.Select(p=> new { p.Flow}).Distinct().ToList();
 
-            //var chart = flows.Select(p=>new { p.Data }).ToList();
-            //List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
-
-            //var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
-
             ViewBag.lstFTWipOut = outPlans;
 
-            // @for(int i = 0; i < 4; i++)
-            //    {
-            //    string command = "{";
-
-            //    command += "name: '" + @Html.Raw(ViewBag.lstFlow[i].Name) + "',";
-            //    command += "data: [" + @Html.Raw(ViewBag.lstFlow[i].A1) + "," + @Html.Raw(ViewBag.lstFlow[i].A2) + ","
-            //                         + @Html.Raw(ViewBag.lstFlow[i].A3) + "," + @Html.Raw(ViewBag.lstFlow[i].A4) + "]},";
-            //}
             string command = "";
 
             foreach (var item in flows)
@@ -255,11 +244,9 @@ namespace WebApplication1.Controllers
             }
 
             ViewBag.lstFlow = command;
-           // ViewBag.lstFTWipOut2 = lstFTWipOut;
 
             return View();
 
-            //return View(repository.fTSetups);
         }
         
 
