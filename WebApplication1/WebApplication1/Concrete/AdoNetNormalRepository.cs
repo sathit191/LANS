@@ -279,6 +279,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKName  = reader["MethodPkgName"].ToString().Trim();
                             if (!(reader["JobName"] is DBNull)) ftWip.JobName  = reader["JobName"].ToString().Trim();
                             if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at  = reader["updated_at"].ToString().Trim();
+                            if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             lstFTWip.Add(ftWip);
                         }
                         conn.Close();

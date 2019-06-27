@@ -17,6 +17,8 @@ namespace WebApplication1.Models
 
         public string S_Color { get; set; }
 
+        public int Kpcs { get; set; }
+
 
     }
 }
