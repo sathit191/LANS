@@ -173,12 +173,12 @@ namespace WebApplication1.Controllers
             ViewBag.ftSetup = lstFTSetup;
 
             // Group the FTWip by DeviceName
-            var DeviceList = from Group in lstFTWipOut
+            var DeviceList = from Group in lstFTWips// lstFTWipOut
                                 group Group by new {Group.JobName,Group.DeviceName} into list
 
                                 select new FTWipOutPlan { Flow = list.Key.JobName,  DeviceName =list.Key.DeviceName, Count = list.Count() , SumKpcs = lstFTWipOut.Sum(x=>x.Kpcs)};
 
-            var List2 = lstFTWipOut.GroupBy(x => x.JobName, y => y.DeviceName).ToList();
+           // var List2 = lstFTWipOut.GroupBy(x => x.JobName, y => y.DeviceName).ToList();
 
 
             List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
@@ -189,7 +189,8 @@ namespace WebApplication1.Controllers
             }
 
             List<Flow> flows = new List<Flow>();
-            var DeviceGroup = lstFTWipOut.Select(p => new { p.DeviceName }).Distinct().ToList();
+            //var DeviceGroup = lstFTWipOut.Select(p => new { p.DeviceName }).Distinct().ToList();
+            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName }).Distinct().ToList();
 
             foreach (var item in DeviceGroup)
             {
