@@ -19,6 +19,6 @@ namespace WebApplication1.Models
 
         public int Kpcs { get; set; }
 
-
+        public string MachineWip { get; set; }
     }
 }

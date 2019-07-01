@@ -67,32 +67,69 @@ namespace WebApplication1.Controllers
                     lstFTWipOut.Add(item);
 
                 }
-                
+
                 //// Group the FTWip by DeviceName
                 //var DeviceGrouped = from deviceGroup in lstFTWipOut
                 //                   group deviceGroup by deviceGroup.DeviceName into device
                 //                   select new Group<string, FTWip> { Key = device.Key, Values = device };
 
+                //GetData
+                List<FTMachineSchedulerSetup> machineManualSetupList = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup;
+                //SetData Machine Device Now
+                foreach (var machineManualSetup in machineManualSetupList)
+                {
+                    var FtMachine = lstFTSetupAuto1.Where(x => x.MCNo == machineManualSetup.MachineNo).Select(x => new { x.DeviceName }).ToList();
+                    if (FtMachine.Count > 0)
+                    {
+                        machineManualSetup.DeviceNow = FtMachine.FirstOrDefault().DeviceName;
+                    }
+                
+                }
+
+
 
                 foreach (var deviceName in machineDevicesList)
                 {
-
                     List<FTSetup> McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
                     List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
-
-                    int count = 1;
+                    List<FTMachineSchedulerSetup> machineSetupList = McDevice.Select(x => new FTMachineSchedulerSetup { MachineNo = x.MCNo, DeviceNow = x.DeviceName,MachienDisable = false }).ToList();
+                    //ทำต่อ
+                    var machineManualSetupSittingList = machineManualSetupList.Where(x => McDevice.Where(y => y.MCNo == x.MachineNo).Any()).ToList();
+                    int countX = 1;
+                    int countY = 2;
                     foreach (var item in WipDevice)
                     {
-                        int sequence = count % McDevice.Count;
-                        if (sequence != 0)
+                        //var machineSetup = machineManualSetupList.Where(x => x.Sequence == countY && x.DeviceNow == deviceName.DeviceName).ToList();
+
+                        var machineManualSetupListTmp = machineManualSetupSittingList.Where(y => y.DeviceNow == deviceName.DeviceName && y.Sequence <= countY).ToList();
+                        foreach (var mcSetup in machineManualSetupListTmp)
                         {
-                            item.Sequence = sequence;
+                            mcSetup.MachienDisable = true;
                         }
-                        else
+                        var machineManualSetupDisable = machineManualSetupListTmp.Where(y => y.MachienDisable == true).ToList();
+                        var mcinfo = machineSetupList.Where(x => machineManualSetupDisable.Where(y=> y.MachineNo != x.MachineNo).Any() || machineManualSetupDisable.Count == 0).ToList();
+
+                        if (mcinfo.Count != 0)
                         {
-                            item.Sequence = McDevice.Count;
+                            int sequence = (countX + 1) % mcinfo.Count;
+
+                            item.MachineWip = mcinfo[sequence].MachineNo;
+
+                            if (sequence == mcinfo.Count -1)
+                                countY++;
+                            ////int sequence = countX % McDevice.Count;
+                            //if (sequence != 0)
+                            //{
+                            //    item.Sequence = sequence;
+                            //}
+                            //else
+                            //{
+                            //    item.Sequence = McDevice.Count;
+                            //    countY++;
+                            //}
+                            countX++;
                         }
-                        count++;
+                      
                     }
 
 
@@ -103,7 +140,8 @@ namespace WebApplication1.Controllers
                         List<FTWip> lstFTWipsAuto = new List<FTWip>();
                         for (int i = 2; i <= 10; i++)
                         {
-                            List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.Sequence == countMc).ToList();
+                            //List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.Sequence == countMc).ToList();
+                            List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.MachineWip == mcData.MCNo).ToList();
                             foreach (var lotSequence in lstFTWipsAuto1OnMc)
                             {
                                 lstFTWipsAuto.Add(lotSequence);
