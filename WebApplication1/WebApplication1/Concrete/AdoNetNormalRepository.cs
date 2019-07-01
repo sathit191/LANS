@@ -248,11 +248,6 @@ namespace WebApplication1.Concrete
                 }
             }
         }
-
-        private void FTWipOutPlan( List<FTWip > lotOutPlan)
-        {
-
-        }
         public IEnumerable<FTWip> FTWips
         {
 
@@ -348,6 +343,58 @@ namespace WebApplication1.Concrete
                     return lstLotFTinMc;
                 }
            
+            }
+        }
+        public IEnumerable<FTDenpyo > Denpyos
+        {
+            get
+            {
+                List<FTDenpyo> fTDenpyos = new List<FTDenpyo>(); 
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_time_wip]";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // FTWip ftWip = new FTWip();
+                            FTDenpyo denpyo = new FTDenpyo();
+                            if (!(reader["PKG"] is DBNull)) denpyo.PKGName = reader["PKG"].ToString().Trim();
+                            if (!(reader["DeviceName"] is DBNull)) denpyo.DeviceName = reader["DeviceName"].ToString().Trim();
+                            if (!(reader["job_Id"] is DBNull)) denpyo.JobId = reader["job_Id"].ToString().Trim();
+                            if (!(reader["timeAuto1"] is DBNull))
+                            { denpyo.A1 = float.Parse(reader["timeAuto1"].ToString().Split(' ')[1]); }
+                            else
+                            {
+                                denpyo.A1 = 0;
+                            }
+                            if (!(reader["timeAuto2"] is DBNull) && reader["timeAuto2"].ToString() != "")
+                            { denpyo.A2 = float.Parse(reader["timeAuto2"].ToString().Split(' ')[1]); }
+                            else
+                            {
+                                denpyo.A2 = 0;
+                            }
+                            if (!(reader["timeAuto3"] is DBNull) && reader["timeAuto3"].ToString() != "")
+                            { denpyo.A3 = float.Parse(reader["timeAuto3"].ToString().Split(' ')[1]); }
+                            else
+                            {
+                                denpyo.A3 = 0;
+                            }
+                            if (!(reader["timeAuto4"] is DBNull) && reader["timeAuto4"].ToString() != "")
+                            { denpyo.A4 = float.Parse(reader["timeAuto4"].ToString().Split(' ')[1]); }
+                            else
+                            {
+                                denpyo.A4 = 0;
+                            }
+                            fTDenpyos.Add(denpyo);
+                        }
+                        conn.Close();
+                    }
+                    return fTDenpyos;
+                }
             }
         }
     }

@@ -97,7 +97,7 @@
                 </tr>
                 <tr>
                     @*<th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➀</th>
-                    <th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➁</th>*@
+                        <th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➁</th>*@
                     <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
                     <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">END</th>
                     <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
@@ -114,129 +114,189 @@
             <tbody>
                 @foreach (var item in (List<WebApplication1.Models.FTSetup>)ViewBag.ftSetup)
                 {
-                <tr style="height :30px">
-                    <td class="text-center" style="vertical-align : middle; width : 120px;">
-                        @Html.DisplayFor(modelItem => item.PKName)
-                    </td>
-                    <td class="text-center" style="vertical-align : middle; width : 120px;">
-                        @Html.DisplayFor(modelItem => item.MCNo)
-                    </td>
-                    <td class="text-center" style="vertical-align : middle; width : 125px;">
-                        @Html.DisplayFor(modelItem => item.TesterType)
-                    </td>
-                    <td class="text-center" style="font-size:10px; vertical-align : middle; width : 25px;">
-                        @Html.DisplayFor(modelItem => item.TestBord)
-                    </td>
-                    <td class="text-center" style="font-size : 10px; vertical-align : middle; width : 25px;">
-                        @Html.DisplayFor(modelItem => item.TestProgram)
-                    </td>
-                    @*<td class="text-center" style=" font-size:smaller; vertical-align : middle; width : 20px;">
-            @Html.DisplayFor(modelItem => item.DutName)
-        </td>*@
-                    @switch (item.Flow)
-                    {
-                        case "AUTO1":
-                            <td class=" text-center" style="font-size:smaller; color : cadetblue; font : bold; vertical-align : middle; width : 25px;">
-                                -40
-                            </td>
-                            break;
-                        case "AUTO2":
-                            <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
-                                125
-                            </td>
-                            break;
-                        case "AUTO3":
-                            <td class=" text-center " style="font-size:smaller;vertical-align : middle; width : 25px;">
-                                25
-                            </td>
-                            break;
-                        case "AUTO4":
-
-                            <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
-                                125
-                            </td>
-                            break;
-                        default:
-                            <td></td>
-                            break;
-                    }
-
-                    <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px;">
-                        @Html.DisplayFor(modelItem => item.Flow)
-                    </td>
-                    @*<td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
-            @Html.DisplayFor(modelItem => item.Option1)
-        </td>
-        <td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
-            @Html.DisplayFor(modelItem => item.Option2)
-        </td>*@
-                    @switch (item.Status)
-                    {
-                        case WebApplication1.Models.FTSetup.State.Wait:
-                            <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            break;
-                        case WebApplication1.Models.FTSetup.State.Run:
-                            <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            break;
-                        case WebApplication1.Models.FTSetup.State.Ready:
-                            <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            break;
-                        case WebApplication1.Models.FTSetup.State.Setup:
-                            <td class=" text-center" style="background-color : #009000; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            break;
-                        default:
-                            <td rowspan="2"></td>
-                            break;
-                    }
-                    @if (item.Production_DelayLot == "0")
-                    {
-                        <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
-                    }
-                    else
-                    {
-                        <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
-                    }
-                    @if (DateTime.Now > item.Production_Date)
-                    {
-                        <td class="text-center" style="color : red; font-size:smaller;font : bold; vertical-align : middle; width : 50px;">
-                            @Html.DisplayFor(modelItem => item.Production_Date)<br />
-                            @Html.DisplayFor(modelItem => item.Production_Time)
+                    <tr style="height :30px">
+                        <td class="text-center" style="vertical-align : middle; width : 120px;">
+                            @Html.DisplayFor(modelItem => item.PKName)
                         </td>
-                    }
-                    else
-                    {
-                        <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 50px;">
-                            @Html.DisplayFor(modelItem => item.Production_Date)<br />
-                            @Html.DisplayFor(modelItem => item.Production_Time)
+                        <td class="text-center" style="vertical-align : middle; width : 120px;">
+                            @Html.DisplayFor(modelItem => item.MCNo)
                         </td>
-                    }
-                    @for (int i = 0; i < 4; i++)
-                    {
-                        <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.LotQueue[i].Lot_no)<br /><p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.LotQueue[i].DeviceName)</p></td>
-                    }
+                        <td class="text-center" style="vertical-align : middle; width : 125px;">
+                            @Html.DisplayFor(modelItem => item.TesterType)
+                        </td>
+                        <td class="text-center" style="font-size:10px; vertical-align : middle; width : 25px;">
+                            @Html.DisplayFor(modelItem => item.TestBord)
+                        </td>
+                        <td class="text-center" style="font-size : 10px; vertical-align : middle; width : 25px;">
+                            @Html.DisplayFor(modelItem => item.TestProgram)
+                        </td>
+                        @*<td class="text-center" style=" font-size:smaller; vertical-align : middle; width : 20px;">
+                                @Html.DisplayFor(modelItem => item.DutName)
+                            </td>*@
+                        @switch (item.Flow)
+                        {
+                            case "AUTO1":
+                                <td class=" text-center" style="font-size:smaller; color : cadetblue; font : bold; vertical-align : middle; width : 25px;">
+                                    -40
+                                </td>
+                                break;
+                            case "AUTO2":
+                                <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
+                                    125
+                                </td>
+                                break;
+                            case "AUTO3":
+                                <td class=" text-center " style="font-size:smaller;vertical-align : middle; width : 25px;">
+                                    25
+                                </td>
+                                break;
+                            case "AUTO4":
+
+                                <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
+                                    125
+                                </td>
+                                break;
+                            default:
+                                <td></td>
+                                break;
+                        }
+
+                        <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px;">
+                            @Html.DisplayFor(modelItem => item.Flow)
+                        </td>
+                        @*<td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
+                                @Html.DisplayFor(modelItem => item.Option1)
+                            </td>
+                            <td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
+                                @Html.DisplayFor(modelItem => item.Option2)
+                            </td>*@
+                        @switch (item.Status)
+                        {
+                            case WebApplication1.Models.FTSetup.State.Wait:
+                                <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                break;
+                            case WebApplication1.Models.FTSetup.State.Run:
+                                <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                break;
+                            case WebApplication1.Models.FTSetup.State.Ready:
+                                <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                break;
+                            case WebApplication1.Models.FTSetup.State.Setup:
+                                <td class=" text-center" style="background-color : #009000; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                break;
+                            default:
+                                <td rowspan="2"></td>
+                                break;
+                        }
+                        @if (item.Production_DelayLot == "0")
+                        {
+                            <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
+                        }
+                        else
+                        {
+                            <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
+                        }
+                        @if (DateTime.Now > item.Production_Date)
+                        {
+                            <td class="text-center" style="color : red; font-size:smaller;font : bold; vertical-align : middle; width : 50px;">
+                                @Html.DisplayFor(modelItem => item.Production_Date)<br />
+                                @Html.DisplayFor(modelItem => item.Production_Time)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 50px;">
+                                @Html.DisplayFor(modelItem => item.Production_Date)<br />
+                                @Html.DisplayFor(modelItem => item.Production_Time)
+                            </td>
+                        }
+                        @for (int i = 0; i < 4; i++)
+                        {
+                            <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.LotQueue[i].Lot_no)<br /><p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.LotQueue[i].DeviceName)</p></td>
+                        }
                     <td class="text-center" style="font:bold ; vertical-align : middle;">
-                        @if (item.OverPlan != 0)
+                        @*@if (item.OverPlan != 0)
                         {
                             @Html.DisplayFor(modelItem => item.OverPlan)
-                        }
+                        }*@
+                        <i class="btn btn-info  btn-sm Edit" style="color:black;"><a href="javascript:;"></a>Edit</i>
+                        
+                        <a class="Update" href="javascript:;" style="display:none">Update</a>
+                        <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
                     </td>
-                </tr>
+                        @*<td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>*@
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
     <div class=" col-xs-4 col-sm-4 col-md-4 col-lg-4" style="vertical-align :central;">
         <div id="container"></div>
-        <div >
+        <div>
             <table class="table table-striped table-condensed table-bordered">
+                <tr>
+                    <th class="text-center" style=" vertical-align : middle; width : 120px;">PKG</th>
+                    <th class="text-center" style=" vertical-align : middle; width : 200px; background-color : #ABF6E8;">Device</th>
+                    <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A1<p>48.6H</p></th>
+                    <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A2<p>48.6H</p></th>
+                    <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A3<p>48.6H</p></th>
+                    <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A4<p>64.8H</p></th>
+                </tr>
+                @foreach (var item in (List<WebApplication1.Models.FTDenpyo_Calculate>)ViewBag.fff)
+                {
+
+            <tr class="text-center">
+                <td style="vertical-align : middle;">@item.PKGName</td>
+                <td style="vertical-align : middle;">@item.DeviceName</td>
+                @if (@item.A1_Calculate == 0)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A1_Calculate.ToString("0.00") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                }
+                @if (@item.A2_Calculate == 0)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A2_Calculate.ToString("0.00") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                }
+                @if (@item.A3_Calculate == 0)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A3_Calculate.ToString("0.00") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                }
+                @if (@item.A4_Calculate == 0)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                }
+                </tr>
+                }
+
+            </table>
+            @*<table class="table table-striped table-condensed table-bordered">
                 <tr>
                     <th class="text-center" style=" vertical-align : middle; width : 120px;">Flow</th>
                     <th class="text-center" style=" vertical-align : middle; width : 200px;">DeviceName</th>
@@ -252,10 +312,11 @@
                     </tr>
                 }
 
-            </table>
+            </table>*@
         </div>
     </div>
 </div>
+
 
 
 <link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
@@ -305,7 +366,7 @@
     </script>
 
     <script>
-       
+
         Highcharts.chart('container', {
   chart: {
     type: 'column'
@@ -341,8 +402,8 @@
     shadow: false
   },
   tooltip: {
-    headerFormat: '<b>{point.x}</b><br/>',
-    pointFormat: '{series.name} <br/>Total: {point.y} Lot.<br/>'
+    headerFormat: '<b>{point.x} : {point.y} Lot.</b><br/>',
+    pointFormat: '{series.name} <br/>Total: {point.stackTotal} Lot.<br/>'
   },
   plotOptions: {
     column: {
