@@ -149,6 +149,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\FTDenpyo.cs" />
     <Compile Include="Models\FTMachineSchedulerSetup.cs" />
     <Compile Include="Models\FTSetup.cs" />
     <Compile Include="Models\FTWip.cs" />

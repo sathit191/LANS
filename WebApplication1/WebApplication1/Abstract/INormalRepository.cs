@@ -12,6 +12,7 @@ namespace WebApplication1.Abstract
         IEnumerable<FTSetup> fTSetups { get; }
         IEnumerable<LotFTinMc> LotFTinMcs { get; }
         IEnumerable<FTWip> FTWips { get; }
+        IEnumerable<FTDenpyo> Denpyos { get; }
         IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup { get; }
 
     }
