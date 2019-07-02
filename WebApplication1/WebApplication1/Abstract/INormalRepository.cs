@@ -14,6 +14,7 @@ namespace WebApplication1.Abstract
         IEnumerable<FTWip> FTWips { get; }
         IEnumerable<FTDenpyo> Denpyos { get; }
         IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup { get; }
+        void SaveUpdate(FTTypeChange dataTypeChange);
 
     }
 }

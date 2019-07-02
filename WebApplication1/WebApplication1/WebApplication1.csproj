@@ -152,6 +152,7 @@
     <Compile Include="Models\FTDenpyo.cs" />
     <Compile Include="Models\FTMachineSchedulerSetup.cs" />
     <Compile Include="Models\FTSetup.cs" />
+    <Compile Include="Models\FTTypeChange.cs" />
     <Compile Include="Models\FTWip.cs" />
     <Compile Include="Models\FTWipOutPlan.cs" />
     <Compile Include="Models\LotFTinMc.cs" />

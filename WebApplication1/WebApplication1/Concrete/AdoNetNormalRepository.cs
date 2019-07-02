@@ -57,38 +57,9 @@ namespace WebApplication1.Concrete
                             if (!(reader["ProgramName"] is DBNull)) fTSetup.TestProgram = reader["ProgramName"].ToString().Trim();
                             if (!(reader["OptionName1"] is DBNull)) fTSetup.Option1 = reader["OptionName1"].ToString().Trim();
                             if (!(reader["OptionName2"] is DBNull)) fTSetup.Option2 = reader["OptionName2"].ToString().Trim();
-
-
-                            //if (!(reader["Status"] is DBNull))
-                            //{
-                            //    if (reader["Status"].ToString().Trim() == "Wait")
-                            //    {
-                            //        fTSetup.Status = FTSetup.State.Wait;
-                            //    }
-                            //    else if(reader["Status"].ToString().Trim() == "Run")
-                            //    {
-                            //        fTSetup.Status = FTSetup.State.Run;
-                            //    }
-                            //    else if (reader["Status"].ToString().Trim() == "Ready")
-                            //    {
-                            //        fTSetup.Status = FTSetup.State.Ready;
-                            //    }
-                            //    else if (reader["Status"].ToString().Trim() == "Setup")
-                            //    {
-                            //        fTSetup.Status = FTSetup.State.Setup;
-                            //    }
-
-                            //}
-                            
-
-
-
-                            if (!(reader["DeviceName"] is DBNull)) fTSetup.DeviceName = reader["DeviceName"].ToString().Trim(); 
-
+                            if (!(reader["DeviceName"] is DBNull)) fTSetup.DeviceName = reader["DeviceName"].ToString().Trim();
                             if (!(reader["LOT1"] is DBNull)) fTSetup.Production_LotNo = reader["LOT1"].ToString().Trim();
                             if (!(reader["DEVICE1"] is DBNull)) fTSetup.Production_LotDevice = reader["DEVICE1"].ToString().Trim();
-
-
 
                             for (int i = 2; i <= 10; i++)
                             {
@@ -97,152 +68,152 @@ namespace WebApplication1.Concrete
                                 if (!(reader["DEVICE" + i] is DBNull)) fTWipLot.DeviceName = reader["DEVICE" + i].ToString().Trim();
                                 fTSetup.LotQueue.Add(fTWipLot);
                             }
-                         
+
                             if (!(reader["DelayLot"] is DBNull)) fTSetup.Production_DelayLot = reader["DelayLot"].ToString().Trim();
-                            if (!(reader["Lot1Date"] is DBNull)) fTSetup.Production_Date = Convert.ToDateTime( reader["Lot1Date"]);
+                            if (!(reader["Lot1Date"] is DBNull)) fTSetup.Production_Date = Convert.ToDateTime(reader["Lot1Date"]);
                             if (!(reader["Lot1Date"] is DBNull)) fTSetup.Production_Time = Convert.ToDateTime(reader["Lot1Date"]);
                             if (!(reader["Lot1Date"] is DBNull)) fTSetup.Production_Datetime = Convert.ToDateTime(reader["Lot1Date"]);
                             lstFTSetup.Add(fTSetup);
 
-                        }conn.Close();
-                       // List<FTWip> lstFTWips = FTWips();
-                       // List<FTWip> lstFTWipOut = new List<FTWip>();
-                       // //List<FTWip> lstFTWipOut = lstFTWips.Where(x => !lstFTSetup.Where(p => p.DeviceName == x.DeviceName).Any()).ToList();
+                        } conn.Close();
+                        // List<FTWip> lstFTWips = FTWips();
+                        // List<FTWip> lstFTWipOut = new List<FTWip>();
+                        // //List<FTWip> lstFTWipOut = lstFTWips.Where(x => !lstFTSetup.Where(p => p.DeviceName == x.DeviceName).Any()).ToList();
 
 
-                       // var ColorList = lstFTWips.Select(x => new { x.DeviceName }).Distinct().ToList();
-                       // int countColor = 1;
-                       // foreach (var deviceName in ColorList)
-                       // {
-                       //     List<FTWip> WipDevice = lstFTWips.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
-                       //     List<FTSetup> ColorOnMc = lstFTSetup.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
+                        // var ColorList = lstFTWips.Select(x => new { x.DeviceName }).Distinct().ToList();
+                        // int countColor = 1;
+                        // foreach (var deviceName in ColorList)
+                        // {
+                        //     List<FTWip> WipDevice = lstFTWips.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
+                        //     List<FTSetup> ColorOnMc = lstFTSetup.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
 
-                       //     foreach (var item in WipDevice)
-                       //     {
-                       //         item.S_Color = "A" + countColor;
-                                
-                       //     }
-                       //     foreach (var item in ColorOnMc)
-                       //     {
-                       //         item.Mc_Color = "A" + countColor;
-                       //     }
-                       //     countColor++;
-                       // }
+                        //     foreach (var item in WipDevice)
+                        //     {
+                        //         item.S_Color = "A" + countColor;
 
-                       // for (int J = 1; J <= 4; J++)
-                       // {
-                       //     List<FTSetup> lstFTSetupAuto1 = lstFTSetup.Where(x => x.Flow == "AUTO" +J).OrderBy(x => x.MCNo).ToList(); //หาเครื่องกรอก Auto
-                       //     List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" +J).OrderBy(x => x.Lot_no).ToList();
+                        //     }
+                        //     foreach (var item in ColorOnMc)
+                        //     {
+                        //         item.Mc_Color = "A" + countColor;
+                        //     }
+                        //     countColor++;
+                        // }
 
-                       //     var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
+                        // for (int J = 1; J <= 4; J++)
+                        // {
+                        //     List<FTSetup> lstFTSetupAuto1 = lstFTSetup.Where(x => x.Flow == "AUTO" +J).OrderBy(x => x.MCNo).ToList(); //หาเครื่องกรอก Auto
+                        //     List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" +J).OrderBy(x => x.Lot_no).ToList();
 
-
-                       //     var wipLotOutPlan = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
-
-                       //     foreach (var item in wipLotOutPlan)
-                       //     {
-                       //         lstFTWipOut.Add(item);
-                       //     }
-
-                       //     for (int i = 0; i < machineDevicesList.Count(); i++)
-                       //     {
-                                
-                       //     }
-
-                       //     foreach (var deviceName in machineDevicesList)
-                       //     {
-                                
-                       //         List<FTSetup > McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
-                       //         List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
-
-                       //         //List<FTWip> WipOtherDevice = lstFTWipsAuto1.Where(x => !DevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
-
-                       //         int count = 1;
-                       //         foreach (var item in WipDevice)
-                       //         {
-                       //             int sequence = count % McDevice.Count;
-                       //             if (sequence != 0)
-                       //             {
-                       //                 item.Sequence = sequence;
-                       //             }
-                       //             else
-                       //             {
-                       //                 item.Sequence = McDevice.Count;
-                       //             }
-                       //             count++;
-                       //         }
+                        //     var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
 
 
-                       //         int countMc = 1;
-                       //         foreach (var mcData in McDevice.ToArray()) //เอาลอ็อตเข้าQue
-                       //         {
-                       //             List<FTWip> lstFTWipsAuto = new List<FTWip>();
-                       //             for (int i = 2; i <= 10; i++)
-                       //             {
-                       //                 List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.Sequence == countMc).ToList();
-                       //                 foreach (var lotSequence in lstFTWipsAuto1OnMc)
-                       //                 {
-                       //                     lstFTWipsAuto.Add(lotSequence);
-                       //                 }
-                       //                 for (int k = 0; k < 9 - lstFTWipsAuto1OnMc.Count; k++)
-                       //                 {
-                       //                     FTWip fTWip = new FTWip();
-                       //                     fTWip.DeviceName = "";
-                       //                     fTWip.Lot_no = "";
-                       //                     lstFTWipsAuto.Add(fTWip);
-                       //                 }
+                        //     var wipLotOutPlan = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
 
-                       //             }
-                       //             mcData.LotQueue = lstFTWipsAuto;
-                       //             //mcData.LotOutPlan = WipOtherDevice;
-                       //             countMc++;
-                       //         }
-                       //     }
-                       //     var result = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
-                       // } //lot wip add to Que
-                     
+                        //     foreach (var item in wipLotOutPlan)
+                        //     {
+                        //         lstFTWipOut.Add(item);
+                        //     }
 
-                       //// lstFTWips.Where(x => x != lstFTSetup.ToList())
-                       // List<LotFTinMc> lotFTinMcs = LotFTinMcs();
+                        //     for (int i = 0; i < machineDevicesList.Count(); i++)
+                        //     {
 
-                       // foreach (var item in lstFTSetup)
-                       // {
-                       //     LotFTinMc onMc = lotFTinMcs.Where(x => x.MCName == item.MCNo).FirstOrDefault();
-                       //     if (onMc == null)
-                       //         continue;
-                       //     item.Production_LotNo = onMc.LotNo;
-                       //     item.Production_LotDevice = onMc.Device;
-                       //     DateTime? production_Date = null;
-                       //     if (onMc.ProcessState == FTSetup.State.Run)
-                       //     {
+                        //     }
 
-                       //         if (item.Flow == "AUTO1")
-                       //         {
-                       //             production_Date = onMc.Updated_time.Value + onMc.timeAuto1;
-                       //         }
-                       //         else if (item.Flow == "AUTO2")
-                       //         {
-                       //             production_Date = onMc.Updated_time.Value + onMc.timeAuto2;
-                       //         }
-                       //         else if (item.Flow == "AUTO3")
-                       //         {
-                       //             production_Date = onMc.Updated_time.Value + onMc.timeAuto3;
-                       //         }
-                       //         else if (item.Flow == "AUTO4")
-                       //         {
-                       //             production_Date = onMc.Updated_time.Value + onMc.timeAuto4;
-                       //         }
-                       //         if (production_Date.HasValue)
-                       //         {
-                       //             item.Production_Date = production_Date.Value;
-                       //             item.Production_Time = production_Date.Value;
-                       //         }
-                       //     }
-                            
-                       //     item.Status = onMc.ProcessState;
-                       // }
+                        //     foreach (var deviceName in machineDevicesList)
+                        //     {
 
-                        
+                        //         List<FTSetup > McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
+                        //         List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
+
+                        //         //List<FTWip> WipOtherDevice = lstFTWipsAuto1.Where(x => !DevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
+
+                        //         int count = 1;
+                        //         foreach (var item in WipDevice)
+                        //         {
+                        //             int sequence = count % McDevice.Count;
+                        //             if (sequence != 0)
+                        //             {
+                        //                 item.Sequence = sequence;
+                        //             }
+                        //             else
+                        //             {
+                        //                 item.Sequence = McDevice.Count;
+                        //             }
+                        //             count++;
+                        //         }
+
+
+                        //         int countMc = 1;
+                        //         foreach (var mcData in McDevice.ToArray()) //เอาลอ็อตเข้าQue
+                        //         {
+                        //             List<FTWip> lstFTWipsAuto = new List<FTWip>();
+                        //             for (int i = 2; i <= 10; i++)
+                        //             {
+                        //                 List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.Sequence == countMc).ToList();
+                        //                 foreach (var lotSequence in lstFTWipsAuto1OnMc)
+                        //                 {
+                        //                     lstFTWipsAuto.Add(lotSequence);
+                        //                 }
+                        //                 for (int k = 0; k < 9 - lstFTWipsAuto1OnMc.Count; k++)
+                        //                 {
+                        //                     FTWip fTWip = new FTWip();
+                        //                     fTWip.DeviceName = "";
+                        //                     fTWip.Lot_no = "";
+                        //                     lstFTWipsAuto.Add(fTWip);
+                        //                 }
+
+                        //             }
+                        //             mcData.LotQueue = lstFTWipsAuto;
+                        //             //mcData.LotOutPlan = WipOtherDevice;
+                        //             countMc++;
+                        //         }
+                        //     }
+                        //     var result = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
+                        // } //lot wip add to Que
+
+
+                        //// lstFTWips.Where(x => x != lstFTSetup.ToList())
+                        // List<LotFTinMc> lotFTinMcs = LotFTinMcs();
+
+                        // foreach (var item in lstFTSetup)
+                        // {
+                        //     LotFTinMc onMc = lotFTinMcs.Where(x => x.MCName == item.MCNo).FirstOrDefault();
+                        //     if (onMc == null)
+                        //         continue;
+                        //     item.Production_LotNo = onMc.LotNo;
+                        //     item.Production_LotDevice = onMc.Device;
+                        //     DateTime? production_Date = null;
+                        //     if (onMc.ProcessState == FTSetup.State.Run)
+                        //     {
+
+                        //         if (item.Flow == "AUTO1")
+                        //         {
+                        //             production_Date = onMc.Updated_time.Value + onMc.timeAuto1;
+                        //         }
+                        //         else if (item.Flow == "AUTO2")
+                        //         {
+                        //             production_Date = onMc.Updated_time.Value + onMc.timeAuto2;
+                        //         }
+                        //         else if (item.Flow == "AUTO3")
+                        //         {
+                        //             production_Date = onMc.Updated_time.Value + onMc.timeAuto3;
+                        //         }
+                        //         else if (item.Flow == "AUTO4")
+                        //         {
+                        //             production_Date = onMc.Updated_time.Value + onMc.timeAuto4;
+                        //         }
+                        //         if (production_Date.HasValue)
+                        //         {
+                        //             item.Production_Date = production_Date.Value;
+                        //             item.Production_Time = production_Date.Value;
+                        //         }
+                        //     }
+
+                        //     item.Status = onMc.ProcessState;
+                        // }
+
+
                         return lstFTSetup;
                     }
                 }
@@ -254,8 +225,8 @@ namespace WebApplication1.Concrete
             get
             {
 
-            
-                List<FTWip > lstFTWip = new List<FTWip>();
+
+                List<FTWip> lstFTWip = new List<FTWip>();
                 var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
                 using (var cmd = conn.CreateCommand())
                 {
@@ -268,12 +239,12 @@ namespace WebApplication1.Concrete
                         {
                             FTWip ftWip = new FTWip();
 
-                            if (!(reader["MCName"] is DBNull)) ftWip.MCName  = reader["MCName"].ToString().Trim();
-                            if (!(reader["lot_no"] is DBNull)) ftWip.Lot_no  = reader["lot_no"].ToString().Trim();
-                            if (!(reader["DeviceName"] is DBNull)) ftWip.DeviceName  = reader["DeviceName"].ToString().Trim();
-                            if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKName  = reader["MethodPkgName"].ToString().Trim();
-                            if (!(reader["JobName"] is DBNull)) ftWip.JobName  = reader["JobName"].ToString().Trim();
-                            if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at  = reader["updated_at"].ToString().Trim();
+                            if (!(reader["MCName"] is DBNull)) ftWip.MCName = reader["MCName"].ToString().Trim();
+                            if (!(reader["lot_no"] is DBNull)) ftWip.Lot_no = reader["lot_no"].ToString().Trim();
+                            if (!(reader["DeviceName"] is DBNull)) ftWip.DeviceName = reader["DeviceName"].ToString().Trim();
+                            if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKName = reader["MethodPkgName"].ToString().Trim();
+                            if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
+                            if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
                             if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             lstFTWip.Add(ftWip);
                         }
@@ -284,7 +255,7 @@ namespace WebApplication1.Concrete
                 //return null;
             }
         }
-        public IEnumerable<LotFTinMc > LotFTinMcs
+        public IEnumerable<LotFTinMc> LotFTinMcs
         {
 
             get
@@ -342,14 +313,14 @@ namespace WebApplication1.Concrete
                     }
                     return lstLotFTinMc;
                 }
-           
+
             }
         }
-        public IEnumerable<FTDenpyo > Denpyos
+        public IEnumerable<FTDenpyo> Denpyos
         {
             get
             {
-                List<FTDenpyo> fTDenpyos = new List<FTDenpyo>(); 
+                List<FTDenpyo> fTDenpyos = new List<FTDenpyo>();
                 var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
                 using (var cmd = conn.CreateCommand())
                 {
@@ -407,7 +378,7 @@ namespace WebApplication1.Concrete
                 using (var cmd = conn.CreateCommand())
                 {
                     //cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.CommandText = "SELECT [priority],[mc_no],[sequence],[device_change],[date_change],[date_complete]" + 
+                    cmd.CommandText = "SELECT [priority],[mc_no],[sequence],[device_change],[date_change],[date_complete]" +
                         " FROM [DBx].[dbo].[scheduler_setup]" +
                         " where sequence != 0";
                     conn.Open();
@@ -422,7 +393,7 @@ namespace WebApplication1.Concrete
                                 MachineNo = ((string)reader["mc_no"]).Trim(),
                                 Sequence = (byte)reader["sequence"],
                                 DeviceChange = ((string)reader["device_change"]).Trim(),
-                             //   DeviceNow = ((string)reader["device_now"]).Trim(),
+                                //   DeviceNow = ((string)reader["device_now"]).Trim(),
                                 DateChange = (DateTime)reader["date_change"],
                                 MachienDisable = false
                             };
@@ -439,9 +410,44 @@ namespace WebApplication1.Concrete
                     }
                     return ftSchedulerSetupList;
                 }
-                
+
             }
 
+        }
+        public void SaveUpdate(FTTypeChange dataTypeChange)
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                //cmd.CommandText = "SELECT * FROM [APCSProDWH].[cac].[wip_monitor_delay_lot_condition_detail] WHERE lot_no = '" + SaveUpdateDelaylotCon.lot + "'";
+                //cmd.CommandText = "INSERT INTO [dbo].[scheduler_setup]([priority],[mc_no],[sequence],[device_change],[device_now],[date_change],[date_complete])" +
+                //    "VALUES(<priority, int,>,<mc_no, varchar(20),>,<sequence, tinyint,>,<device_change, varchar(20),>,<device_now, varchar(20),>,<date_change, datetime,>,<date_complete, datetime,>)"
+                //conn.Open();
+                //using (var reader = cmd.ExecuteReader())
+                //{
+                //    conn.Close();
+                //    if (reader != null)
+                //    {
+                //        conn.Open();
+                //        using (var cmd2 = conn.CreateCommand())
+                //        {
+                //            cmd2.CommandType = System.Data.CommandType.StoredProcedure;
+
+                //            cmd2.CommandText = "[StoredProcedureDB].[cac].[sp_set_wip_monitor_delay_lot_condition_table]";
+
+                //            cmd2.Parameters.Add("@status_id", System.Data.SqlDbType.Int).Value = SaveUpdateDelaylotCon.status_id;
+                //            cmd2.Parameters.Add("@lot_no", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.lot;
+                //            cmd2.Parameters.Add("@status", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.status;
+                //            cmd2.Parameters.Add("@problem_point", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.problem_point;
+                //            cmd2.Parameters.Add("@incharge", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.incharge;
+                //            cmd2.Parameters.Add("@occure_date", System.Data.SqlDbType.Date).Value = SaveUpdateDelaylotCon.occure_date;
+                //            cmd2.Parameters.Add("@plan_date", System.Data.SqlDbType.Date).Value = SaveUpdateDelaylotCon.plan_date;
+
+                //            //cmd2.ExecuteNonQuery();
+                //        }
+                //    }
+                //}
+            }
         }
     }
 }

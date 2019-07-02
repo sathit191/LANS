@@ -216,9 +216,6 @@ namespace WebApplication1.Controllers
 
                                 select new FTWipOutPlan { Flow = list.Key.JobName,  DeviceName =list.Key.DeviceName, Count = list.Count() };
 
-           // var List2 = lstFTWipOut.GroupBy(x => x.JobName, y => y.DeviceName).ToList();
-
-
             List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
             
             foreach (var item in DeviceList)
@@ -284,8 +281,6 @@ namespace WebApplication1.Controllers
                 command += "name: '" + item.Name + "',";
                 command += "data: [" + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]},";
             }
-
-
 
             ViewBag.lstFlow = command;
             List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();
@@ -365,7 +360,12 @@ namespace WebApplication1.Controllers
             return View();
 
         }
-        
+        public ActionResult SaveTypeChange(FTTypeChange dataTypeChange)
+        {
+            repository.SaveUpdate(dataTypeChange);
+            return RedirectToAction("DelayLotCondition");
+        }
+
 
     }
 }
