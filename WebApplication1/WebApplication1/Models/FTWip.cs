@@ -18,7 +18,14 @@ namespace WebApplication1.Models
         public string S_Color { get; set; }
 
         public int Kpcs { get; set; }
-
+        public LotState Lot_State { get; set; }
         public string MachineWip { get; set; }
+        public enum LotState
+        {
+            Wip = 0,
+            Setup = 1,
+            Start = 2,
+            Other = 99
+        }
     }
 }

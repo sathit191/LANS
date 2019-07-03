@@ -26,13 +26,14 @@ namespace WebApplication1.Controllers
         }
         public ActionResult Index3()
         {
-
+            //DATA-----------------------------------------------------------------------------------------------
             List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
             List<FTWip> lstFTWips = (List<FTWip>)repository.FTWips;
             List<FTDenpyo> lstFTDenpyo = (List<FTDenpyo>)repository.Denpyos;
-
+            //---------------------------------------------------------------------------------------------------
+            //Main table------------------------------------------------------------------------------------------
              List<FTWip> lstFTWipOut = new List<FTWip>();
-
+            
             var ColorList = lstFTWips.Select(x => new { x.DeviceName }).Distinct().ToList();
             int countColor = 1;
             foreach (var deviceName in ColorList)
@@ -55,7 +56,7 @@ namespace WebApplication1.Controllers
             for (int J = 1; J <= 4; J++)
             {
                 List<FTSetup> lstFTSetupAuto1 = lstFTSetup.Where(x => x.Flow == "AUTO" + J).OrderBy(x => x.MCNo).ToList(); //หาเครื่องกรอก Auto
-                List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" + J).OrderBy(x => x.Lot_no).ToList();
+                List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" + J && x.Lot_State == FTWip.LotState.Wip).OrderBy(x => x.Lot_no).ToList();
 
                 var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
 
@@ -215,20 +216,21 @@ namespace WebApplication1.Controllers
 
             //ViewData["listA"] = lstFTSetup;
             ViewBag.ftSetup = lstFTSetup;
-
+            //-----------------------------------------------------------------------------------------------------
+            //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
             var DeviceList = from Group in lstFTWips// lstFTWipOut
                                 group Group by new {Group.JobName,Group.DeviceName} into list
 
                                 select new FTWipOutPlan { Flow = list.Key.JobName,  DeviceName =list.Key.DeviceName, Count = list.Count() };
 
-            List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
+            //List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
             
-            foreach (var item in DeviceList)
-            {
-                outPlans.Add(item);
-            }
-
+            //foreach (var item in DeviceList)
+            //{
+            //    outPlans.Add(item);
+            //}
+           
             List<Flow> flows = new List<Flow>();
 
             var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName }).Distinct().ToList();
@@ -274,10 +276,10 @@ namespace WebApplication1.Controllers
 
 
             }
+            
+            //var list2 = outPlans.Select(p=> new { p.Flow}).Distinct().ToList();
 
-            var list2 = outPlans.Select(p=> new { p.Flow}).Distinct().ToList();
-
-            ViewBag.lstFTWipOut = outPlans;
+            //ViewBag.lstFTWipOut = outPlans;
 
             string command = "";
 
@@ -289,6 +291,8 @@ namespace WebApplication1.Controllers
             }
 
             ViewBag.lstFlow = command;
+            //-----------------------------------------------------------------------------------------------------
+            //table Denpyo-----------------------------------------------------------------------------------------
             List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();
             foreach (var item in DeviceGroup)
             {
@@ -303,20 +307,25 @@ namespace WebApplication1.Controllers
                 //{
                 //FTDenpyo_Calculate calculate = fTDenpyo_Calculates.Where(x => x.DeviceName == item.DeviceName).FirstOrDefault();
                 // var addflow = new Flow { Name = name, A1 = A1, A2 = A2, A3 = A3, A4 = A4 };
-                var calculate = new FTDenpyo_Calculate
+                if (listDenpyo.Count() != 0)
                 {
-                    PKGName = listDenpyo.FirstOrDefault().PKGName,
-                    DeviceName = item.DeviceName,
-                    A1_Calculate = 0,
-                    A1_Lot = 0,
-                    A2_Calculate = 0,
-                    A2_Lot = 0,
-                    A3_Calculate = 0,
-                    A3_Lot = 0,
-                    A4_Calculate = 0,
-                    A4_Lot = 0
-                };
-                fTDenpyo_Calculates.Add(calculate);
+                    var calculate = new FTDenpyo_Calculate
+                    {
+                        PKGName = listDenpyo.FirstOrDefault().PKGName,
+                        DeviceName = item.DeviceName,
+                        A1_Calculate = 0,
+                        A1_Lot = 0,
+                        A2_Calculate = 0,
+                        A2_Lot = 0,
+                        A3_Calculate = 0,
+                        A3_Lot = 0,
+                        A4_Calculate = 0,
+                        A4_Lot = 0
+                    };
+                    fTDenpyo_Calculates.Add(calculate);
+                }
+                
+                
                 foreach (var row in listDenpyo)
                 {
                     var selectrow = fTDenpyo_Calculates.Where(p => p.PKGName == row.PKGName && p.DeviceName == row.DeviceName).SingleOrDefault();
@@ -363,15 +372,16 @@ namespace WebApplication1.Controllers
                // var rowDenpyo2 = listDenpyo.GroupBy(a=>a.PKGName,b=>b.DeviceName).Select(p=> new FTDenpyo_Calculate { PKGName= p.Key,DeviceName=p.Key. })
             }
             ViewBag.fff = fTDenpyo_Calculates;
+            //-----------------------------------------------------------------------------------------------------
             return View();
 
         }
-        public ActionResult SaveTypeChange(FTTypeChange dataTypeChange)
+        public ActionResult SaveTypeChange(string McNo,int Sequence,string Device ,string DeviceChange)
         {
-            repository.SaveUpdate(dataTypeChange);
-            return RedirectToAction("DelayLotCondition");
+            repository.SaveUpdate(McNo, Sequence, Device, DeviceChange);
+            return RedirectToAction("Index3");
         }
 
-
+        
     }
 }

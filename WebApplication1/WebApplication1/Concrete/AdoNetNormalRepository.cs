@@ -246,6 +246,24 @@ namespace WebApplication1.Concrete
                             if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
                             if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
                             if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
+                            if (!(reader["state"] is DBNull)) {
+                               string state = reader["state"].ToString().Trim();
+                                if (state == "0" || state == "100")
+                                {
+                                    ftWip.Lot_State = FTWip.LotState.Wip;
+                                }
+                                else if(state == "1" || state == "101")
+                                {
+                                    ftWip.Lot_State = FTWip.LotState.Setup;
+                                }
+                                else if (state =="2" || state == "102")
+                                {
+                                    ftWip.Lot_State = FTWip.LotState.Start;
+                                }else
+                                {
+                                    ftWip.Lot_State = FTWip.LotState.Other;
+                                }
+                            }
                             lstFTWip.Add(ftWip);
                         }
                         conn.Close();
@@ -427,39 +445,36 @@ namespace WebApplication1.Concrete
                 return ftSchedulerSetupList;
             }
         }
-        public void SaveUpdate(FTTypeChange dataTypeChange)
+        public void SaveUpdate(string McNo, int Sequence, string Device, string DeviceChange)
         {
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
             {
                 //cmd.CommandText = "SELECT * FROM [APCSProDWH].[cac].[wip_monitor_delay_lot_condition_detail] WHERE lot_no = '" + SaveUpdateDelaylotCon.lot + "'";
-                //cmd.CommandText = "INSERT INTO [dbo].[scheduler_setup]([priority],[mc_no],[sequence],[device_change],[device_now],[date_change],[date_complete])" +
-                //    "VALUES(<priority, int,>,<mc_no, varchar(20),>,<sequence, tinyint,>,<device_change, varchar(20),>,<device_now, varchar(20),>,<date_change, datetime,>,<date_complete, datetime,>)"
-                //conn.Open();
-                //using (var reader = cmd.ExecuteReader())
-                //{
-                //    conn.Close();
-                //    if (reader != null)
-                //    {
-                //        conn.Open();
-                //        using (var cmd2 = conn.CreateCommand())
-                //        {
-                //            cmd2.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_setup]([mc_no],[sequence],[device_change],[device_now],[date_change])" +
+                    "VALUES(@McNo,@Sequence,@Device_change,@Device_now,GETDATE())";
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    conn.Close();
+                    if (reader != null)
+                    {
+                        conn.Open();
+                        using (var cmd2 = conn.CreateCommand())
+                        {
+                            cmd2.CommandType = System.Data.CommandType.StoredProcedure;
 
-                //            cmd2.CommandText = "[StoredProcedureDB].[cac].[sp_set_wip_monitor_delay_lot_condition_table]";
+                            cmd2.CommandText = "[StoredProcedureDB].[cac].[sp_set_wip_monitor_delay_lot_condition_table]";
 
-                //            cmd2.Parameters.Add("@status_id", System.Data.SqlDbType.Int).Value = SaveUpdateDelaylotCon.status_id;
-                //            cmd2.Parameters.Add("@lot_no", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.lot;
-                //            cmd2.Parameters.Add("@status", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.status;
-                //            cmd2.Parameters.Add("@problem_point", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.problem_point;
-                //            cmd2.Parameters.Add("@incharge", System.Data.SqlDbType.VarChar).Value = SaveUpdateDelaylotCon.incharge;
-                //            cmd2.Parameters.Add("@occure_date", System.Data.SqlDbType.Date).Value = SaveUpdateDelaylotCon.occure_date;
-                //            cmd2.Parameters.Add("@plan_date", System.Data.SqlDbType.Date).Value = SaveUpdateDelaylotCon.plan_date;
+                            cmd2.Parameters.Add("@McNo", System.Data.SqlDbType.Int).Value = McNo;
+                            cmd2.Parameters.Add("@Sequence", System.Data.SqlDbType.VarChar).Value = Sequence;
+                            cmd2.Parameters.Add("@Device_change", System.Data.SqlDbType.VarChar).Value = DeviceChange;
+                            cmd2.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;
 
-                //            //cmd2.ExecuteNonQuery();
-                //        }
-                //    }
-                //}
+                            cmd2.ExecuteNonQuery();
+                        }
+                    }
+                }
             }
         }
     }
