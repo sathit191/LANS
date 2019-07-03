@@ -71,6 +71,10 @@
         color: #1E90FF;
         font: bold;
     }
+    .TypeChange{
+        color: red;
+        font: bold;
+    }
 </style>
 <div class="container-fluid">
     <h1>FT SCHEDULER</h1>
@@ -227,8 +231,7 @@
                             @if (item.LotQueue[i].Lot_no != "")
                             {
                                 @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                               new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo ,@data_device = item.DeviceName , @data_sequence = i+2,
-                               })
+                               new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo ,@data_device = item.DeviceName , @data_sequence = i+2})
 
                             }
                             @*new { MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }*@
@@ -345,7 +348,7 @@
         </div>
     </div>
 
-
+    </div>
 
 
 
@@ -376,7 +379,7 @@
                 console.log(mcno);
                 console.log(sequence);
                 console.log(device);
-                //$('#myModal').modal('show');
+
                 $("#MCName").val(mcno);
                 $("#Device").val(device);
                 $("#Sequence").val(sequence);
@@ -399,7 +402,7 @@
                     'McNo': mcno,
                     'Sequence': sequence,
                     'Device': device,
-                    'DeviceChange': deviceChange;
+                    'DeviceChange': deviceChange
 
                 },
                 contentType: "application/json; charset=utf-8",

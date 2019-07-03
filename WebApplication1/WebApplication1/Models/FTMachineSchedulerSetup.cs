@@ -9,7 +9,7 @@ namespace WebApplication1.Models
     {
         public int Priority { get; set; }
         public string MachineNo { get; set; }
-        public byte Sequence { get; set; }
+        public int Sequence { get; set; }
         public string DeviceChange { get; set; }
         public string DeviceNow { get; set; }
         public DateTime? DateChange { get; set; }

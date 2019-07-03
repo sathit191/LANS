@@ -151,13 +151,19 @@ namespace WebApplication1.Controllers
                             for (int k = 0; k < 9 - lstFTWipsAuto1OnMc.Count; k++)
                             {
                                 string device = "";
+                                string lotno = "";
                                 if (k == 0)
                                 {
                                     device = machineManualSetupList.Where(x => x.MachineNo == mcData.MCNo).Select(x => x.DeviceChange).FirstOrDefault();
+                                    if(device != null)
+                                    {
+                                        lotno = "Type Change";
+                                    }
                                 }
                                 FTWip fTWip = new FTWip();
                                 fTWip.DeviceName = device;
-                                fTWip.Lot_no = "";
+                                fTWip.Lot_no = lotno;
+                                fTWip.S_Color = "TypeChange";
                                 lstFTWipsAuto.Add(fTWip);
                             }
                             if(lstFTWipsAuto1OnMc.Count()-4 > 0)

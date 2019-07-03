@@ -421,14 +421,15 @@ namespace WebApplication1.Concrete
                             //    MachienDisable = false
                             //};
                             FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup();
-                            ftSchedulerSetup.Priority = (int)reader["priority"];
-                            ftSchedulerSetup.MachineNo = ((string)reader["mc_no"]).Trim();
-                            ftSchedulerSetup.Sequence = (byte)reader["sequence"];
-                            ftSchedulerSetup.DeviceChange = ((string)reader["device_set"]).Trim();
-                            ftSchedulerSetup.DeviceNow = ((string)reader["device_now"]).Trim();
-                            ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
-                            ftSchedulerSetup.MachienDisable = false;
-                            ftSchedulerSetupList.Add(ftSchedulerSetup);
+                            if (!(reader["priority"] is DBNull)) ftSchedulerSetup.Priority = (int)reader["priority"];
+                            if (!(reader["mc_no"] is DBNull)) ftSchedulerSetup.MachineNo = ((string)reader["mc_no"]).Trim();
+                            if (!(reader["sequence"] is DBNull)) ftSchedulerSetup.Sequence = (int)reader["sequence"];
+                            if (!(reader["device_set"] is DBNull)) ftSchedulerSetup.DeviceChange = ((string)reader["device_set"]).Trim();
+                            if (!(reader["device_now"] is DBNull)) ftSchedulerSetup.DeviceNow = ((string)reader["device_now"]).Trim();
+                            if (!(reader["device_set_date"] is DBNull)) ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
+                             ftSchedulerSetup.MachienDisable = false;
+                             ftSchedulerSetupList.Add(ftSchedulerSetup);
+                        
                             //if (!(reader["lot_no"] is DBNull)) ftWip.Lot_no = reader["lot_no"].ToString().Trim();
                             //if (!(reader["DeviceName"] is DBNull)) ftWip.DeviceName = reader["DeviceName"].ToString().Trim();
                             //if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKName = reader["MethodPkgName"].ToString().Trim();
@@ -450,31 +451,15 @@ namespace WebApplication1.Concrete
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
             {
-                //cmd.CommandText = "SELECT * FROM [APCSProDWH].[cac].[wip_monitor_delay_lot_condition_detail] WHERE lot_no = '" + SaveUpdateDelaylotCon.lot + "'";
                 cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_setup]([mc_no],[sequence],[device_change],[device_now],[date_change])" +
                     "VALUES(@McNo,@Sequence,@Device_change,@Device_now,GETDATE())";
+                cmd.Parameters.Add("@McNo", System.Data.SqlDbType.VarChar).Value = McNo;
+                cmd.Parameters.Add("@Sequence", System.Data.SqlDbType.TinyInt).Value = Sequence;
+                cmd.Parameters.Add("@Device_change", System.Data.SqlDbType.VarChar).Value = DeviceChange;
+                cmd.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;
                 conn.Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    conn.Close();
-                    if (reader != null)
-                    {
-                        conn.Open();
-                        using (var cmd2 = conn.CreateCommand())
-                        {
-                            cmd2.CommandType = System.Data.CommandType.StoredProcedure;
-
-                            cmd2.CommandText = "[StoredProcedureDB].[cac].[sp_set_wip_monitor_delay_lot_condition_table]";
-
-                            cmd2.Parameters.Add("@McNo", System.Data.SqlDbType.Int).Value = McNo;
-                            cmd2.Parameters.Add("@Sequence", System.Data.SqlDbType.VarChar).Value = Sequence;
-                            cmd2.Parameters.Add("@Device_change", System.Data.SqlDbType.VarChar).Value = DeviceChange;
-                            cmd2.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;
-
-                            cmd2.ExecuteNonQuery();
-                        }
-                    }
-                }
+                cmd.ExecuteNonQuery();
+                
             }
         }
     }
