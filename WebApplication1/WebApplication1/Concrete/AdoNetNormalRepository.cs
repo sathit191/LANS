@@ -371,17 +371,22 @@ namespace WebApplication1.Concrete
 
         public IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<string> mcNoList)
         {
-            get
+
+
+            List<FTMachineSchedulerSetup> ftSchedulerSetupList = new List<FTMachineSchedulerSetup>();
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+
+            using (var cmd = conn.CreateCommand())
             {
-                List<FTMachineSchedulerSetup> ftSchedulerSetupList = new List<FTMachineSchedulerSetup>();
-                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
-                using (var cmd = conn.CreateCommand())
+                conn.Open();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_sequence]";
+
+
+                foreach (var machineNo in mcNoList)
                 {
-                    //cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.CommandText = "SELECT [priority],[mc_no],[sequence],[device_change],[date_change],[date_complete]" +
-                        " FROM [DBx].[dbo].[scheduler_setup]" +
-                        " where sequence != 0";
-                    conn.Open();
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@machine_no", machineNo);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -421,8 +426,6 @@ namespace WebApplication1.Concrete
                 conn.Close();
                 return ftSchedulerSetupList;
             }
-
-
         }
         public void SaveUpdate(FTTypeChange dataTypeChange)
         {
