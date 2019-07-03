@@ -73,18 +73,19 @@ namespace WebApplication1.Controllers
                 //                   group deviceGroup by deviceGroup.DeviceName into device
                 //                   select new Group<string, FTWip> { Key = device.Key, Values = device };
 
+                var machineNoList = (List<string>)lstFTSetupAuto1.Select(x => x.MCNo).Distinct().ToList();
                 //GetData
-                List<FTMachineSchedulerSetup> machineManualSetupList = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup;
-                //SetData Machine Device Now
-                foreach (var machineManualSetup in machineManualSetupList)
-                {
-                    var FtMachine = lstFTSetupAuto1.Where(x => x.MCNo == machineManualSetup.MachineNo).Select(x => new { x.DeviceName }).ToList();
-                    if (FtMachine.Count > 0)
-                    {
-                        machineManualSetup.DeviceNow = FtMachine.FirstOrDefault().DeviceName;
-                    }
+                List<FTMachineSchedulerSetup> machineManualSetupList = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(machineNoList);
+                ////SetData Machine Device Now
+                //foreach (var machineManualSetup in machineManualSetupList)
+                //{
+                //    var FtMachine = lstFTSetupAuto1.Where(x => x.MCNo == machineManualSetup.MachineNo).Select(x => new { x.DeviceName }).ToList();
+                //    if (FtMachine.Count > 0)
+                //    {
+                //        machineManualSetup.DeviceNow = FtMachine.FirstOrDefault().DeviceName;
+                //    }
                 
-                }
+                //}
 
 
 
@@ -148,8 +149,13 @@ namespace WebApplication1.Controllers
                             }
                             for (int k = 0; k < 9 - lstFTWipsAuto1OnMc.Count; k++)
                             {
+                                string device = "";
+                                if (k == 0)
+                                {
+                                    device = machineManualSetupList.Where(x => x.MachineNo == mcData.MCNo).Select(x => x.DeviceChange).FirstOrDefault();
+                                }
                                 FTWip fTWip = new FTWip();
-                                fTWip.DeviceName = "";
+                                fTWip.DeviceName = device;
                                 fTWip.Lot_no = "";
                                 lstFTWipsAuto.Add(fTWip);
                             }

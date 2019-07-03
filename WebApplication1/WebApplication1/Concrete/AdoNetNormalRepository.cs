@@ -398,34 +398,46 @@ namespace WebApplication1.Concrete
             }
         }
 
-        public IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup
+        public IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<string> mcNoList)
         {
-            get
+            
+            List<FTMachineSchedulerSetup> ftSchedulerSetupList = new List<FTMachineSchedulerSetup>();
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+          
+            using (var cmd = conn.CreateCommand())
             {
-                List<FTMachineSchedulerSetup> ftSchedulerSetupList = new List<FTMachineSchedulerSetup>();
-                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
-                using (var cmd = conn.CreateCommand())
+                conn.Open();
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_sequence]";
+             
+              
+                foreach (var machineNo in mcNoList)
                 {
-                    //cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.CommandText = "SELECT [priority],[mc_no],[sequence],[device_change],[date_change],[date_complete]" + 
-                        " FROM [DBx].[dbo].[scheduler_setup]" +
-                        " where sequence != 0";
-                    conn.Open();
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@machine_no", machineNo);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup()
-                            {
+                            //FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup()
+                            //{
 
-                                Priority = (int)reader["priority"],
-                                MachineNo = ((string)reader["mc_no"]).Trim(),
-                                Sequence = (byte)reader["sequence"],
-                                DeviceChange = ((string)reader["device_change"]).Trim(),
-                             //   DeviceNow = ((string)reader["device_now"]).Trim(),
-                                DateChange = (DateTime)reader["date_change"],
-                                MachienDisable = false
-                            };
+                            //    Priority = (int)reader["priority"],
+                            //    MachineNo = ((string)reader["mc_no"]).Trim(),
+                            //    Sequence = (byte)reader["sequence"],
+                            //    DeviceChange = ((string)reader["device_set"]).Trim(),
+                            //    //   DeviceNow = ((string)reader["device_now"]).Trim(),
+                            //    DateChange = (DateTime)reader["device_set_date"],
+                            //    MachienDisable = false
+                            //};
+                            FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup();
+                            ftSchedulerSetup.Priority = (int)reader["priority"];
+                            ftSchedulerSetup.MachineNo = ((string)reader["mc_no"]).Trim();
+                            ftSchedulerSetup.Sequence = (byte)reader["sequence"];
+                            ftSchedulerSetup.DeviceChange = ((string)reader["device_set"]).Trim();
+                            ftSchedulerSetup.DeviceNow = ((string)reader["device_now"]).Trim();
+                            ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
+                            ftSchedulerSetup.MachienDisable = false;
                             ftSchedulerSetupList.Add(ftSchedulerSetup);
                             //if (!(reader["lot_no"] is DBNull)) ftWip.Lot_no = reader["lot_no"].ToString().Trim();
                             //if (!(reader["DeviceName"] is DBNull)) ftWip.DeviceName = reader["DeviceName"].ToString().Trim();
@@ -435,12 +447,15 @@ namespace WebApplication1.Concrete
                             //if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             //lstFTWip.Add(ftWip);
                         }
-                        conn.Close();
+
                     }
-                    return ftSchedulerSetupList;
                 }
-                
+           
+                conn.Close();
+                return ftSchedulerSetupList;
             }
+                
+           
 
         }
     }

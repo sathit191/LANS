@@ -13,7 +13,7 @@ namespace WebApplication1.Abstract
         IEnumerable<LotFTinMc> LotFTinMcs { get; }
         IEnumerable<FTWip> FTWips { get; }
         IEnumerable<FTDenpyo> Denpyos { get; }
-        IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup { get; }
+        IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<string> mcNoList);
 
     }
 }
