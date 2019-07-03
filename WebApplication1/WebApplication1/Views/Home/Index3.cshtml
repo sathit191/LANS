@@ -222,24 +222,26 @@
                             }
                             @for (int i = 0; i < 4; i++)
                             {
-                        <td class="text-center DeviceName1" style="font-size:smaller; vertical-align : middle; width : 80px;">
+                                <td class="text-center DeviceName1" style="font-size:smaller; vertical-align : middle; width : 80px;">
 
-                            @if (item.LotQueue[i].Lot_no != "")
-                            {
-                                @*@Html.ActionLink(item.LotQueue[i].Lot_no, "", new { id = "Qclick", MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }, new { @class = "my-class" })*@
-                                @Html.ActionLink(item.LotQueue[i].Lot_no, "", null, new { id = "Qclick", MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }, 
-                               new { @class = "my-class",data_toggle = "modal", data_target = "#exampleModal" })
-                                @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="mdo">Open</button>*@
-                            }
+                                    @if (item.LotQueue[i].Lot_no != "")
+                                    {
+                                        @*@Html.ActionLink(item.LotQueue[i].Lot_no, "", new { id = "Qclick", MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }, new { @class = "my-class" })*@
+                                        @Html.ActionLink(item.LotQueue[i].Lot_no,null,null,new { id = "Qclick", MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName },
+                                       new { @class = "my-class" , data_toggle = "modal", data_target ="#exampleModal" })
+                                        @*<button type=""  data-toggle="modal" data-target="#exampleModal">Launch demo modal</button>*@
+                                        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="mdo">Open</button>*@
+                                    }
 
-                            <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
+                                <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
 
-                                @Html.DisplayFor(modelItem => item.LotQueue[i].DeviceName)
-                            </p>
+                                    @Html.DisplayFor(modelItem => item.LotQueue[i].DeviceName)
+                                    <button type="button" data-toggle="modal" data-target="#exampleModal">TypeChange</button>
+                                </p>
 
-                            @*<input type="text" class="form-control" style="display:none; width : 80px; font-size : smaller;" />*@
-                            @*@Html.ActionLink(item.LotQueue[i], "", new { })*@
-                        </td>
+                                    @*<input type="text" class="form-control" style="display:none; width : 80px; font-size : smaller;" />*@
+                                    @*@Html.ActionLink(item.LotQueue[i], "", new { })*@
+                                </td>
                             }
 
 
@@ -252,11 +254,6 @@
                                 @*<a class="Update" href="javascript:;" style="display:none">Update</a>
                                     <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>*@
                             </td>
-                            @*<td>
-                                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                                </td>*@
                         </tr>
                     }
                 </tbody>
@@ -341,220 +338,22 @@
 
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <table id="iTable" class="table table-striped table-condensed table-bordered">
-                <thead>
-                    <tr>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#8dcffd;" rowspan="2">PKG</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#8dcffd;" rowspan="2">MC_No.</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#8dcffd;" rowspan="2">Tester</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#FFBE7D;" rowspan="2">Board</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#FFBE7D;" rowspan="2">Program</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#FFBE7D;" rowspan="2">Temp.(°C)</th>
-                        @*<th class=" text-center" style=" vertical-align : middle; background-color :#FFBE7D;" rowspan="2">DUT</th>*@
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#FFBE7D;" rowspan="2">Flow</th>
-                        @*<th class=" text-center" style=" vertical-align : middle; background-color :#FFBE7D;" colspan="2">Option</th>*@
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#8e84ce;" rowspan="2">Status</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="2">Production</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">2nd Lot</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">3rd Lot</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">4th Lot</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">5th Lot</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" rowspan="2">More Lot</th>
-                    </tr>
-                    <tr>
-                        @*<th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➀</th>
-                    <th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➁</th>*@
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">END</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                        @*<th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                    <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                    <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                    <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>
-                    <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;">Lot_Card</th>*@
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in (List<WebApplication1.Models.FTSetup>)ViewBag.ftSetup)
-                    {
-                        <tr style="height :30px">
-                            <td class="text-center PKName" style="vertical-align : middle; width : 120px;">
-                                <span>@Html.DisplayFor(modelItem => item.PKName)</span>
-                            </td>
-                            <td class="text-center MCNo" style="vertical-align : middle; width : 120px;">
-                                @Html.DisplayFor(modelItem => item.MCNo)
-                            </td>
-                            <td class="text-center" style="vertical-align : middle; width : 125px;">
-                                @Html.DisplayFor(modelItem => item.TesterType)
-                            </td>
-                            <td class="text-center" style="font-size:10px; vertical-align : middle; width : 25px;">
-                                @Html.DisplayFor(modelItem => item.TestBord)
-                            </td>
-                            <td class="text-center" style="font-size : 10px; vertical-align : middle; width : 25px;">
-                                @Html.DisplayFor(modelItem => item.TestProgram)
-                            </td>
-                            @*<td class="text-center" style=" font-size:smaller; vertical-align : middle; width : 20px;">
-                            @Html.DisplayFor(modelItem => item.DutName)
-                        </td>*@
-                            @switch (item.Flow)
-                            {
-                                case "AUTO1":
-                                    <td class=" text-center" style="font-size:smaller; color : cadetblue; font : bold; vertical-align : middle; width : 25px;">
-                                        -40
-                                    </td>
-                                    break;
-                                case "AUTO2":
-                                    <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
-                                        125
-                                    </td>
-                                    break;
-                                case "AUTO3":
-                                    <td class=" text-center " style="font-size:smaller;vertical-align : middle; width : 25px;">
-                                        25
-                                    </td>
-                                    break;
-                                case "AUTO4":
-
-                                    <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
-                                        125
-                                    </td>
-                                    break;
-                                default:
-                                    <td></td>
-                                    break;
-                            }
-
-                            <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px;">
-                                @Html.DisplayFor(modelItem => item.Flow)
-                            </td>
-                            @*<td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
-                            @Html.DisplayFor(modelItem => item.Option1)
-                        </td>
-                        <td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
-                            @Html.DisplayFor(modelItem => item.Option2)
-                        </td>*@
-                            @switch (item.Status)
-                            {
-                                case WebApplication1.Models.FTSetup.State.Wait:
-                                    <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    break;
-                                case WebApplication1.Models.FTSetup.State.Run:
-                                    <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    break;
-                                case WebApplication1.Models.FTSetup.State.Ready:
-                                    <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    break;
-                                case WebApplication1.Models.FTSetup.State.Setup:
-                                    <td class=" text-center" style="background-color : #009000; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    break;
-                                default:
-                                    <td rowspan="2"></td>
-                                    break;
-                            }
-                            @if (item.Production_DelayLot == "0")
-                            {
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
-                            }
-                            else
-                            {
-                                <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
-                            }
-                            @if (DateTime.Now > item.Production_Date)
-                            {
-                                <td class="text-center" style="color : red; font-size:smaller;font : bold; vertical-align : middle; width : 50px;">
-                                    @Html.DisplayFor(modelItem => item.Production_Date)<br />
-                                    @Html.DisplayFor(modelItem => item.Production_Time)
-                                </td>
-                            }
-                            else
-                            {
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 50px;">
-                                    @Html.DisplayFor(modelItem => item.Production_Date)<br />
-                                    @Html.DisplayFor(modelItem => item.Production_Time)
-                                </td>
-                            }
-                            @for (int i = 0; i < 4; i++)
-                            {
-                                <td class="text-center DeviceName1" style="font-size:smaller; vertical-align : middle; width : 80px;">
-
-                                    @if (item.LotQueue[i].Lot_no != "")
-                                    {
-                                        @Html.ActionLink(item.LotQueue[i].Lot_no, "", new { id = "Qclick", MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }, new { @class = "my-class" })
-                                       // <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="mdo">Open modal for mdo</button>
-                                    }
-
-                                    <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
-
-                                        @Html.DisplayFor(modelItem => item.LotQueue[i].DeviceName)
-                                    </p>
-
-                                    @*<input type="text" class="form-control" style="display:none; width : 80px; font-size : smaller;" />*@
-                                    @*@Html.ActionLink(item.LotQueue[i], "", new { })*@
-                                </td>
-                            }
-
-
-                            <td class="text-center" style="font:bold ; vertical-align : middle;">
-                                @*@if (item.OverPlan != 0)
-                            {
-                                @Html.DisplayFor(modelItem => item.OverPlan)
-                            }*@
-                                @*<i class="Edit" style="color:black;"><a href="javascript:;"></a>Edit</i> @*//btn btn-info  btn-sm*@
-                                @*<a class="Update" href="javascript:;" style="display:none">Update</a>
-                            <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>*@
-                            </td>
-                            @*<td>
-                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                        </td>*@
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-
+    @*--------------modal-------------------*@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
-                        </div>
-                    </form>
+                    ...
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
@@ -563,65 +362,69 @@
 
 
 
-<link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
-<link href="~/Scripts/dataTables.bootstrap.min.css" rel="stylesheet" />
-<link href="~/Content/select2.min.css" rel="stylesheet" />
-<link href="~/Scripts/datatable/dataTables.bootstrap.css" rel="stylesheet" />
 
-@section Scripts
+    <link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Scripts/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/select2.min.css" rel="stylesheet" />
+    <link href="~/Scripts/datatable/dataTables.bootstrap.css" rel="stylesheet" />
+
+    @section Scripts
 {
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/i18n/Thai.json"></script>
-    <script src="~/Scripts/select2.min.js"></script>
+        @*<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+            <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+            <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/i18n/Thai.json"></script>*@
+        <script src="~/Scripts/datatables.min.js"></script>
+        <script src="~/Scripts/select2.min.js"></script>
 
-    <script src="~/Scripts/highcharts.js"></script>
-    <script src="~/Scripts/exporting.js"></script>
-    <script src="~/Scripts/export-data.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#iTable').DataTable({
-                "ordering": true,
-                "pageLength": 50,
-                "filter": true,
-                "bFilter": false,
-                "bLengthChange": false,
-                "scrollCollapse": true,
-                "scrollY": "800px",
+        <script src="~/Scripts/highcharts.js"></script>
+        <script src="~/Scripts/exporting.js"></script>
+        <script src="~/Scripts/export-data.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#iTable').DataTable({
+                    "ordering": true,
+                    "pageLength": 50,
+                    "filter": true,
+                    "bFilter": false,
+                    "bLengthChange": false,
+                    "scrollCollapse": true,
+                    "scrollY": "800px",
+                });
             });
-        });
-        $(document).ready(function () {
-            $('#WIPTable').DataTable({
-                "ordering": true,
-                "pageLength": 6,
-                "filter": true,
-                "bFilter": false,
-                "bLengthChange": false,
-                "scrollCollapse": true,
-                "scrollY": "400px",
+            $(document).ready(function () {
+                $('#WIPTable').DataTable({
+                    "ordering": true,
+                    "pageLength": 6,
+                    "filter": true,
+                    "bFilter": false,
+                    "bLengthChange": false,
+                    "scrollCollapse": true,
+                    "scrollY": "400px",
+                });
             });
-        });
 
-        //$(document).ready(function () {
-        //    $('#process').select2();
-        //    $('#package').select2();
-        //    $('#packgegroup').select2();
-        //    $('#device').select2();
-        //});
-    </script>
-    
-   
-    <script language="javascript">
-        function strauto() {
-            var text = document.getElementById('lot').value;
-            var str = new String(text);
-            var str = str.toUpperCase();
-            document.getElementById('lot').value = str;
-        }
-    </script>
+            //$(document).ready(function () {
+            //    $('#process').select2();
+            //    $('#package').select2();
+            //    $('#packgegroup').select2();
+            //    $('#device').select2();
+            //});
+        </script>
 
-    <script>
+        
+
+        <script language="javascript">
+            function strauto() {
+                var text = document.getElementById('lot').value;
+                var str = new String(text);
+                var str = str.toUpperCase();
+                document.getElementById('lot').value = str;
+            }
+        </script>
+
+        <script>
 
         Highcharts.chart('container', {
   chart: {
@@ -673,5 +476,5 @@
   series: [ @Html.Raw(ViewBag.lstFlow)]
 });
 
-    </script>
-}
+        </script>
+    }
