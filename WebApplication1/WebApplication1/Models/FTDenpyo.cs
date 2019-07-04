@@ -29,5 +29,11 @@ namespace WebApplication1.Models
         public int A2_Lot { get; set; }
         public int A3_Lot { get; set; }
         public int A4_Lot { get; set; }
+        public int Plan_today { get; set; }
+        public int Result_today { get; set; }
+        public int Calulate_today { get; set; }
+        public int Plan_yesterday { get; set; }
+        public int Result_yesterday { get; set; }
+        public int Calulate_yesterday { get; set; }
     }
 }

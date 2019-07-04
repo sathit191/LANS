@@ -99,7 +99,7 @@
                         <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">3rd Lot</th>
                         <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">4th Lot</th>
                         <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">5th Lot</th>
-                        <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" rowspan="2">More Lot</th>
+                        
                     </tr>
                     <tr>
                         @*<th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➀</th>
@@ -246,68 +246,75 @@
                             }
 
 
-                            <td class="text-center" style="font:bold ; vertical-align : middle;">
-                                
-                            </td>
+                            
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
         <div class="col-md-4" style="vertical-align :central;">
-            <div id="container"></div>
-            <div>
+            <div id="container"  ></div>
+            <div >
                 <table id="WIPTable" class="table table-striped table-condensed table-bordered">
                     <thead>
                         <tr>
-                            <th class="text-center" style=" vertical-align : middle; width : 120px;">PKG</th>
-                            <th class="text-center" style=" vertical-align : middle; width : 200px; background-color : #ABF6E8;">Device</th>
-                            <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A1<p>48.6H</p></th>
-                            <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A2<p>48.6H</p></th>
-                            <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A3<p>48.6H</p></th>
-                            <th class="text-center" style=" vertical-align : middle; width : 100px; background-color : #BAF6AB;">A4<p>64.8H</p></th>
+                            <th class="text-center" style=" vertical-align : middle; width : 120px; " rowspan="2">PKG</th>
+                            <th class="text-center" style=" vertical-align : middle; width : 200px; background-color : #ABF6E8;" rowspan="2">Device</th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A1<p>48.9H</p></th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A2<p>62.4H</p></th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A3<p>72.9H</p></th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A4<p>97.2H</p></th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;" colspan="3">Kpcs.</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;">Plan</th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;">Result</th>
+                            <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;">+<p>-</p></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in (List<WebApplication1.Models.FTDenpyo_Calculate>)ViewBag.fff)
+                        @foreach (var item in (List<WebApplication1.Models.FTDenpyo_Calculate>)ViewBag.Denpyo_Calculates)
                         {
 
-                            <tr class="text-center">
-                                <td style="vertical-align : middle;">@item.PKGName</td>
-                                <td style="vertical-align : middle;">@item.DeviceName</td>
-                                @if (@item.A1_Calculate == 0)
-                                {
-                                    <td></td>
-                                }
-                                else
-                                {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A1_Calculate.ToString("0.00") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
-                                }
-                                @if (@item.A2_Calculate == 0)
-                                {
-                                    <td></td>
-                                }
-                                else
-                                {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A2_Calculate.ToString("0.00") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
-                                }
-                                @if (@item.A3_Calculate == 0)
-                                {
-                                    <td></td>
-                                }
-                                else
-                                {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A3_Calculate.ToString("0.00") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
-                                }
-                                @if (@item.A4_Calculate == 0)
-                                {
-                                    <td></td>
-                                }
-                                else
-                                {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
-                                }
-                            </tr>
+                        <tr class="text-center">
+                            <td style="vertical-align : middle;">@item.PKGName</td>
+                            <td style="vertical-align : middle;">@item.DeviceName</td>
+                            @if (@item.A1_Calculate == 0)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A1_Calculate.ToString("0.00") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                            }
+                            @if (@item.A2_Calculate == 0)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A2_Calculate.ToString("0.00") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                            }
+                            @if (@item.A3_Calculate == 0)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A3_Calculate.ToString("0.00") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                            }
+                            @if (@item.A4_Calculate == 0)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                            }
+                            <td style="vertical-align : middle;">@item.Plan_today</td>
+                            <td style="vertical-align : middle;">@item.Result_today</td>
+                            <td style="vertical-align : middle;">@item.Calulate_today</td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -486,17 +493,17 @@
       }
     }
   },
-  legend: {
-    align: 'right',
-    x: -30,
-    verticalAlign: 'top',
-    y: 25,
-    floating: true,
-    backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-    borderColor: '#CCC',
-    borderWidth: 1,
-    shadow: false
-  },
+  //legend: {
+  //  align: 'right',
+  //  x: -30,
+  //  verticalAlign: 'top',
+  //  y: 25,
+  //  floating: true,
+  //  backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+  //  borderColor: '#CCC',
+  //  borderWidth: 1,
+  //  shadow: false
+  //},
   tooltip: {
     headerFormat: '<b>{point.x} : {point.y} Lot.</b><br/>',
     pointFormat: '{series.name} <br/>Total: {point.stackTotal} Lot.<br/>'

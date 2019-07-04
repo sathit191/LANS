@@ -462,5 +462,76 @@ namespace WebApplication1.Concrete
                 
             }
         }
+
+        public IEnumerable<Accumulator_Plan> Plan
+        {
+            get
+            {
+                DateTime dtResultStart = DateTime.Now.AddDays(-4);
+                DateTime dtResultEnd = DateTime.Now;
+                DateTime dtPlanStart = dtResultStart.AddDays(-10);
+                DateTime dtPlanEnd = dtResultEnd.AddDays(-10);
+
+                List<Accumulator_Plan> accumulator = new List<Accumulator_Plan>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
+                    cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtPlanStart;
+                    cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtPlanEnd;
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // FTWip ftWip = new FTWip();
+                            Accumulator_Plan accumulator_Plan = new Accumulator_Plan(); 
+                            if (!(reader["Devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();
+                            if (!(reader["Kpcs"] is DBNull)) accumulator_Plan.Kpcs_PlanT = int.Parse(reader["Kpcs"].ToString().Trim());
+
+                            accumulator.Add(accumulator_Plan);
+                        }
+                        conn.Close();
+                    }
+
+                    //return accumulator;
+                }
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_result]";
+                    cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtResultStart;
+                    cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtResultEnd;
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (!(reader["Devicename"] is DBNull))
+                            {
+                                foreach (Accumulator_Plan item in accumulator)
+                                {
+                                    if (reader["Devicename"].ToString().Trim()== item.DeviceName)
+                                    {
+                                        if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultT = int.Parse(reader["Kpcs"].ToString().Trim());
+                                        break;
+                                    }
+                                }
+                            } /*accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();*/
+                            // FTWip ftWip = new FTWip();
+                            //Accumulator_Plan accumulator_Plan = new Accumulator_Plan();
+                            //if (!(reader["Devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();
+                            //if (!(reader["Kpcs"] is DBNull)) accumulator_Plan.Kpcs_Plan = int.Parse(reader["Kpcs"].ToString().Trim());
+
+                           // accumulator.Add(accumulator_Plan);
+                        }
+                        conn.Close();
+                    }
+                }
+                return accumulator;
+            }
+        }
+
     }
 }

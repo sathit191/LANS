@@ -30,6 +30,7 @@ namespace WebApplication1.Controllers
             List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
             List<FTWip> lstFTWips = (List<FTWip>)repository.FTWips;
             List<FTDenpyo> lstFTDenpyo = (List<FTDenpyo>)repository.Denpyos;
+            List<Accumulator_Plan> lstAccumulator_Plans = (List<Accumulator_Plan>)repository.Plan;
             //---------------------------------------------------------------------------------------------------
             //Main table------------------------------------------------------------------------------------------
              List<FTWip> lstFTWipOut = new List<FTWip>();
@@ -300,19 +301,12 @@ namespace WebApplication1.Controllers
             //-----------------------------------------------------------------------------------------------------
             //table Denpyo-----------------------------------------------------------------------------------------
             List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();
+            
             foreach (var item in DeviceGroup)
             {
                 var listDenpyo = lstFTDenpyo.Where(p => p.DeviceName == item.DeviceName);
-                //LotFTinMc onMc = lotFTinMcs.Where(x => x.MCName == item.MCNo).FirstOrDefault();
-                //if (onMc == null)
-                //    continue;
-                //item.Production_LotNo = onMc.LotNo;
-                //item.Production_LotDevice = onMc.Device;
-                //DateTime? production_Date = null;
-                //if (onMc.ProcessState == FTSetup.State.Run)
-                //{
-                //FTDenpyo_Calculate calculate = fTDenpyo_Calculates.Where(x => x.DeviceName == item.DeviceName).FirstOrDefault();
-                // var addflow = new Flow { Name = name, A1 = A1, A2 = A2, A3 = A3, A4 = A4 };
+                var listPlan = lstAccumulator_Plans.Where(p => p.DeviceName == item.DeviceName);
+
                 if (listDenpyo.Count() != 0)
                 {
                     var calculate = new FTDenpyo_Calculate
@@ -327,7 +321,19 @@ namespace WebApplication1.Controllers
                         A3_Lot = 0,
                         A4_Calculate = 0,
                         A4_Lot = 0
+                        
+                        
+
                     };
+                    if (listPlan.Count() != 0)
+                    {
+                        if (item.DeviceName == listPlan.FirstOrDefault().DeviceName)
+                        {
+                            calculate.Plan_today = listPlan.FirstOrDefault().Kpcs_PlanT / 1000;
+                            calculate.Result_today = listPlan.FirstOrDefault().Kpcs_ResultT / 1000;
+                            calculate.Calulate_today = (listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
+                        }
+                    }
                     fTDenpyo_Calculates.Add(calculate);
                 }
                 
@@ -335,6 +341,7 @@ namespace WebApplication1.Controllers
                 foreach (var row in listDenpyo)
                 {
                     var selectrow = fTDenpyo_Calculates.Where(p => p.PKGName == row.PKGName && p.DeviceName == row.DeviceName).SingleOrDefault();
+                    
                     if(row.JobId == "106")
                     {
                         selectrow.A1_Lot++;
@@ -357,27 +364,9 @@ namespace WebApplication1.Controllers
                     }
                     
                 }
-                //var rowDenpyo = from groupDenpyo in listDenpyo
-                //                group groupDenpyo by new { groupDenpyo.PKGName, groupDenpyo.DeviceName } into list
-                //                select new FTDenpyo_Calculate
-                //                {
-                //                    PKGName = list.Key.PKGName,
-                //                    DeviceName = list.Key.DeviceName,
-                //                    A1_Lot = list.Select(x => x.DeviceName).Distinct().Count(),
-                //                    A1_Calculate = list.Sum(x=>x.A1),
-                //                    //A2_Lot = list.Select(x => x.DeviceName).Distinct().Count(),
-                //                    A2_Calculate = list.Sum(x => x.A2),
-                //                   // A3_Lot = list.Select(x => x.DeviceName).Distinct().Count(),
-                //                    A3_Calculate = list.Sum(x => x.A3),
-                //                    //A4_Lot = list.Select(x => x.DeviceName).Distinct().Count(),
-                //                    A4_Calculate = list.Sum(x => x.A4)
-
-                //                };
-                //fTDenpyo_Calculates = rowDenpyo.ToList();
-                //db.Pos.GroupBy(a => a.Pla).Select(p => new { Pla = p.Key, Quantity = p.Sum(q => q.Quantity) });
-               // var rowDenpyo2 = listDenpyo.GroupBy(a=>a.PKGName,b=>b.DeviceName).Select(p=> new FTDenpyo_Calculate { PKGName= p.Key,DeviceName=p.Key. })
+                
             }
-            ViewBag.fff = fTDenpyo_Calculates;
+            ViewBag.Denpyo_Calculates = fTDenpyo_Calculates;
             //-----------------------------------------------------------------------------------------------------
             return View();
 
