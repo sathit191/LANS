@@ -485,7 +485,10 @@ namespace WebApplication1.Concrete
                 DateTime dtPlanEnd = new DateTime(dtResultEnd.AddDays(-10).Year, dtResultEnd.AddDays(-10).Month, dtResultEnd.AddDays(-10).Day, 8, 0, 0);//dtResultEnd.AddDays(-10);
                 #endregion
                 #region Get Date Result
-
+                DateTime dtYResultStart = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, 1, 8, 0, 0);//DateTime.Now.AddDays(-4);
+                DateTime dtYResultEnd = DateTime.Now.AddDays(-1); //DateTime.Parse("2019/07/05 08:00:00");
+                DateTime dtYPlanStart = new DateTime(dtYResultStart.AddDays(-10).Year, dtYResultStart.AddDays(-10).Month, dtYResultStart.AddDays(-10).Day, 8, 0, 0);
+                DateTime dtYPlanEnd = new DateTime(dtYResultEnd.AddDays(-10).Year, dtYResultEnd.AddDays(-10).Month, dtYResultEnd.AddDays(-10).Day, 8, 0, 0);//dtResultEnd.AddDays(-10);
                 #endregion
 
                 List<Accumulator_Plan> accumulator = new List<Accumulator_Plan>();
@@ -549,8 +552,8 @@ namespace WebApplication1.Concrete
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
-                    cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtPlanStart;
-                    cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtPlanEnd;
+                    cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtYPlanStart;
+                    cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtYPlanEnd;
                     conn.Open();
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -562,7 +565,35 @@ namespace WebApplication1.Concrete
                                 {
                                     if (reader["Devicename"].ToString().Trim() == item.DeviceName)
                                     {
-                                        if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultT = int.Parse(reader["Kpcs"].ToString().Trim());
+                                        if (!(reader["Kpcs"] is DBNull)) item.Kpcs_PlanY = int.Parse(reader["Kpcs"].ToString().Trim());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        conn.Close();
+                    }
+                }
+                #endregion
+                #region accumerlaet result yesterday
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_result]";
+                    cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtYResultStart;
+                    cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtYResultEnd;
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (!(reader["Devicename"] is DBNull))
+                            {
+                                foreach (Accumulator_Plan item in accumulator)
+                                {
+                                    if (reader["Devicename"].ToString().Trim() == item.DeviceName)
+                                    {
+                                        if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultY = int.Parse(reader["Kpcs"].ToString().Trim());
                                         break;
                                     }
                                 }

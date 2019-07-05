@@ -264,7 +264,8 @@
                             <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A2<p>62.4H</p></th>
                             <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A3<p>72.9H</p></th>
                             <th class="text-center" style=" vertical-align : middle;  background-color : #BAF6AB;" rowspan="2">A4<p>97.2H</p></th>
-                            <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;" colspan="3">Kpcs.</th>
+                            
+                            <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;" colspan="3">@DateTime.Now.ToString("MMM").ToUpper()   Output(Kpcs.)</th>
                         </tr>
                         <tr>
                             <th class="text-center" style=" vertical-align : middle;  background-color : cornflowerblue;">Plan</th>
@@ -311,9 +312,9 @@
                                 {
                                     <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
                                 }
-                                <td style="vertical-align : middle;">@item.Plan_today</td>
-                                <td style="vertical-align : middle;">@item.Result_today</td>
-                                <td style="vertical-align : middle;">@item.Calulate_today</td>
+                                <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;">T  @item.Plan_today<p>Y  @item.Plan_yesterday</p></td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Result_today<p> @item.Result_yesterday</p></td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Calulate_today<p> @item.Calulate_yesterday</p></td>
                             </tr>
                         }
                     </tbody>

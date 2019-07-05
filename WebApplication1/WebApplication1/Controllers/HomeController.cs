@@ -334,6 +334,10 @@ namespace WebApplication1.Controllers
                             calculate.Plan_today = listPlan.FirstOrDefault().Kpcs_PlanT / 1000;
                             calculate.Result_today = listPlan.FirstOrDefault().Kpcs_ResultT / 1000;
                             calculate.Calulate_today = (listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
+
+                            calculate.Plan_yesterday = listPlan.FirstOrDefault().Kpcs_PlanY / 1000;
+                            calculate.Result_yesterday = listPlan.FirstOrDefault().Kpcs_ResultY / 1000;
+                            calculate.Calulate_yesterday = calculate.Result_yesterday - calculate.Plan_yesterday;
                         }
                     }
                     fTDenpyo_Calculates.Add(calculate);
