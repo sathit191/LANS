@@ -410,12 +410,13 @@ namespace WebApplication1.Concrete
                 conn.Open();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_sequence]";
-
+                
 
                 foreach (var machineNo in mcNoList)
                 {
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("@machine_no", machineNo);
+                    //cmd.Parameters.Add("@machine_no", System.Data.SqlDbType.VarChar).Value = machineNo;
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -434,7 +435,7 @@ namespace WebApplication1.Concrete
                             FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup();
                             if (!(reader["priority"] is DBNull)) ftSchedulerSetup.Priority = (int)reader["priority"];
                             if (!(reader["mc_no"] is DBNull)) ftSchedulerSetup.MachineNo = ((string)reader["mc_no"]).Trim();
-                            if (!(reader["sequence"] is DBNull)) ftSchedulerSetup.Sequence = (int)reader["sequence"];
+                            if (!(reader["sequence"] is DBNull)) ftSchedulerSetup.Sequence = (byte)reader["sequence"];
                             if (!(reader["device_set"] is DBNull)) ftSchedulerSetup.DeviceChange = ((string)reader["device_set"]).Trim();
                             if (!(reader["device_now"] is DBNull)) ftSchedulerSetup.DeviceNow = ((string)reader["device_now"]).Trim();
                             if (!(reader["device_set_date"] is DBNull)) ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
@@ -470,7 +471,7 @@ namespace WebApplication1.Concrete
                 cmd.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                
+                conn.Close();
             }
         }
 

@@ -161,7 +161,7 @@ namespace WebApplication1.Controllers
                                     }
                                 }
                                 FTWip fTWip = new FTWip();
-                                fTWip.DeviceName = device;
+                                fTWip.FTDevice = device;
                                 fTWip.Lot_no = lotno;
                                 fTWip.S_Color = "TypeChange";
                                 lstFTWipsAuto.Add(fTWip);

@@ -230,7 +230,7 @@
 
                             @if (item.LotQueue[i].Lot_no != "")
                             {
-                                @Html.ActionLink(item.LotQueue[i].Lot_no, null, null,
+                                @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo ,@data_device = item.DeviceName , @data_sequence = i+2})
 
                             }
