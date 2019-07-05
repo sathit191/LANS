@@ -13,6 +13,7 @@ namespace WebApplication1.Models
         public string JobName { get; set; }
         public string Updated_at { get; set; }
         public string DeviceName { get; set; }
+        public string FTDevice { get; set; }
         public int Sequence { get; set; }
 
         public string S_Color { get; set; }

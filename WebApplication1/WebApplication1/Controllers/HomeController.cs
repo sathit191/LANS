@@ -189,7 +189,7 @@ namespace WebApplication1.Controllers
                 if (onMc == null)
                     continue;
                 item.Production_LotNo = onMc.LotNo;
-                item.Production_LotDevice = onMc.Device;
+                item.Production_LotDevice = onMc.FTDevice;
                 DateTime? production_Date = null;
                 if (onMc.ProcessState == FTSetup.State.Run)
                 {
@@ -226,9 +226,9 @@ namespace WebApplication1.Controllers
             //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
             var DeviceList = from Group in lstFTWips// lstFTWipOut
-                                group Group by new {Group.JobName,Group.DeviceName} into list
+                                group Group by new {Group.JobName,Group.DeviceName,Group.FTDevice} into list
 
-                                select new FTWipOutPlan { Flow = list.Key.JobName,  DeviceName =list.Key.DeviceName, Count = list.Count() };
+                                select new FTWipOutPlan { Flow = list.Key.JobName, FTDevice= list.Key.FTDevice, DeviceName =list.Key.DeviceName, Count = list.Count() };
 
             //List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
             
@@ -239,12 +239,12 @@ namespace WebApplication1.Controllers
            
             List<Flow> flows = new List<Flow>();
 
-            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName }).Distinct().ToList();
+            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName , p.FTDevice}).Distinct().ToList();
 
             foreach (var item in DeviceGroup)
             {
                 // List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
-                string name = item.DeviceName.ToString();
+                string name = item.FTDevice.ToString();
                 int A1 = 0;
                 int A2 = 0;
                 int A3 = 0;
@@ -256,7 +256,7 @@ namespace WebApplication1.Controllers
 
                 foreach (var list in lstDevice)
                 {
-                    var row = flows.Where(p => p.Name == list.DeviceName).SingleOrDefault();
+                    var row = flows.Where(p => p.Name == list.FTDevice).SingleOrDefault();
 
                     if(list.Flow == "AUTO1")
                     {
@@ -312,6 +312,8 @@ namespace WebApplication1.Controllers
                     {
                         PKGName = listDenpyo.FirstOrDefault().PKGName,
                         DeviceName = item.DeviceName,
+                        FTDevice = item.FTDevice,
+                        TextColor = listDenpyo.FirstOrDefault().S_Color,
                         A1_Calculate = 0,
                         A1_Lot = 0,
                         A2_Calculate = 0,
@@ -320,6 +322,7 @@ namespace WebApplication1.Controllers
                         A3_Lot = 0,
                         A4_Calculate = 0,
                         A4_Lot = 0
+
                         
                         
 

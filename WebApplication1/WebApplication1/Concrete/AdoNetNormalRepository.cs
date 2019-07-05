@@ -242,6 +242,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["MCName"] is DBNull)) ftWip.MCName = reader["MCName"].ToString().Trim();
                             if (!(reader["lot_no"] is DBNull)) ftWip.Lot_no = reader["lot_no"].ToString().Trim();
                             if (!(reader["DeviceName"] is DBNull)) ftWip.DeviceName = reader["DeviceName"].ToString().Trim();
+                            if (!(reader["FTDevice"] is DBNull)) ftWip.FTDevice = reader["FTDevice"].ToString().Trim();
                             if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKGName = reader["MethodPkgName"].ToString().Trim();
                             if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
                             if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
@@ -302,6 +303,7 @@ namespace WebApplication1.Concrete
 
                             if (!(reader["MCName"] is DBNull)) lotFTinMc.MCName = reader["MCName"].ToString().Trim();
                             if (!(reader["DeviceName"] is DBNull)) lotFTinMc.Device = reader["DeviceName"].ToString().Trim();
+                            if (!(reader["FTDevice"] is DBNull)) lotFTinMc.FTDevice = reader["FTDevice"].ToString().Trim();
                             if (!(reader["lot_no"] is DBNull)) lotFTinMc.LotNo = reader["lot_no"].ToString().Trim();
                             if (!(reader["process_state"] is DBNull))
                             {
@@ -476,14 +478,20 @@ namespace WebApplication1.Concrete
         {
             get
             {
+                #region Get Date Today
                 DateTime dtResultStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 8, 0, 0);//DateTime.Now.AddDays(-4);
                 DateTime dtResultEnd = DateTime.Now; //DateTime.Parse("2019/07/05 08:00:00");
                 DateTime dtPlanStart = new DateTime(dtResultStart.AddDays(-10).Year, dtResultStart.AddDays(-10).Month, dtResultStart.AddDays(-10).Day, 8, 0, 0);
                 DateTime dtPlanEnd = new DateTime(dtResultEnd.AddDays(-10).Year, dtResultEnd.AddDays(-10).Month, dtResultEnd.AddDays(-10).Day, 8, 0, 0);//dtResultEnd.AddDays(-10);
+                #endregion
+                #region Get Date Result
+
+                #endregion
 
                 List<Accumulator_Plan> accumulator = new List<Accumulator_Plan>();
-                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
-                using (var cmd = conn.CreateCommand())
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);  
+                #region accumerlaet plan today
+                using (var cmd = conn.CreateCommand()) //accumerlaet plan today
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
@@ -495,8 +503,9 @@ namespace WebApplication1.Concrete
                         while (reader.Read())
                         {
                             // FTWip ftWip = new FTWip();
-                            Accumulator_Plan accumulator_Plan = new Accumulator_Plan(); 
+                            Accumulator_Plan accumulator_Plan = new Accumulator_Plan();
                             if (!(reader["Devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();
+                            if (!(reader["FTDevice"] is DBNull)) accumulator_Plan.FTDevice = reader["FTDevice"].ToString().Trim();
                             if (!(reader["Kpcs"] is DBNull)) accumulator_Plan.Kpcs_PlanT = int.Parse(reader["Kpcs"].ToString().Trim());
 
                             accumulator.Add(accumulator_Plan);
@@ -506,6 +515,8 @@ namespace WebApplication1.Concrete
 
                     //return accumulator;
                 }
+                #endregion
+                #region accumerlaet result today
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -521,17 +532,46 @@ namespace WebApplication1.Concrete
                             {
                                 foreach (Accumulator_Plan item in accumulator)
                                 {
-                                    if (reader["Devicename"].ToString().Trim()== item.DeviceName)
+                                    if (reader["Devicename"].ToString().Trim() == item.DeviceName)
                                     {
                                         if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultT = int.Parse(reader["Kpcs"].ToString().Trim());
                                         break;
                                     }
                                 }
-                            } 
+                            }
                         }
                         conn.Close();
                     }
                 }
+                #endregion
+                #region accumerlaet plan yesterdar
+                using (var cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
+                    cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtPlanStart;
+                    cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtPlanEnd;
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (!(reader["Devicename"] is DBNull))
+                            {
+                                foreach (Accumulator_Plan item in accumulator)
+                                {
+                                    if (reader["Devicename"].ToString().Trim() == item.DeviceName)
+                                    {
+                                        if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultT = int.Parse(reader["Kpcs"].ToString().Trim());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        conn.Close();
+                    }
+                }
+                #endregion
                 return accumulator;
             }
         }

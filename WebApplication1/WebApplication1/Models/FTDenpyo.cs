@@ -21,6 +21,8 @@ namespace WebApplication1.Models
     {
         public string PKGName { get; set; }
         public string DeviceName { get; set; }
+        public string TextColor { get; set; }
+        public string FTDevice { get; set; }
         public float A1_Calculate { get; set; }
         public float A2_Calculate { get; set; }
         public float A3_Calculate { get; set; }

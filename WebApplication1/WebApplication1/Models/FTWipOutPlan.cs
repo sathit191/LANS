@@ -10,8 +10,8 @@ namespace WebApplication1.Models
         public string Flow { get; set; }
         public string DeviceName { get; set; }
         public int Count { get; set; }
-
-        public int SumKpcs { get; set; }
+        public string FTDevice { get; set; }
+        //public int SumKpcs { get; set; }
     }
 
     public class Flow

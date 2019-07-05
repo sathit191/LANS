@@ -53,7 +53,7 @@
     }
 
     .A5 {
-        color: #FFA500;
+        color: #008080;
         font: bold;
     }
 
@@ -80,7 +80,7 @@
     <h1>FT SCHEDULER</h1>
 
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-8">
             <table id="iTable" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
@@ -158,7 +158,7 @@
                                     break;
                                 case "AUTO4":
 
-                                    <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
+                                    <td class=" text-center" style="font-size:smaller;  font : bold; vertical-align : middle; width : 25px;">
                                         25
                                     </td>
                                     break;
@@ -237,7 +237,7 @@
                             @*new { MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }*@
                             <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
 
-                                @Html.DisplayFor(modelItem => item.LotQueue[i].DeviceName)
+                                @Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)
                             </p>
 
                             @*<input type="text" class="form-control" style="display:none; width : 80px; font-size : smaller;" />*@
@@ -252,10 +252,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-5" style="vertical-align :central;">
-            <h2>SSOP-B20W</h2>
-            <div id="container"  ></div>
-            <div >
+        <div class="col-md-4" style="vertical-align :central;">
+            <div id="container"></div>
+            <div>
                 <table id="WIPTable" class="table table-striped table-condensed table-bordered">
                     <thead>
                         <tr>
@@ -277,45 +276,45 @@
                         @foreach (var item in (List<WebApplication1.Models.FTDenpyo_Calculate>)ViewBag.Denpyo_Calculates)
                         {
 
-                        <tr class="text-center">
-                            @*<td style="vertical-align : middle;">@item.PKGName</td>*@
-                            <td style="vertical-align : middle;">@item.DeviceName</td>
-                            @if (@item.A1_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A1_Calculate.ToString("0.00") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
-                            }
-                            @if (@item.A2_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A2_Calculate.ToString("0.00") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
-                            }
-                            @if (@item.A3_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A3_Calculate.ToString("0.00") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
-                            }
-                            @if (@item.A4_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
-                            }
-                            <td style="vertical-align : middle;">@item.Plan_today</td>
-                            <td style="vertical-align : middle;">@item.Result_today</td>
-                            <td style="vertical-align : middle;">@item.Calulate_today</td>
-                        </tr>
+                            <tr class="text-center">
+                                @*<td style="vertical-align : middle;">@item.PKGName</td>*@
+                                <td class="@item.TextColor" style="vertical-align : middle;">@item.FTDevice</td>
+                                @if (@item.A1_Calculate == 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A1_Calculate.ToString("0.00") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                                }
+                                @if (@item.A2_Calculate == 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A2_Calculate.ToString("0.00") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                }
+                                @if (@item.A3_Calculate == 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A3_Calculate.ToString("0.00") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                }
+                                @if (@item.A4_Calculate == 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                }
+                                <td style="vertical-align : middle;">@item.Plan_today</td>
+                                <td style="vertical-align : middle;">@item.Result_today</td>
+                                <td style="vertical-align : middle;">@item.Calulate_today</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -441,7 +440,7 @@
             $(document).ready(function () {
                 $('#WIPTable').DataTable({
                     "ordering": true,
-                    "pageLength": 6,
+                    "pageLength": 5,
                     "filter": true,
                     "bFilter": false,
                     "bLengthChange": false,
@@ -476,7 +475,7 @@
     type: 'column'
   },
   title: {
-    text: 'FT WIP Data'
+    text: 'FT WIP Data SSOP-B20W'
   },
   xAxis: {
     categories: ['AUTO1', 'AUTO2', 'AUTO3', 'AUTO4']

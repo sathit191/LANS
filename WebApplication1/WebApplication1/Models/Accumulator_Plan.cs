@@ -8,6 +8,7 @@ namespace WebApplication1.Models
     public class Accumulator_Plan
     {
         public string DeviceName { get; set; }
+        public string FTDevice { get; set; }
         public int Kpcs_PlanT { get; set; }
         public int Kpcs_ResultT { get; set; }
         public int Kpcs_PlanY { get; set; }
