@@ -467,10 +467,10 @@ namespace WebApplication1.Concrete
         {
             get
             {
-                DateTime dtResultStart = DateTime.Now.AddDays(-4);
-                DateTime dtResultEnd = DateTime.Now;
-                DateTime dtPlanStart = dtResultStart.AddDays(-10);
-                DateTime dtPlanEnd = dtResultEnd.AddDays(-10);
+                DateTime dtResultStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 8, 0, 0);//DateTime.Now.AddDays(-4);
+                DateTime dtResultEnd = DateTime.Now; //DateTime.Parse("2019/07/05 08:00:00");
+                DateTime dtPlanStart = new DateTime(dtResultStart.AddDays(-10).Year, dtResultStart.AddDays(-10).Month, dtResultStart.AddDays(-10).Day, 8, 0, 0);
+                DateTime dtPlanEnd = new DateTime(dtResultEnd.AddDays(-10).Year, dtResultEnd.AddDays(-10).Month, dtResultEnd.AddDays(-10).Day, 8, 0, 0);//dtResultEnd.AddDays(-10);
 
                 List<Accumulator_Plan> accumulator = new List<Accumulator_Plan>();
                 var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
@@ -518,13 +518,7 @@ namespace WebApplication1.Concrete
                                         break;
                                     }
                                 }
-                            } /*accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();*/
-                            // FTWip ftWip = new FTWip();
-                            //Accumulator_Plan accumulator_Plan = new Accumulator_Plan();
-                            //if (!(reader["Devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();
-                            //if (!(reader["Kpcs"] is DBNull)) accumulator_Plan.Kpcs_Plan = int.Parse(reader["Kpcs"].ToString().Trim());
-
-                           // accumulator.Add(accumulator_Plan);
+                            } 
                         }
                         conn.Close();
                     }
