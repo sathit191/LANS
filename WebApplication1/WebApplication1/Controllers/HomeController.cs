@@ -29,7 +29,6 @@ namespace WebApplication1.Controllers
             //DATA-----------------------------------------------------------------------------------------------
             List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
             List<FTWip> lstFTWips = (List<FTWip>)repository.FTWips;
-            List<FTDenpyo> lstFTDenpyo = (List<FTDenpyo>)repository.Denpyos;
             List<Accumulator_Plan> lstAccumulator_Plans = (List<Accumulator_Plan>)repository.Plan;
             //---------------------------------------------------------------------------------------------------
             //Main table------------------------------------------------------------------------------------------
@@ -304,7 +303,7 @@ namespace WebApplication1.Controllers
             
             foreach (var item in DeviceGroup)
             {
-                var listDenpyo = lstFTDenpyo.Where(p => p.DeviceName == item.DeviceName);
+                var listDenpyo = lstFTWips.Where(p => p.DeviceName == item.DeviceName);
                 var listPlan = lstAccumulator_Plans.Where(p => p.DeviceName == item.DeviceName);
 
                 if (listDenpyo.Count() != 0)
