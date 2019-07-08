@@ -312,9 +312,9 @@
                                 {
                                     <td style="font-size:smaller; vertical-align : middle; color : blue">@item.A4_Calculate.ToString("0.00") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
                                 }
-                                <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;">T  @item.Plan_today<p>Y  @item.Plan_yesterday</p></td>
-                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Result_today<p> @item.Result_yesterday</p></td>
-                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Calulate_today<p> @item.Calulate_yesterday</p></td>
+                                <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;"><p>Y  @item.Plan_yesterday.ToString("0")</p>T  @item.Plan_today.ToString("0")</td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"><p> @item.Result_yesterday.ToString("0")</p> @item.Result_today.ToString("0")</td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"><p> @item.Calulate_yesterday.ToString("0")</p> @item.Calulate_today.ToString("0")</td>
                             </tr>
                         }
                     </tbody>

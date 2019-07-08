@@ -305,7 +305,7 @@ namespace WebApplication1.Controllers
             {
                 var listDenpyo = lstFTWips.Where(p => p.DeviceName == item.DeviceName);
                 var listPlan = lstAccumulator_Plans.Where(p => p.DeviceName == item.DeviceName);
-
+                
                 if (listDenpyo.Count() != 0)
                 {
                     var calculate = new FTDenpyo_Calculate
@@ -331,24 +331,28 @@ namespace WebApplication1.Controllers
                     {
                         if (item.DeviceName == listPlan.FirstOrDefault().DeviceName)
                         {
-                            calculate.Plan_today = listPlan.FirstOrDefault().Kpcs_PlanT / 1000;
-                            calculate.Result_today = listPlan.FirstOrDefault().Kpcs_ResultT / 1000;
-                            calculate.Calulate_today = (listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
+                            calculate.Plan_today = (float)listPlan.FirstOrDefault().Kpcs_PlanT / 1000;
+                            calculate.Result_today = (float)listPlan.FirstOrDefault().Kpcs_ResultT / 1000;
+                            calculate.Calulate_today = (float)(listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
 
-                            calculate.Plan_yesterday = listPlan.FirstOrDefault().Kpcs_PlanY / 1000;
-                            calculate.Result_yesterday = listPlan.FirstOrDefault().Kpcs_ResultY / 1000;
-                            calculate.Calulate_yesterday = calculate.Result_yesterday - calculate.Plan_yesterday;
+                            calculate.Plan_yesterday = (float)listPlan.FirstOrDefault().Kpcs_PlanY / 1000;
+                            calculate.Result_yesterday = (float)listPlan.FirstOrDefault().Kpcs_ResultY / 1000;
+                            calculate.Calulate_yesterday = (float)calculate.Result_yesterday - calculate.Plan_yesterday;
                         }
                     }
                     fTDenpyo_Calculates.Add(calculate);
                 }
-                
-                
+
+                DateTime dateS = DateTime.Now;
+                DateTime dateE = new DateTime(DateTime.Now.AddDays(1).Year, DateTime.Now.AddDays(1).Month, DateTime.Now.AddDays(1).Day, 8, 0, 0);
+                float countdownHours = (float)((dateE - dateS).TotalHours);
+
                 foreach (var row in listDenpyo)
                 {
                     var selectrow = fTDenpyo_Calculates.Where(p => p.PKGName == row.PKGName && p.DeviceName == row.DeviceName).SingleOrDefault();
                     
-                    if(row.JobId == "106")
+
+                    if (row.JobId == "106")
                     {
                         selectrow.A1_Lot++;
                         selectrow.A1_Calculate += row.A1;
@@ -368,9 +372,26 @@ namespace WebApplication1.Controllers
                         selectrow.A4_Lot++;
                         selectrow.A4_Calculate += row.A1;
                     }
-                    
+
+                    if (row.JobId == "119" && row.MachineWip != null && countdownHours > row.A4)
+                    {
+                        selectrow.Result_today += (float)row.Kpcs / 1000;
+                        selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
+                        countdownHours -= row.A4;
+                    }else if(row.JobId == "119" && row.Lot_State == FTWip.LotState.Start && countdownHours > row.A4)
+                    {
+                        selectrow.Result_today += (float)row.Kpcs / 1000;
+                        selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
+                        countdownHours -= row.A4;
+                    }
                 }
-                
+                //foreach (var device in DeviceGroup)
+                //{
+                //    foreach (var row in listDenpyo)
+                //    {
+                        
+                //    }
+
             }
             ViewBag.Denpyo_Calculates = fTDenpyo_Calculates;
             //-----------------------------------------------------------------------------------------------------

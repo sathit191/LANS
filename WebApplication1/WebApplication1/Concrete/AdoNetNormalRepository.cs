@@ -421,17 +421,6 @@ namespace WebApplication1.Concrete
                     {
                         while (reader.Read())
                         {
-                            //FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup()
-                            //{
-
-                            //    Priority = (int)reader["priority"],
-                            //    MachineNo = ((string)reader["mc_no"]).Trim(),
-                            //    Sequence = (byte)reader["sequence"],
-                            //    DeviceChange = ((string)reader["device_set"]).Trim(),
-                            //    //   DeviceNow = ((string)reader["device_now"]).Trim(),
-                            //    DateChange = (DateTime)reader["device_set_date"],
-                            //    MachienDisable = false
-                            //};
                             FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup();
                             if (!(reader["priority"] is DBNull)) ftSchedulerSetup.Priority = (int)reader["priority"];
                             if (!(reader["mc_no"] is DBNull)) ftSchedulerSetup.MachineNo = ((string)reader["mc_no"]).Trim();
@@ -441,14 +430,6 @@ namespace WebApplication1.Concrete
                             if (!(reader["device_set_date"] is DBNull)) ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
                              ftSchedulerSetup.MachienDisable = false;
                              ftSchedulerSetupList.Add(ftSchedulerSetup);
-                        
-                            //if (!(reader["lot_no"] is DBNull)) ftWip.Lot_no = reader["lot_no"].ToString().Trim();
-                            //if (!(reader["DeviceName"] is DBNull)) ftWip.DeviceName = reader["DeviceName"].ToString().Trim();
-                            //if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKName = reader["MethodPkgName"].ToString().Trim();
-                            //if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
-                            //if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
-                            //if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
-                            //lstFTWip.Add(ftWip);
                         }
 
                     }
