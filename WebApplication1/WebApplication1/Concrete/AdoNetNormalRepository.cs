@@ -246,6 +246,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKGName = reader["MethodPkgName"].ToString().Trim();
                             if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
                             if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
+                            if (!(reader["qty_production"] is DBNull)) ftWip.Qty_Production = int.Parse(reader["qty_production"].ToString().Trim());
                             if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             if (!(reader["state"] is DBNull)) {
                                string state = reader["state"].ToString().Trim();
@@ -274,6 +275,7 @@ namespace WebApplication1.Concrete
                             else ftWip.A3 = 0;
                             if (!(reader["timeAuto4"] is DBNull) && reader["timeAuto4"].ToString() != "")ftWip.A4 = float.Parse(reader["timeAuto4"].ToString().Split(' ')[1]);
                             else ftWip.A4 = 0;
+
                             lstFTWip.Add(ftWip);
                         }
                         conn.Close();

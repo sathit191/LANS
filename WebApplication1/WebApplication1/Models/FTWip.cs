@@ -15,9 +15,8 @@ namespace WebApplication1.Models
         public string DeviceName { get; set; }
         public string FTDevice { get; set; }
         public int Sequence { get; set; }
-
         public string S_Color { get; set; }
-
+        public int Qty_Production { get; set; }
         public int Kpcs { get; set; }
         public LotState Lot_State { get; set; }
         public string MachineWip { get; set; }

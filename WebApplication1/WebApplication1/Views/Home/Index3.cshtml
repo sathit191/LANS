@@ -176,17 +176,23 @@
                                 <td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
                                     @Html.DisplayFor(modelItem => item.Option2)
                                 </td>*@
+                            
                             @switch (item.Status)
                             {
                                 case WebApplication1.Models.FTSetup.State.Wait:
+                                    
                                     <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
                                         @Html.DisplayFor(modelItem => item.Status)
                                     </td>
                                     break;
-                                case WebApplication1.Models.FTSetup.State.Run:
-                                    <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
+                                case WebApplication1.Models.FTSetup.State.Run:                                    
+                        <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
+
+                            @*time = 0.6
+                            mon, sec = divmod(time, 60)
+                            hr, mon = divmod(mon, 60)*@
+                            @Html.DisplayFor(modelItem => item.Status)<p>  @item.countDown</p>
+                        </td>
                                     break;
                                 case WebApplication1.Models.FTSetup.State.Ready:
                                     <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">

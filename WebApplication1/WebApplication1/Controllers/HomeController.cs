@@ -197,24 +197,51 @@ namespace WebApplication1.Controllers
                     if (item.Flow == "AUTO1")
                     {
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto1;
+
+                        var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A1 });
+                        float xx = data.FirstOrDefault().A1 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float hours = xx;
+                        float minminute = (xx - hours) * 60;
+                        item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
                     }
                     else if (item.Flow == "AUTO2")
                     {
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto2;
+
+                        var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A2 });
+                        float xx = data.FirstOrDefault().A2 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float hours = xx;
+                        float minminute = (xx - hours) * 60;
+                        item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
                     }
                     else if (item.Flow == "AUTO3")
                     {
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto3;
+
+                        var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A3 });
+                        float xx = data.FirstOrDefault().A3 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float hours = xx;
+                        float minminute = (xx - hours) * 60;
+                        item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
                     }
                     else if (item.Flow == "AUTO4")
                     {
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto4;
+
+                        var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A4 });
+                        float xx = data.FirstOrDefault().A4 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float hours = xx;
+                        float minminute = (xx-hours)*60;
+                        item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
                     }
                     if (production_Date.HasValue)
                     {
                         item.Production_Date = production_Date.Value;
                         item.Production_Time = production_Date.Value;
+                        
                     }
+
+                    
                 }
 
                 item.Status = onMc.ProcessState;
