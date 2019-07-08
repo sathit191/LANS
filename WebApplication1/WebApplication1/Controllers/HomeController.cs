@@ -199,7 +199,7 @@ namespace WebApplication1.Controllers
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto1;
 
                         var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A1 });
-                        float xx = data.FirstOrDefault().A1 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float xx = data.FirstOrDefault().A1 * (float)data.FirstOrDefault().Qty_Production;
                         float hours = xx;
                         float minminute = (xx - hours) * 60;
                         item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
@@ -209,7 +209,7 @@ namespace WebApplication1.Controllers
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto2;
 
                         var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A2 });
-                        float xx = data.FirstOrDefault().A2 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float xx = data.FirstOrDefault().A2 * (float)data.FirstOrDefault().Qty_Production;
                         float hours = xx;
                         float minminute = (xx - hours) * 60;
                         item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
@@ -219,7 +219,7 @@ namespace WebApplication1.Controllers
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto3;
 
                         var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A3 });
-                        float xx = data.FirstOrDefault().A3 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float xx = data.FirstOrDefault().A3 * (float)data.FirstOrDefault().Qty_Production;
                         float hours = xx;
                         float minminute = (xx - hours) * 60;
                         item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
@@ -229,7 +229,7 @@ namespace WebApplication1.Controllers
                         production_Date = onMc.Updated_time.Value + onMc.timeAuto4;
 
                         var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.A4 });
-                        float xx = data.FirstOrDefault().A4 * (float)((data.FirstOrDefault().Qty_Production) / data.FirstOrDefault().Kpcs);
+                        float xx = data.FirstOrDefault().A4 * (float)data.FirstOrDefault().Qty_Production;
                         float hours = xx;
                         float minminute = (xx-hours)*60;
                         item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
@@ -266,7 +266,7 @@ namespace WebApplication1.Controllers
            
             List<Flow> flows = new List<Flow>();
 
-            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName , p.FTDevice}).Distinct().ToList();
+            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).Distinct().ToList();
 
             foreach (var item in DeviceGroup)
             {
@@ -276,7 +276,8 @@ namespace WebApplication1.Controllers
                 int A2 = 0;
                 int A3 = 0;
                 int A4 = 0;
-                var addflow = new Flow { Name = name, A1 = A1, A2 = A2, A3 = A3, A4 = A4 };
+                string color = item.S_Color;
+                var addflow = new Flow { Name = name, A1 = A1, A2 = A2, A3 = A3, A4 = A4, Color = color };
                 flows.Add(addflow);
 
                 var lstDevice = DeviceList.Where(p => p.DeviceName == item.DeviceName).ToList();
@@ -315,15 +316,19 @@ namespace WebApplication1.Controllers
             //ViewBag.lstFTWipOut = outPlans;
 
             string command = "";
-
+            //string commandColor = "";
             foreach (var item in flows)
             {
                 command += "{";
                 command += "name: '" + item.Name + "',";
                 command += "data: [" + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]},";
+
+                
+                //commandColor +="'"+ item.Color+"'" + ",";
             }
 
             ViewBag.lstFlow = command;
+            //ViewBag.chartcolor = commandColor;
             //-----------------------------------------------------------------------------------------------------
             //table Denpyo-----------------------------------------------------------------------------------------
             List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();

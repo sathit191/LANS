@@ -33,32 +33,32 @@
     }
 
     .A1 {
-        color: #FFA500;
+        color: #7cb5ec;
         font: bold;
     }
 
     .A2 {
-        color: #FF1493;
+        color: #434348;
         font: bold;
     }
 
     .A3 {
-        color: #DC143C;
+        color: #90ed7d;
         font: bold;
     }
 
     .A4 {
-        color: #9400D3;
+        color: #f7a35c;
         font: bold;
     }
 
     .A5 {
-        color: #008080;
+        color: #8085E9;
         font: bold;
     }
 
     .A6 {
-        color: #B8860B;
+        color: #f15c80;
         font: bold;
     }
 
@@ -191,7 +191,7 @@
                             @*time = 0.6
                             mon, sec = divmod(time, 60)
                             hr, mon = divmod(mon, 60)*@
-                            @Html.DisplayFor(modelItem => item.Status)<p>  @item.countDown</p>
+                            @Html.DisplayFor(modelItem => item.Status)<p>  @item.countDown H</p>
                         </td>
                                     break;
                                 case WebApplication1.Models.FTSetup.State.Ready:
@@ -210,11 +210,11 @@
                             }
                             @if (item.Production_DelayLot == "0")
                             {
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
+                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;"><b>@Html.DisplayFor(modelItem => item.Production_LotDevice)</b></p></td>
                             }
                             else
                             {
-                                <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;">@Html.DisplayFor(modelItem => item.Production_LotDevice)</p></td>
+                                <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;"><b>@Html.DisplayFor(modelItem => item.Production_LotDevice)</b></p></td>
                             }
                             @if (DateTime.Now > item.Production_Date)
                             {
@@ -243,7 +243,7 @@
                             @*new { MCNo = item.MCNo, sq = i + 2, Device = item.DeviceName }*@
                             <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
 
-                                @Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)
+                                <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
                             </p>
 
                             @*<input type="text" class="form-control" style="display:none; width : 80px; font-size : smaller;" />*@
@@ -285,7 +285,7 @@
 
                             <tr class="text-center">
                                 @*<td style="vertical-align : middle;">@item.PKGName</td>*@
-                                <td class="@item.TextColor" style="vertical-align : middle;">@item.FTDevice</td>
+                                <td class="@item.TextColor" style="vertical-align : middle;"><b>@item.FTDevice</b></td>
                                 @if (@item.A1_Calculate == 0)
                                 {
                                     <td></td>
@@ -520,7 +520,7 @@
       stacking: 'normal',
       dataLabels: {
         enabled: true,
-        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor)|| 'white'
       }
     }
   },

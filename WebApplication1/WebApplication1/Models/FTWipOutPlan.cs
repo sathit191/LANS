@@ -21,6 +21,7 @@ namespace WebApplication1.Models
         public int A2 { get; set; }
         public int A3 { get; set; }
         public int A4 { get; set; }
+        public string Color { get; set; }
         public int[] Data { get; set; }
     }
 }

@@ -246,7 +246,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["MethodPkgName"] is DBNull)) ftWip.PKGName = reader["MethodPkgName"].ToString().Trim();
                             if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
                             if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
-                            if (!(reader["qty_production"] is DBNull)) ftWip.Qty_Production = int.Parse(reader["qty_production"].ToString().Trim());
+                            if (!(reader["qty_production"] is DBNull)) ftWip.Qty_Production = (decimal)reader["qty_production"];
                             if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             if (!(reader["state"] is DBNull)) {
                                string state = reader["state"].ToString().Trim();
