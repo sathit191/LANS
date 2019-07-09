@@ -247,6 +247,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["JobName"] is DBNull)) ftWip.JobName = reader["JobName"].ToString().Trim();
                             if (!(reader["updated_at"] is DBNull)) ftWip.Updated_at = reader["updated_at"].ToString().Trim();
                             if (!(reader["qty_production"] is DBNull)) ftWip.Qty_Production = (decimal)reader["qty_production"];
+                            if (!(reader["StandardTime"] is DBNull)) ftWip.StandardTime = (int)reader["StandardTime"];
                             if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             if (!(reader["state"] is DBNull)) {
                                string state = reader["state"].ToString().Trim();
@@ -267,14 +268,15 @@ namespace WebApplication1.Concrete
                                 }
                             }
                             if (!(reader["job_Id"] is DBNull)) ftWip.JobId = reader["job_Id"].ToString().Trim();
-                            if (!(reader["timeAuto1"] is DBNull)) ftWip.A1 = float.Parse(reader["timeAuto1"].ToString().Split(' ')[1]); 
-                            else ftWip.A1 = 0;
-                            if (!(reader["timeAuto2"] is DBNull) && reader["timeAuto2"].ToString() != "") ftWip.A2 = float.Parse(reader["timeAuto2"].ToString().Split(' ')[1]);
-                            else ftWip.A2 = 0;
-                            if (!(reader["timeAuto3"] is DBNull) && reader["timeAuto3"].ToString() != "") ftWip.A3 = float.Parse(reader["timeAuto3"].ToString().Split(' ')[1]); 
-                            else ftWip.A3 = 0;
-                            if (!(reader["timeAuto4"] is DBNull) && reader["timeAuto4"].ToString() != "")ftWip.A4 = float.Parse(reader["timeAuto4"].ToString().Split(' ')[1]);
-                            else ftWip.A4 = 0;
+
+                            //if (!(reader["timeAuto1"] is DBNull)) ftWip.A1 = float.Parse(reader["timeAuto1"].ToString().Split(' ')[1]); 
+                            //else ftWip.A1 = 0;
+                            //if (!(reader["timeAuto2"] is DBNull) && reader["timeAuto2"].ToString() != "") ftWip.A2 = float.Parse(reader["timeAuto2"].ToString().Split(' ')[1]);
+                            //else ftWip.A2 = 0;
+                            //if (!(reader["timeAuto3"] is DBNull) && reader["timeAuto3"].ToString() != "") ftWip.A3 = float.Parse(reader["timeAuto3"].ToString().Split(' ')[1]); 
+                            //else ftWip.A3 = 0;
+                            //if (!(reader["timeAuto4"] is DBNull) && reader["timeAuto4"].ToString() != "")ftWip.A4 = float.Parse(reader["timeAuto4"].ToString().Split(' ')[1]);
+                            //else ftWip.A4 = 0;
 
                             lstFTWip.Add(ftWip);
                         }
@@ -306,7 +308,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["MCName"] is DBNull)) lotFTinMc.MCName = reader["MCName"].ToString().Trim();
                             if (!(reader["DeviceName"] is DBNull)) lotFTinMc.Device = reader["DeviceName"].ToString().Trim();
                             if (!(reader["FTDevice"] is DBNull)) lotFTinMc.FTDevice = reader["FTDevice"].ToString().Trim();
-                            if (!(reader["lot_no"] is DBNull)) lotFTinMc.LotNo = reader["lot_no"].ToString().Trim();
+                            if (!(reader["lot_no"] is DBNull)) lotFTinMc.LotNo = reader["lot_no"].ToString().Trim(); //StandardTime
                             if (!(reader["process_state"] is DBNull))
                             {
                                 if (reader["process_state"].ToString() == "1")
@@ -316,28 +318,28 @@ namespace WebApplication1.Concrete
 
                             }
                             if (!(reader["update_time"] is DBNull)) lotFTinMc.Updated_time = Convert.ToDateTime(reader["update_time"]);
+                            if (!(reader["StandardTime"] is DBNull)) lotFTinMc.StandardTime = (int)(reader["StandardTime"]);
 
-
-                            if (!(reader["timeAuto1"] is DBNull)) lotFTinMc.timeAuto1 = new TimeSpan(
-                                int.Parse(reader["timeAuto1"].ToString().Split(' ')[1].Split('.')[0]),
-                                int.Parse(reader["timeAuto1"].ToString().Split(' ')[1].Split('.')[1]),
-                                 0
-                                );
-                            if (!(reader["timeAuto2"] is DBNull) && reader["timeAuto2"].ToString() != "") lotFTinMc.timeAuto2 = new TimeSpan(
-                                int.Parse(reader["timeAuto2"].ToString().Split(' ')[1].Split('.')[0]),
-                                int.Parse(reader["timeAuto2"].ToString().Split(' ')[1].Split('.')[1]),
-                                0
-                                );
-                            if (!(reader["timeAuto3"] is DBNull) && reader["timeAuto3"].ToString() != "") lotFTinMc.timeAuto3 = new TimeSpan(
-                                int.Parse(reader["timeAuto3"].ToString().Split(' ')[1].Split('.')[0]),
-                                int.Parse(reader["timeAuto3"].ToString().Split(' ')[1].Split('.')[1]),
-                                0
-                                );
-                            if (!(reader["timeAuto4"] is DBNull) && reader["timeAuto4"].ToString() != "") lotFTinMc.timeAuto4 = new TimeSpan(
-                                int.Parse(reader["timeAuto4"].ToString().Split(' ')[1].Split('.')[0]),
-                                int.Parse(reader["timeAuto4"].ToString().Split(' ')[1].Split('.')[1]),
-                                0
-                                );
+                            //if (!(reader["timeAuto1"] is DBNull)) lotFTinMc.timeAuto1 = new TimeSpan(
+                            //    int.Parse(reader["timeAuto1"].ToString().Split(' ')[1].Split('.')[0]),
+                            //    int.Parse(reader["timeAuto1"].ToString().Split(' ')[1].Split('.')[1]),
+                            //     0
+                            //    );
+                            //if (!(reader["timeAuto2"] is DBNull) && reader["timeAuto2"].ToString() != "") lotFTinMc.timeAuto2 = new TimeSpan(
+                            //    int.Parse(reader["timeAuto2"].ToString().Split(' ')[1].Split('.')[0]),
+                            //    int.Parse(reader["timeAuto2"].ToString().Split(' ')[1].Split('.')[1]),
+                            //    0
+                            //    );
+                            //if (!(reader["timeAuto3"] is DBNull) && reader["timeAuto3"].ToString() != "") lotFTinMc.timeAuto3 = new TimeSpan(
+                            //    int.Parse(reader["timeAuto3"].ToString().Split(' ')[1].Split('.')[0]),
+                            //    int.Parse(reader["timeAuto3"].ToString().Split(' ')[1].Split('.')[1]),
+                            //    0
+                            //    );
+                            //if (!(reader["timeAuto4"] is DBNull) && reader["timeAuto4"].ToString() != "") lotFTinMc.timeAuto4 = new TimeSpan(
+                            //    int.Parse(reader["timeAuto4"].ToString().Split(' ')[1].Split('.')[0]),
+                            //    int.Parse(reader["timeAuto4"].ToString().Split(' ')[1].Split('.')[1]),
+                            //    0
+                            //    );
                             lstLotFTinMc.Add(lotFTinMc);
                         }
                         conn.Close();

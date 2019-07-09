@@ -32,5 +32,6 @@ namespace WebApplication1.Models
         public float A2 { get; set; }
         public float A3 { get; set; }
         public float A4 { get; set; }
+        public float StandardTime { get; set; }
     }
 }
