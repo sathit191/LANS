@@ -159,6 +159,11 @@ namespace WebApplication1.Controllers
                                     {
                                         lotno = "Type Change";
                                     }
+                                    else
+                                    {
+                                        lotno = "Set Type Change";
+                                        
+                                    }
                                 }
                                 FTWip fTWip = new FTWip();
                                 fTWip.FTDevice = device;
@@ -253,17 +258,17 @@ namespace WebApplication1.Controllers
             //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
             var DeviceList = from Group in lstFTWips// lstFTWipOut
-                                group Group by new {Group.JobName,Group.DeviceName,Group.FTDevice} into list
-
-                                select new FTWipOutPlan { Flow = list.Key.JobName, FTDevice= list.Key.FTDevice, DeviceName =list.Key.DeviceName, Count = list.Count() };
-
-            //List<FTWipOutPlan> outPlans = new List<FTWipOutPlan>();
+                             group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
             
-            //foreach (var item in DeviceList)
-            //{
-            //    outPlans.Add(item);
-            //}
-           
+                             select new FTWipOutPlan
+                             {
+                                 Flow = list.Key.JobName,
+                                 FTDevice = list.Key.FTDevice,
+                                 DeviceName = list.Key.DeviceName,
+                                 Count = list.Count(),
+                                 SumKpcs = list.Sum(p=>p.Kpcs)
+                             };
+
             List<Flow> flows = new List<Flow>();
 
             var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).Distinct().ToList();
@@ -272,12 +277,11 @@ namespace WebApplication1.Controllers
             {
                 // List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
                 string name = item.FTDevice.ToString();
-                int A1 = 0;
-                int A2 = 0;
-                int A3 = 0;
-                int A4 = 0;
+
                 string color = item.S_Color;
-                var addflow = new Flow { Name = name, A1 = A1, A2 = A2, A3 = A3, A4 = A4, Color = color };
+
+                var addflow = new Flow { Name = name, A1 = 0, A2 = 0, A3 = 0, A4 = 0, FL = 0,
+                    A1_Kpcs = 0, A2_Kpcs = 0, A3_Kpcs = 0, A4_Kpcs = 0, FL_Kpcs = 0, Color = color };
                 flows.Add(addflow);
 
                 var lstDevice = DeviceList.Where(p => p.DeviceName == item.DeviceName).ToList();
@@ -289,18 +293,28 @@ namespace WebApplication1.Controllers
                     if(list.Flow == "AUTO1")
                     {
                         row.A1 = list.Count;
+                        row.A1_Kpcs = (float)list.SumKpcs / 1000 ;
+                        
                     }
                     else if(list.Flow == "AUTO2")
                     {
                         row.A2 = list.Count;
+                        row.A2_Kpcs = (float)list.SumKpcs / 1000;
                     }
                     else if (list.Flow == "AUTO3")
                     {
                         row.A3 = list.Count;
+                        row.A3_Kpcs = (float)list.SumKpcs / 1000;
                     }
                     else if (list.Flow == "AUTO4")
                     {
                         row.A4 = list.Count;
+                        row.A4_Kpcs = (float)list.SumKpcs / 1000;
+                    }
+                    else if(list.Flow.Substring(0,2)== "FL")
+                    {
+                        row.FL = list.Count;
+                        row.FL_Kpcs = (float)list.SumKpcs / 1000;
                     }
                 }
 
@@ -316,18 +330,23 @@ namespace WebApplication1.Controllers
             //ViewBag.lstFTWipOut = outPlans;
 
             string command = "";
-            //string commandColor = "";
             foreach (var item in flows)
             {
                 command += "{";
                 command += "name: '" + item.Name + "',";
-                command += "data: [" + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]},";
-
-                
-                //commandColor +="'"+ item.Color+"'" + ",";
+                command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]},";
+            }
+            string commandKpcs = "";
+            foreach (var item in flows)
+            {
+                commandKpcs += "{";
+                commandKpcs += "name: '" + item.Name + "',";
+                commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," + 
+                    item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "]},";
             }
 
             ViewBag.lstFlow = command;
+            ViewBag.chartKpcs = commandKpcs;
             //ViewBag.chartcolor = commandColor;
             //-----------------------------------------------------------------------------------------------------
             //table Denpyo-----------------------------------------------------------------------------------------
@@ -365,11 +384,11 @@ namespace WebApplication1.Controllers
                         {
                             calculate.Plan_today = (float)listPlan.FirstOrDefault().Kpcs_PlanT / 1000;
                             calculate.Result_today = (float)listPlan.FirstOrDefault().Kpcs_ResultT / 1000;
-                            calculate.Calulate_today = (float)(listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
+                            calculate.Calulate_today = (int)(listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
 
                             calculate.Plan_yesterday = (float)listPlan.FirstOrDefault().Kpcs_PlanY / 1000;
                             calculate.Result_yesterday = (float)listPlan.FirstOrDefault().Kpcs_ResultY / 1000;
-                            calculate.Calulate_yesterday = (float)calculate.Result_yesterday - calculate.Plan_yesterday;
+                            calculate.Calulate_yesterday = (int)(listPlan.FirstOrDefault().Kpcs_ResultY - listPlan.FirstOrDefault().Kpcs_PlanY) / 1000;
                         }
                     }
                     fTDenpyo_Calculates.Add(calculate);
@@ -404,13 +423,18 @@ namespace WebApplication1.Controllers
                         selectrow.A4_Lot++;
                         selectrow.A4_Calculate += row.StandardTime / 60;
                     }
+                    else if(row.JobId == "87" || row.JobId == "88" || row.JobId == "278" )
+                    {
+                        selectrow.FL_Lot++;
+                        selectrow.FL_Calculate += row.StandardTime / 60;
+                    }
 
-                    if (row.JobId == "119" && row.MachineWip != null && countdownHours > row.StandardTime / 60)
+                    if (row.JobId == "119" && row.MachineWip != null && countdownHours > row.StandardTime / 60) //WIP Plan 
                     {
                         selectrow.Result_today += (float)row.Kpcs / 1000;
                         selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
                         countdownHours -= row.A4;
-                    }else if(row.JobId == "119" && row.Lot_State == FTWip.LotState.Start && countdownHours > row.StandardTime / 60)
+                    }else if(row.JobId == "119" && row.Lot_State == FTWip.LotState.Start && countdownHours > row.StandardTime / 60) //ON Mc 
                     {
                         selectrow.Result_today += (float)row.Kpcs / 1000;
                         selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
@@ -432,10 +456,36 @@ namespace WebApplication1.Controllers
         }
         public ActionResult SaveTypeChange(string McNo,int Sequence,string Device ,string DeviceChange)
         {
-            repository.SaveUpdate(McNo, Sequence, Device, DeviceChange);
+            // List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
+            List<string> lstMcNo = new List<string>();
+            lstMcNo.Add(McNo);
+            List<FTMachineSchedulerSetup> lstschedulerSetups = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(lstMcNo);
+            if (lstschedulerSetups.Count() > 0)
+            {
+                repository.UpdateData(McNo, Sequence, Device, DeviceChange);
+            }
+            else
+            {
+                repository.SaveUpdate(McNo, Sequence, Device, DeviceChange);
+                
+            }
             return RedirectToAction("Index3");
         }
 
-        
+        public ActionResult CancelTypeChange(string McNo)
+        {
+            
+            List<string> lstMcNo = new List<string>();
+            lstMcNo.Add(McNo);
+            List<FTMachineSchedulerSetup> lstschedulerSetups = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(lstMcNo);
+            if (lstschedulerSetups.Count() > 0)
+            {
+                repository.CencelTc(McNo);
+            }
+            else
+            {
+            }
+            return RedirectToAction("Index3");
+        }
     }
 }

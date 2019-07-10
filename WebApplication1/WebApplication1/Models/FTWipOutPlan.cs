@@ -11,7 +11,7 @@ namespace WebApplication1.Models
         public string DeviceName { get; set; }
         public int Count { get; set; }
         public string FTDevice { get; set; }
-        //public int SumKpcs { get; set; }
+        public int SumKpcs { get; set; }
     }
 
     public class Flow
@@ -21,6 +21,12 @@ namespace WebApplication1.Models
         public int A2 { get; set; }
         public int A3 { get; set; }
         public int A4 { get; set; }
+        public int FL { get; set; }
+        public float A1_Kpcs { get; set; }
+        public float A2_Kpcs { get; set; }
+        public float A3_Kpcs { get; set; }
+        public float A4_Kpcs { get; set; }
+        public float FL_Kpcs { get; set; }
         public string Color { get; set; }
         public int[] Data { get; set; }
     }

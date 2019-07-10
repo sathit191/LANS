@@ -460,6 +460,44 @@ namespace WebApplication1.Concrete
             }
         }
 
+        public void UpdateData(string McNo, int Sequence, string Device, string DeviceChange)
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "UPDATE [DBx].[dbo].[scheduler_setup]" +
+                    "SET [sequence] = @Sequence ," +
+                    "[device_change] = @Device_change ," +
+                    "[device_now] = @Device_now ," +
+                    "[date_change] = GETDATE() " +
+                    "WHERE [mc_no] = @McNo and [date_complete] is null";
+                //cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_setup]([mc_no],[sequence],[device_change],[device_now],[date_change])" +
+                //    "VALUES(@McNo,@Sequence,@Device_change,@Device_now,GETDATE())";
+                cmd.Parameters.Add("@McNo", System.Data.SqlDbType.VarChar).Value = McNo;
+                cmd.Parameters.Add("@Sequence", System.Data.SqlDbType.TinyInt).Value = Sequence;
+                cmd.Parameters.Add("@Device_change", System.Data.SqlDbType.VarChar).Value = DeviceChange;
+                cmd.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        public void CencelTc(string McNo)
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "UPDATE [DBx].[dbo].[scheduler_setup]" +
+                    "SET [date_complete] = GETDATE() " +
+                    "WHERE [mc_no] = @McNo and [date_complete] is null";
+                cmd.Parameters.Add("@McNo", System.Data.SqlDbType.VarChar).Value = McNo;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
         public IEnumerable<Accumulator_Plan> Plan
         {
             get

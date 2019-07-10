@@ -51,24 +51,7 @@ namespace WebApplication1.Models
             Run = 2,
             Ready = 3
         }
-        //public string Lot_second_LotNo { get; set; }
-        //public string Lot_second_LotDevice { get; set; }
-        //public string Lot_third_LotNo { get; set; }
-        //public string Lot_third_LotDevice { get; set; }
-        //public string Lot_fourth_LotNo { get; set; }
-        //public string Lot_fourth_LotDevice  { get; set; }
-        //public string Lot_fifth_LotNo { get; set; }
-        //public string Lot_fifth_LotDevice { get; set; }
-        //public string Lot_sixth_LotNo { get; set; }
-        //public string Lot_sixth_LotDevice { get; set; }
-        //public string Lot_seventh_LotNo { get; set; }
-        //public string Lot_seventh_LotDevice { get; set; }
-        //public string Lot_eighth_LotNo { get; set; }
-        //public string Lot_eighth_LotDevice { get; set; }
-        //public string Lot_ninth_LotNo { get; set; }
-        //public string Lot_ninth_LotDevice { get; set; }
-        //public string Lot_tenth_LotNo { get; set; }
-        //public string Lot_tenth_LotDevice { get; set; }
+        
 
     }
 }

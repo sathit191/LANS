@@ -23,10 +23,12 @@ namespace WebApplication1.Models
         public string DeviceName { get; set; }
         public string TextColor { get; set; }
         public string FTDevice { get; set; }
+        public float FL_Calculate { get; set; }
         public float A1_Calculate { get; set; }
         public float A2_Calculate { get; set; }
         public float A3_Calculate { get; set; }
         public float A4_Calculate { get; set; }
+        public int FL_Lot { get; set; }
         public int A1_Lot { get; set; }
         public int A2_Lot { get; set; }
         public int A3_Lot { get; set; }
