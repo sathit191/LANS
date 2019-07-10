@@ -384,11 +384,11 @@ namespace WebApplication1.Controllers
                         {
                             calculate.Plan_today = (float)listPlan.FirstOrDefault().Kpcs_PlanT / 1000;
                             calculate.Result_today = (float)listPlan.FirstOrDefault().Kpcs_ResultT / 1000;
-                            calculate.Calulate_today = (int)(listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000;
+                            calculate.Calulate_today = (float)Math.Ceiling((double)(listPlan.FirstOrDefault().Kpcs_ResultT - listPlan.FirstOrDefault().Kpcs_PlanT) / 1000);
 
                             calculate.Plan_yesterday = (float)listPlan.FirstOrDefault().Kpcs_PlanY / 1000;
                             calculate.Result_yesterday = (float)listPlan.FirstOrDefault().Kpcs_ResultY / 1000;
-                            calculate.Calulate_yesterday = (int)(listPlan.FirstOrDefault().Kpcs_ResultY - listPlan.FirstOrDefault().Kpcs_PlanY) / 1000;
+                            calculate.Calulate_yesterday = (float)Math.Ceiling((double)(listPlan.FirstOrDefault().Kpcs_ResultY - listPlan.FirstOrDefault().Kpcs_PlanY) / 1000);
                         }
                     }
                     fTDenpyo_Calculates.Add(calculate);
@@ -398,10 +398,22 @@ namespace WebApplication1.Controllers
                 DateTime dateE = new DateTime(DateTime.Now.AddDays(1).Year, DateTime.Now.AddDays(1).Month, DateTime.Now.AddDays(1).Day, 8, 0, 0);
                 float countdownHours = (float)((dateE - dateS).TotalHours);
 
+
+                List<string> mcNoList = new List<string>();
+                var mcNoAuto4 = lstFTSetup.Where(x => x.Flow == "AUTO4").Select(y => new { y.MCNo }).ToList();
+                foreach (var mcNo in mcNoAuto4)
+                {
+                    mcNoList.Add(mcNo.MCNo);
+                }
+
+                List<FTMachineSchedulerSetup> mcTypeChangeAuto4 = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(mcNoList);
+
+
+
                 foreach (var row in listDenpyo)
                 {
                     var selectrow = fTDenpyo_Calculates.Where(p => p.PKGName == row.PKGName && p.DeviceName == row.DeviceName).SingleOrDefault();
-                    
+                    //var selectTempSq = ft
 
                     if (row.JobId == "106")
                     {
@@ -439,7 +451,15 @@ namespace WebApplication1.Controllers
                         selectrow.Result_today += (float)row.Kpcs / 1000;
                         selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
                         countdownHours -= row.A4;
+                    }else if (row.JobId == "119" && mcTypeChangeAuto4.Where(x=>x.DeviceChange == row.FTDevice).Any())
+                    {
+                        // machineManualSetupL
+                        selectrow.Result_today += (float)row.Kpcs / 1000;
+                        selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
+                        countdownHours -= row.A4;
                     }
+
+
                 }
                 //foreach (var device in DeviceGroup)
                 //{

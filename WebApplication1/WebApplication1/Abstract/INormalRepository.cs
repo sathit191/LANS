@@ -15,7 +15,6 @@ namespace WebApplication1.Abstract
         //IEnumerable<FTDenpyo> Denpyos { get; }
         IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<string> mcNoList);
         IEnumerable<Accumulator_Plan> Plan { get; }
-
         void SaveUpdate(string McNo, int Sequence, string Device, string DeviceChange);
         void UpdateData(string McNo, int Sequence, string Device, string DeviceChange);
         void CencelTc(string McNo);
