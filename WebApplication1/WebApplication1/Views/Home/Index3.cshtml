@@ -217,9 +217,6 @@
                             case WebApplication1.Models.FTSetup.State.Run:
                                 <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
 
-                                    @*time = 0.6
-                    mon, sec = divmod(time, 60)
-                    hr, mon = divmod(mon, 60)*@
                                     @Html.DisplayFor(modelItem => item.Status)<p style="font-size:smaller;">@item.countDown</p>
                                 </td>
                                 break;
@@ -267,7 +264,7 @@
                                 {
                                     <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke;">
                                         @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                                               new { @class = "textinvisible sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo, @data_device = item.DeviceName, @data_sequence = i + 2 })
+                                               new { @class = "textinvisible sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo,@data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
                                         <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
                                             <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
                                         </p>
@@ -277,7 +274,7 @@
                                 {
                                     <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke; background-color : #009000;">
                                         @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo, @data_device = item.DeviceName, @data_sequence = i + 2 })
+                                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo,@data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
                                         <p  style="font-size:10px; color : white;">
                                             <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
                                         </p>
@@ -287,7 +284,7 @@
                                 {
                                     <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke;">
                                         @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo, @data_device = item.DeviceName, @data_sequence = i + 2 })
+                                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo,@data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
                                         <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
                                             <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
                                         </p>
@@ -310,17 +307,17 @@
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#home">Lots.</a>
+                    <a class="nav-link active" href="#Lots">Lots.</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#menu1">Kpcs.</a>
+                    <a class="nav-link" href="#Kpcs">Kpcs.</a>
                 </li>
             </ul>
             <div class="tab-content border mb-3">
-                <div id="home" class="tab-pane active">
+                <div id="Lots" class="tab-pane active">
                     <div id="container"></div>
                 </div>
-                <div id="menu1" class="tab-pane fade">
+                <div id="Kpcs" class="tab-pane ">
                     <div id="container2"></div>
                 </div>
             </div>
@@ -419,13 +416,16 @@
                         <div class="form-group">
                             @*<label for="recipient-name" class="col-form-label">MC Name:</label>*@
                             <input type="hidden" class="form-control" id="MCName">
+                            <input type="hidden" class="form-control" id="McId">
                             <input type="hidden" class="form-control" id="Device">
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Change after(Lot.):</label>
                             <input type="text" class="form-control" id="Sequence">
                             <label for="recipient-name" class="col-form-label">Type Change Device:</label>
-                            <input type="text" class="form-control" id="DeviceChange">
+                            @Html.DropDownList("DeviceName", ViewBag.devicefilter as SelectList, "All", new { @class = "form-control",@id="DeviceChange"  })
+                           
+                            @*<input type="text" class="form-control" id="DeviceChange">*@
                         </div>
                     </form>
                 </div>
@@ -463,13 +463,18 @@
 
             $(".sendData").click(function () {
                 console.log("OK");
+
                 var mcno = $(this).data('mcno');
+                var mcid = $(this).data('mcid');
                 var sequence = $(this).data('sequence');
                 var device = $(this).data('device');
+
                 console.log(mcno);
+                console.log(mcid);
                 console.log(sequence);
                 console.log(device);
 
+                $("#McId").val(mcid);
                 $("#MCName").val(mcno);
                 $("#Device").val(device);
                 $("#Sequence").val(sequence);
@@ -477,11 +482,13 @@
 
             $("#savetypechange").click(function () {
                 var mcno = $("#MCName").val();
+                var mcid = $("#McId").val();
                 var sequence = $("#Sequence").val();
                 var device = $("#Device").val();
                 var deviceChange = $("#DeviceChange").val();
 
                 console.log(mcno);
+                console.log(mcid);
                 console.log(sequence);
                 console.log(device);
 
@@ -490,6 +497,7 @@
                  url: '@Url.Action("SaveTypeChange", "Home")',
                 data: {
                     'McNo': mcno,
+                    'McId': mcid,
                     'Sequence': sequence,
                     'Device': device,
                     'DeviceChange': deviceChange
@@ -509,14 +517,15 @@
             });
             $("#canceltypechange").click(function () {
                 var mcno = $("#MCName").val();
-
+                var mcid = $("#McId").val();
                 console.log(mcno);
 
             $.ajax({
                 type: "GET",
                  url: '@Url.Action("CancelTypeChange", "Home")',
                 data: {
-                    'McNo': mcno
+                    'McNo': mcno,
+                    'McId': mcid
 
                 },
                 contentType: "application/json; charset=utf-8",
@@ -556,12 +565,12 @@
                 });
             });
 
-            //$(document).ready(function () {
-            //    $('#process').select2();
-            //    $('#package').select2();
-            //    $('#packgegroup').select2();
-            //    $('#device').select2();
-            //});
+            $(document).ready(function () {
+                //$('#process').select2();
+                //$('#package').select2();
+                //$('#packgegroup').select2();
+                $('#device').select2();
+            });
         </script>
         <script>
             $(document).ready(function () {

@@ -17,6 +17,7 @@ namespace WebApplication1.Concrete
             get
             {
                 List<FTSetup> lstFTSetup = new List<FTSetup>();
+
                 var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
                 using (var cmd = conn.CreateCommand())
                 {
@@ -32,8 +33,9 @@ namespace WebApplication1.Concrete
                         while (reader.Read())
                         {
                             FTSetup fTSetup = new FTSetup();
-
+                            
                             if (!(reader["MCNo"] is DBNull)) fTSetup.MCNo = reader["MCNo"].ToString().Trim();
+                            if (!(reader["McId"] is DBNull)) fTSetup.McId = (int)(reader["McId"]);
                             if (!(reader["PackageName"] is DBNull)) fTSetup.PKName = reader["PackageName"].ToString().Trim();
                             if (!(reader["TesterType"] is DBNull)) fTSetup.TesterType = reader["TesterType"].ToString().Trim();
                             if (!(reader["TestBoxA"] is DBNull))
@@ -402,7 +404,7 @@ namespace WebApplication1.Concrete
         //    }
         //}
 
-        public IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<string> mcNoList)
+        public IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<int> mcNoList)
         {
 
 
@@ -428,7 +430,7 @@ namespace WebApplication1.Concrete
                             FTMachineSchedulerSetup ftSchedulerSetup = new FTMachineSchedulerSetup();
                             if (!(reader["priority"] is DBNull)) ftSchedulerSetup.Priority = (int)reader["priority"];
                             if (!(reader["mc_no"] is DBNull)) ftSchedulerSetup.MachineNo = ((string)reader["mc_no"]).Trim();
-                            if (!(reader["sequence"] is DBNull)) ftSchedulerSetup.Sequence = (byte)reader["sequence"];
+                            if (!(reader["sequence"] is DBNull)) ftSchedulerSetup.Sequence = (int)reader["sequence"];
                             if (!(reader["device_set"] is DBNull)) ftSchedulerSetup.DeviceChange = ((string)reader["device_set"]).Trim();
                             if (!(reader["device_now"] is DBNull)) ftSchedulerSetup.DeviceNow = ((string)reader["device_now"]).Trim();
                             if (!(reader["device_set_date"] is DBNull)) ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
@@ -443,14 +445,15 @@ namespace WebApplication1.Concrete
                 return ftSchedulerSetupList;
             }
         }
-        public void SaveUpdate(string McNo, int Sequence, string Device, string DeviceChange)
+        public void SaveUpdate(string McNo, int McId, int Sequence, string Device, string DeviceChange)
         {
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_setup]([mc_no],[sequence],[device_change],[device_now],[date_change])" +
-                    "VALUES(@McNo,@Sequence,@Device_change,@Device_now,GETDATE())";
+                cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_setup]([mc_no],[mc_id],[sequence],[device_change],[device_now],[date_change])" +
+                    "VALUES(@McNo,@McId,@Sequence,@Device_change,@Device_now,GETDATE())";
                 cmd.Parameters.Add("@McNo", System.Data.SqlDbType.VarChar).Value = McNo;
+                cmd.Parameters.Add("@McId", System.Data.SqlDbType.Int).Value = McId;
                 cmd.Parameters.Add("@Sequence", System.Data.SqlDbType.TinyInt).Value = Sequence;
                 cmd.Parameters.Add("@Device_change", System.Data.SqlDbType.VarChar).Value = DeviceChange;
                 cmd.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;
@@ -460,7 +463,7 @@ namespace WebApplication1.Concrete
             }
         }
 
-        public void UpdateData(string McNo, int Sequence, string Device, string DeviceChange)
+        public void UpdateData(string McNo,int McId, int Sequence, string Device, string DeviceChange)
         {
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
@@ -470,10 +473,11 @@ namespace WebApplication1.Concrete
                     "[device_change] = @Device_change ," +
                     "[device_now] = @Device_now ," +
                     "[date_change] = GETDATE() " +
-                    "WHERE [mc_no] = @McNo and [date_complete] is null";
+                    "WHERE [mc_no] = @McNo and [mc_id] = @McId and [date_complete] is null";
                 //cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_setup]([mc_no],[sequence],[device_change],[device_now],[date_change])" +
                 //    "VALUES(@McNo,@Sequence,@Device_change,@Device_now,GETDATE())";
                 cmd.Parameters.Add("@McNo", System.Data.SqlDbType.VarChar).Value = McNo;
+                cmd.Parameters.Add("@McId", System.Data.SqlDbType.Int).Value = McId;
                 cmd.Parameters.Add("@Sequence", System.Data.SqlDbType.TinyInt).Value = Sequence;
                 cmd.Parameters.Add("@Device_change", System.Data.SqlDbType.VarChar).Value = DeviceChange;
                 cmd.Parameters.Add("@Device_now", System.Data.SqlDbType.VarChar).Value = Device;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,7 +19,7 @@ namespace WebApplication1.Controllers
             repository = repo;
         }
         // GET: Home
-        public class Group<T1,T2>
+        public class Group<T1, T2>
         {
             public string Key { get; set; }
             public string Key1 { get; set; }
@@ -26,14 +27,19 @@ namespace WebApplication1.Controllers
         }
         public ActionResult Index3()
         {
+            DateTime dateTime = DateTime.Now;
             //DATA-----------------------------------------------------------------------------------------------
+
             List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
+            Debug.Print("repository.fTSetups:" + (DateTime.Now - dateTime).ToString());
             List<FTWip> lstFTWips = (List<FTWip>)repository.FTWips;
+            Debug.Print("repository.FTWips:" + (DateTime.Now - dateTime).ToString());
             List<Accumulator_Plan> lstAccumulator_Plans = (List<Accumulator_Plan>)repository.Plan;
+            Debug.Print("repository.Plan:" + (DateTime.Now - dateTime).ToString());
             //---------------------------------------------------------------------------------------------------
             //Main table------------------------------------------------------------------------------------------
-             List<FTWip> lstFTWipOut = new List<FTWip>();
-            
+            List<FTWip> lstFTWipOut = new List<FTWip>();
+
             var ColorList = lstFTWips.Select(x => new { x.DeviceName }).Distinct().ToList();
             int countColor = 1;
             foreach (var deviceName in ColorList)
@@ -53,6 +59,10 @@ namespace WebApplication1.Controllers
                 countColor++;
             }
 
+            var machineNoList = (List<int>)lstFTSetup.Select(x => x.McId).Distinct().ToList();
+            List<FTMachineSchedulerSetup> machineManualSetupList = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(machineNoList);
+            Debug.Print("Query TC:" + (DateTime.Now - dateTime).ToString());
+
             for (int J = 1; J <= 4; J++)
             {
                 List<FTSetup> lstFTSetupAuto1 = lstFTSetup.Where(x => x.Flow == "AUTO" + J).OrderBy(x => x.MCNo).ToList(); //หาเครื่องกรอก Auto
@@ -66,17 +76,15 @@ namespace WebApplication1.Controllers
                 foreach (var item in wipLotOutPlan)
                 {
                     lstFTWipOut.Add(item);
-
                 }
 
-                //// Group the FTWip by DeviceName
-                //var DeviceGrouped = from deviceGroup in lstFTWipOut
-                //                   group deviceGroup by deviceGroup.DeviceName into device
-                //                   select new Group<string, FTWip> { Key = device.Key, Values = device };
 
-                var machineNoList = (List<string>)lstFTSetupAuto1.Select(x => x.MCNo).Distinct().ToList();
-                //GetData
-                List<FTMachineSchedulerSetup> machineManualSetupList = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(machineNoList);
+                //var machineNoList = (List<int>)lstFTSetupAuto1.Select(x => x.McId).Distinct().ToList();
+                ////GetData
+
+                //List<FTMachineSchedulerSetup> machineManualSetupList = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(machineNoList);
+                //Debug.Print("Query TC:" + (DateTime.Now - dateTime).ToString());
+
                 ////SetData Machine Device Now
                 //foreach (var machineManualSetup in machineManualSetupList)
                 //{
@@ -85,7 +93,7 @@ namespace WebApplication1.Controllers
                 //    {
                 //        machineManualSetup.DeviceNow = FtMachine.FirstOrDefault().DeviceName;
                 //    }
-                
+
                 //}
 
 
@@ -94,7 +102,7 @@ namespace WebApplication1.Controllers
                 {
                     List<FTSetup> McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
                     List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
-                    List<FTMachineSchedulerSetup> machineSetupList = McDevice.Select(x => new FTMachineSchedulerSetup { MachineNo = x.MCNo, DeviceNow = x.DeviceName,MachienDisable = false }).ToList();
+                    List<FTMachineSchedulerSetup> machineSetupList = McDevice.Select(x => new FTMachineSchedulerSetup { MachineNo = x.MCNo, DeviceNow = x.DeviceName, MachienDisable = false }).ToList();
                     //ทำต่อ
                     var machineManualSetupSittingList = machineManualSetupList.Where(x => McDevice.Where(y => y.MCNo == x.MachineNo).Any()).ToList();
                     int countX = 1;
@@ -109,7 +117,7 @@ namespace WebApplication1.Controllers
                             mcSetup.MachienDisable = true;
                         }
                         var machineManualSetupDisable = machineManualSetupListTmp.Where(y => y.MachienDisable == true).ToList();
-                        var mcinfo = machineSetupList.Where(x => machineManualSetupDisable.Where(y=> y.MachineNo != x.MachineNo).Any() || machineManualSetupDisable.Count == 0).ToList();
+                        var mcinfo = machineSetupList.Where(x => machineManualSetupDisable.Where(y => y.MachineNo != x.MachineNo).Any() || machineManualSetupDisable.Count == 0).ToList();
 
                         if (mcinfo.Count != 0)
                         {
@@ -117,7 +125,7 @@ namespace WebApplication1.Controllers
 
                             item.MachineWip = mcinfo[sequence].MachineNo;
 
-                            if (sequence == mcinfo.Count -1)
+                            if (sequence == mcinfo.Count - 1)
                                 countY++;
                             ////int sequence = countX % McDevice.Count;
                             //if (sequence != 0)
@@ -131,18 +139,17 @@ namespace WebApplication1.Controllers
                             //}
                             countX++;
                         }
-                      
+
                     }
 
 
                     int countMc = 1;
-                    int lotOverShows = 0 ;
+                    int lotOverShows = 0;
                     foreach (var mcData in McDevice.ToArray()) //เอาลอ็อตเข้าQue
                     {
                         List<FTWip> lstFTWipsAuto = new List<FTWip>();
                         for (int i = 2; i <= 10; i++)
                         {
-                            //List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.Sequence == countMc).ToList();
                             List<FTWip> lstFTWipsAuto1OnMc = WipDevice.Where(x => x.MachineWip == mcData.MCNo).ToList();
                             foreach (var lotSequence in lstFTWipsAuto1OnMc)
                             {
@@ -155,14 +162,14 @@ namespace WebApplication1.Controllers
                                 if (k == 0)
                                 {
                                     device = machineManualSetupList.Where(x => x.MachineNo == mcData.MCNo).Select(x => x.DeviceChange).FirstOrDefault();
-                                    if(device != null)
+                                    if (device != null)
                                     {
                                         lotno = "Type Change";
                                     }
                                     else
                                     {
                                         lotno = "Set Type Change";
-                                        
+
                                     }
                                 }
                                 FTWip fTWip = new FTWip();
@@ -171,7 +178,7 @@ namespace WebApplication1.Controllers
                                 fTWip.S_Color = "TypeChange";
                                 lstFTWipsAuto.Add(fTWip);
                             }
-                            if(lstFTWipsAuto1OnMc.Count()-4 > 0)
+                            if (lstFTWipsAuto1OnMc.Count() - 4 > 0)
                             {
                                 lotOverShows = lstFTWipsAuto1OnMc.Count() - 4;
                             }
@@ -179,15 +186,14 @@ namespace WebApplication1.Controllers
                         }
                         mcData.LotQueue = lstFTWipsAuto;
                         mcData.OverPlan = lotOverShows;
-                        //mcData.LotOutPlan = WipOtherDevice;
                         countMc++;
                     }
                 }
                 var result = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
             } //lot wip add to Que
-
+            Debug.Print("lot wip add to Que:" + (DateTime.Now - dateTime).ToString());
             List<LotFTinMc> lotFTinMcs = (List<LotFTinMc>)repository.LotFTinMcs;
-
+            Debug.Print("repository.LotFTinMcs:" + (DateTime.Now - dateTime).ToString());
             foreach (var item in lstFTSetup)
             {
                 LotFTinMc onMc = lotFTinMcs.Where(x => x.MCName == item.MCNo).FirstOrDefault();
@@ -201,52 +207,20 @@ namespace WebApplication1.Controllers
 
                     //if (item.Flow == "AUTO1")
                     //{
-                        TimeSpan StandardTime = new TimeSpan(0, (int)onMc.StandardTime, 0);
-                        production_Date = onMc.Updated_time.Value + StandardTime;
+                    TimeSpan StandardTime = new TimeSpan(0, (int)onMc.StandardTime, 0);
+                    production_Date = onMc.Updated_time.Value + StandardTime;
 
-                        var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
-                        float time = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
+                    var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
+                    float time = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
 
-                        item.countDown = (new TimeSpan(0, (int)time, 0)).ToString().Substring(0, 5);
-                    //}
-                    //else if (item.Flow == "AUTO2")
-                    //{
-                    //    production_Date = onMc.Updated_time.Value + onMc.timeAuto2;
-
-                    //    var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
-                    //    float xx = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
-                    //    float hours = xx;
-                    //    float minminute = (xx - hours) * 60;
-                    //    item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
-                    //}
-                    //else if (item.Flow == "AUTO3")
-                    //{
-                    //    production_Date = onMc.Updated_time.Value + onMc.timeAuto3;
-
-                    //    var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
-                    //    float xx = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
-                    //    float hours = xx;
-                    //    float minminute = (xx - hours) * 60;
-                    //    item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
-                    //}
-                    //else if (item.Flow == "AUTO4")
-                    //{
-                    //    production_Date = onMc.Updated_time.Value + onMc.timeAuto4;
-
-                    //    var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
-                    //    float xx = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
-                    //    float hours = xx;
-                    //    float minminute = (xx - hours) * 60;
-                    //    item.countDown = hours.ToString("00") + ":" + minminute.ToString("00");
-                    //}
+                    item.countDown = (new TimeSpan(0, (int)time, 0)).ToString().Substring(0, 5);
                     if (production_Date.HasValue)
                     {
                         item.Production_Date = production_Date.Value;
                         item.Production_Time = production_Date.Value;
-                        
                     }
 
-                    
+
                 }
 
                 item.Status = onMc.ProcessState;
@@ -254,24 +228,27 @@ namespace WebApplication1.Controllers
 
             //ViewData["listA"] = lstFTSetup;
             ViewBag.ftSetup = lstFTSetup;
+            Debug.Print("Get main table:" + (DateTime.Now - dateTime).ToString());
             //-----------------------------------------------------------------------------------------------------
             //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
             var DeviceList = from Group in lstFTWips// lstFTWipOut
                              group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
-            
+
                              select new FTWipOutPlan
                              {
                                  Flow = list.Key.JobName,
                                  FTDevice = list.Key.FTDevice,
                                  DeviceName = list.Key.DeviceName,
                                  Count = list.Count(),
-                                 SumKpcs = list.Sum(p=>p.Kpcs)
+                                 SumKpcs = list.Sum(p => p.Kpcs)
                              };
 
             List<Flow> flows = new List<Flow>();
 
-            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).Distinct().ToList();
+            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).OrderBy(p => p.FTDevice).Distinct().ToList();
+            SelectList devicefilter = new SelectList(DeviceGroup, "DeviceName", "FTDevice");//repository.fTSetups.Distinct().ToList(), "DeviceName", "DeviceName");
+            ViewBag.devicefilter = devicefilter;
 
             foreach (var item in DeviceGroup)
             {
@@ -280,8 +257,21 @@ namespace WebApplication1.Controllers
 
                 string color = item.S_Color;
 
-                var addflow = new Flow { Name = name, A1 = 0, A2 = 0, A3 = 0, A4 = 0, FL = 0,
-                    A1_Kpcs = 0, A2_Kpcs = 0, A3_Kpcs = 0, A4_Kpcs = 0, FL_Kpcs = 0, Color = color };
+                var addflow = new Flow
+                {
+                    Name = name,
+                    A1 = 0,
+                    A2 = 0,
+                    A3 = 0,
+                    A4 = 0,
+                    FL = 0,
+                    A1_Kpcs = 0,
+                    A2_Kpcs = 0,
+                    A3_Kpcs = 0,
+                    A4_Kpcs = 0,
+                    FL_Kpcs = 0,
+                    Color = color
+                };
                 flows.Add(addflow);
 
                 var lstDevice = DeviceList.Where(p => p.DeviceName == item.DeviceName).ToList();
@@ -290,13 +280,13 @@ namespace WebApplication1.Controllers
                 {
                     var row = flows.Where(p => p.Name == list.FTDevice).SingleOrDefault();
 
-                    if(list.Flow == "AUTO1")
+                    if (list.Flow == "AUTO1")
                     {
                         row.A1 = list.Count;
-                        row.A1_Kpcs = (float)list.SumKpcs / 1000 ;
-                        
+                        row.A1_Kpcs = (float)list.SumKpcs / 1000;
+
                     }
-                    else if(list.Flow == "AUTO2")
+                    else if (list.Flow == "AUTO2")
                     {
                         row.A2 = list.Count;
                         row.A2_Kpcs = (float)list.SumKpcs / 1000;
@@ -311,24 +301,19 @@ namespace WebApplication1.Controllers
                         row.A4 = list.Count;
                         row.A4_Kpcs = (float)list.SumKpcs / 1000;
                     }
-                    else if(list.Flow.Substring(0,2)== "FL")
+                    else if (list.Flow.Substring(0, 2) == "FL")
                     {
                         row.FL = list.Count;
                         row.FL_Kpcs = (float)list.SumKpcs / 1000;
                     }
                 }
 
-                var addData = flows.Where(p => p.Name == item.DeviceName).SingleOrDefault();
+                //    //    var addData = flows.Where(p => p.Name == item.DeviceName).SingleOrDefault();
 
-                //string data = "[49.9, 71.5, 106.4, 129.2]";
+                //    //    //string data = "[49.9, 71.5, 106.4, 129.2]";
 
 
             }
-            
-            //var list2 = outPlans.Select(p=> new { p.Flow}).Distinct().ToList();
-
-            //ViewBag.lstFTWipOut = outPlans;
-
             string command = "";
             foreach (var item in flows)
             {
@@ -341,22 +326,23 @@ namespace WebApplication1.Controllers
             {
                 commandKpcs += "{";
                 commandKpcs += "name: '" + item.Name + "',";
-                commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," + 
+                commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," +
                     item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "]},";
             }
 
             ViewBag.lstFlow = command;
             ViewBag.chartKpcs = commandKpcs;
-            //ViewBag.chartcolor = commandColor;
+            Debug.Print("Get Chart:" + (DateTime.Now - dateTime).ToString());
             //-----------------------------------------------------------------------------------------------------
             //table Denpyo-----------------------------------------------------------------------------------------
             List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();
-            
+            int count = 0;
             foreach (var item in DeviceGroup)
             {
+
                 var listDenpyo = lstFTWips.Where(p => p.DeviceName == item.DeviceName);
                 var listPlan = lstAccumulator_Plans.Where(p => p.DeviceName == item.DeviceName);
-                
+
                 if (listDenpyo.Count() != 0)
                 {
                     var calculate = new FTDenpyo_Calculate
@@ -374,11 +360,8 @@ namespace WebApplication1.Controllers
                         A4_Calculate = 0,
                         A4_Lot = 0
 
-                        
-                        
-
                     };
-                    if (listPlan.Count() != 0)
+                    if (listPlan.Count() != 0) // plannnnn 
                     {
                         if (item.DeviceName == listPlan.FirstOrDefault().DeviceName)
                         {
@@ -399,16 +382,16 @@ namespace WebApplication1.Controllers
                 float countdownHours = (float)((dateE - dateS).TotalHours);
 
 
-                List<string> mcNoList = new List<string>();
-                var mcNoAuto4 = lstFTSetup.Where(x => x.Flow == "AUTO4").Select(y => new { y.MCNo }).ToList();
-                foreach (var mcNo in mcNoAuto4)
-                {
-                    mcNoList.Add(mcNo.MCNo);
-                }
+                //List<string> mcNoList = new List<string>();
+                //var mcNoAuto4 = lstFTSetup.Where(x => x.Flow == "AUTO4").Select(y => new { y.MCNo }).ToList();
+                //foreach (var mcNo in mcNoAuto4)
+                //{
+                //    mcNoList.Add(mcNo.MCNo);
+                //}
+                Debug.Print("Get Denpyox:" + count.ToString() + "=>" + (DateTime.Now - dateTime).ToString());
+                // List<FTMachineSchedulerSetup> mcTypeChangeAuto4 = machineManualSetupList.Where(p=>p.jo)
 
-                List<FTMachineSchedulerSetup> mcTypeChangeAuto4 = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(mcNoList);
-
-
+                Debug.Print("Get Denpyo1:" + count.ToString() + "=>" + (DateTime.Now - dateTime).ToString());
 
                 foreach (var row in listDenpyo)
                 {
@@ -435,7 +418,7 @@ namespace WebApplication1.Controllers
                         selectrow.A4_Lot++;
                         selectrow.A4_Calculate += row.StandardTime / 60;
                     }
-                    else if(row.JobId == "87" || row.JobId == "88" || row.JobId == "278" )
+                    else if (row.JobId == "87" || row.JobId == "88" || row.JobId == "278")
                     {
                         selectrow.FL_Lot++;
                         selectrow.FL_Calculate += row.StandardTime / 60;
@@ -446,57 +429,62 @@ namespace WebApplication1.Controllers
                         selectrow.Result_today += (float)row.Kpcs / 1000;
                         selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
                         countdownHours -= row.A4;
-                    }else if(row.JobId == "119" && row.Lot_State == FTWip.LotState.Start && countdownHours > row.StandardTime / 60) //ON Mc 
+                    }
+                    else if (row.JobId == "119" && row.Lot_State == FTWip.LotState.Start && countdownHours > row.StandardTime / 60) //ON Mc 
                     {
                         selectrow.Result_today += (float)row.Kpcs / 1000;
                         selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
                         countdownHours -= row.A4;
-                    }else if (row.JobId == "119" && mcTypeChangeAuto4.Where(x=>x.DeviceChange == row.FTDevice).Any())
+                    }
+                    else if (row.JobId == "119" && machineManualSetupList.Where(x => x.DeviceChange == row.DeviceName).Any())
                     {
-                        // machineManualSetupL
+
                         selectrow.Result_today += (float)row.Kpcs / 1000;
                         selectrow.Calulate_today = selectrow.Result_today - selectrow.Plan_today;
                         countdownHours -= row.A4;
                     }
 
 
+                    //}
+                    //foreach (var device in DeviceGroup)
+                    //{
+                    //    foreach (var row in listDenpyo)
+                    //    {
+
                 }
-                //foreach (var device in DeviceGroup)
-                //{
-                //    foreach (var row in listDenpyo)
-                //    {
-                        
-                //    }
+                Debug.Print("Get Denpyo2:" + count.ToString() + "=>" + (DateTime.Now - dateTime).ToString());
+                count++;
 
             }
             ViewBag.Denpyo_Calculates = fTDenpyo_Calculates;
+            Debug.Print("Get Denpyo:" + (DateTime.Now - dateTime).ToString());
             //-----------------------------------------------------------------------------------------------------
             return View();
 
         }
-        public ActionResult SaveTypeChange(string McNo,int Sequence,string Device ,string DeviceChange)
+        public ActionResult SaveTypeChange(string McNo, int McId, int Sequence, string Device, string DeviceChange)
         {
             // List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
-            List<string> lstMcNo = new List<string>();
-            lstMcNo.Add(McNo);
+            List<int> lstMcNo = new List<int>();
+            lstMcNo.Add(McId);
             List<FTMachineSchedulerSetup> lstschedulerSetups = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(lstMcNo);
             if (lstschedulerSetups.Count() > 0)
             {
-                repository.UpdateData(McNo, Sequence, Device, DeviceChange);
+                repository.UpdateData(McNo, McId, Sequence, Device, DeviceChange);
             }
             else
             {
-                repository.SaveUpdate(McNo, Sequence, Device, DeviceChange);
-                
+                repository.SaveUpdate(McNo, McId, Sequence, Device, DeviceChange);
+
             }
             return RedirectToAction("Index3");
         }
 
-        public ActionResult CancelTypeChange(string McNo)
+        public ActionResult CancelTypeChange(string McNo, int McId)
         {
-            
-            List<string> lstMcNo = new List<string>();
-            lstMcNo.Add(McNo);
+
+            List<int> lstMcNo = new List<int>();
+            lstMcNo.Add(McId);
             List<FTMachineSchedulerSetup> lstschedulerSetups = (List<FTMachineSchedulerSetup>)repository.FTSchedulerSetup(lstMcNo);
             if (lstschedulerSetups.Count() > 0)
             {
@@ -507,5 +495,7 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction("Index3");
         }
+
+        
     }
 }

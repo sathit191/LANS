@@ -12,9 +12,9 @@ namespace WebApplication1.Models
         {
             LotQueue = new List<FTWip>();
         }
-
         public string PKName { get; set; }
         public string MCNo { get; set; }
+        public int McId { get; set; }
         public string TesterType { get; set; }
         public string TestBord { get; set; }
         public string DutName { get; set; }
@@ -27,7 +27,6 @@ namespace WebApplication1.Models
         public State Status { get; set; }
         public string Production_LotNo { get; set; }
         public string Production_LotDevice { get; set; }
-
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime? Production_Date { get; set; }
@@ -37,13 +36,10 @@ namespace WebApplication1.Models
         public string Production_DelayLot { get; set; }
         public string countDown { get; set; }
         public List<FTWip> LotQueue { get; set; }
-
         public int? OverPlan { get; set; }
-         
-
-        
         public string Mc_Color { get; set; }
-
+        public DateTime? STime { get; set; }
+        public DateTime? ETime { get; set; }
         public enum State
         {
             Wait = 0,
@@ -54,4 +50,6 @@ namespace WebApplication1.Models
         
 
     }
+
+   
 }
