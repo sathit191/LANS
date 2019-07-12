@@ -39,5 +39,9 @@ namespace WebApplication1.Models
         public float Plan_yesterday { get; set; }
         public float Result_yesterday { get; set; }
         public float Calulate_yesterday { get; set; }
+        public bool SetOnMcA1 { get; set; }
+        public bool SetOnMcA2 { get; set; }
+        public bool SetOnMcA3 { get; set; }
+        public bool SetOnMcA4 { get; set; }
     }
 }

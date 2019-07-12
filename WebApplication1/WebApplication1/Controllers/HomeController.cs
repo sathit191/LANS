@@ -250,6 +250,7 @@ namespace WebApplication1.Controllers
             List<Flow> flows = new List<Flow>();
 
             var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).OrderBy(p => p.FTDevice).Distinct().ToList();
+
             SelectList devicefilter = new SelectList(DeviceGroup, "DeviceName", "FTDevice");//repository.fTSetups.Distinct().ToList(), "DeviceName", "DeviceName");
             ViewBag.devicefilter = devicefilter;
 
@@ -340,11 +341,14 @@ namespace WebApplication1.Controllers
             //table Denpyo-----------------------------------------------------------------------------------------
             List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();
             int count = 0;
+
             foreach (var item in DeviceGroup)
             {
-
+                
                 var listDenpyo = lstFTWips.Where(p => p.DeviceName == item.DeviceName);
                 var listPlan = lstAccumulator_Plans.Where(p => p.DeviceName == item.DeviceName);
+
+                
 
                 if (listDenpyo.Count() != 0)
                 {
@@ -364,6 +368,34 @@ namespace WebApplication1.Controllers
                         A4_Lot = 0
 
                     };
+                    Debug.Print("Create Denpyo:" + (DateTime.Now - dateTime).ToString());
+                    var DeviceOnMc = lstFTSetup.Select(p => new { p.DeviceName ,p.Flow }).OrderBy(p => p.Flow).Distinct().ToList();
+                    var lstSetupDeviceOnMC = DeviceOnMc.Where(p => p.DeviceName == item.DeviceName);
+
+                    foreach (var taget in lstSetupDeviceOnMC)
+                    {
+                        if (item.DeviceName == lstSetupDeviceOnMC.FirstOrDefault().DeviceName)
+                        {
+                            switch (taget.Flow)
+                            {
+                                case "AUTO1":
+                                    calculate.SetOnMcA1 = true;
+                                    break;
+                                case "AUTO2":
+                                    calculate.SetOnMcA2 = true;
+                                    break;
+                                case "AUTO3":
+                                    calculate.SetOnMcA3 = true;
+                                    break;
+                                case "AUTO4":
+                                    calculate.SetOnMcA4 = true;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                    Debug.Print("Add taget:" + (DateTime.Now - dateTime).ToString());
                     if (listPlan.Count() != 0) // plannnnn 
                     {
                         if (item.DeviceName == listPlan.FirstOrDefault().DeviceName)
