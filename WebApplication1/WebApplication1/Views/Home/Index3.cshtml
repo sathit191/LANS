@@ -211,13 +211,13 @@
                             case WebApplication1.Models.FTSetup.State.Wait:
 
                                 <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                    @Html.DisplayFor(modelItem => item.Status)
+                                    @Html.DisplayFor(modelItem => item.Status) <br />@item.WipCountup
                                 </td>
                                 break;
                             case WebApplication1.Models.FTSetup.State.Run:
                                 <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
 
-                                    @Html.DisplayFor(modelItem => item.Status)<p style="font-size:smaller;">@item.countDown</p>
+                                    @Html.DisplayFor(modelItem => item.Status)@*<p style="font-size:smaller;">*@<br />@item.countDown@*</p>*@
                                 </td>
                                 break;
                             case WebApplication1.Models.FTSetup.State.Ready:

@@ -36,6 +36,8 @@ namespace WebApplication1.Controllers
             Debug.Print("repository.FTWips:" + (DateTime.Now - dateTime).ToString());
             List<Accumulator_Plan> lstAccumulator_Plans = (List<Accumulator_Plan>)repository.Plan;
             Debug.Print("repository.Plan:" + (DateTime.Now - dateTime).ToString());
+            List<McWIP> lstMcWIP = (List<McWIP>)repository.McWIP;
+            Debug.Print("repository.MCWIP:" + (DateTime.Now - dateTime).ToString());
             //---------------------------------------------------------------------------------------------------
             //Main table------------------------------------------------------------------------------------------
             List<FTWip> lstFTWipOut = new List<FTWip>();
@@ -95,9 +97,17 @@ namespace WebApplication1.Controllers
                 //    }
 
                 //}
+                foreach (var item in lstFTSetup)
+                {
+                    var mcWip = lstMcWIP.Where(p => p.McId == item.McId).FirstOrDefault();
 
+                    if (mcWip != null)
+                    {
+                        long test = (long)(DateTime.Now.Ticks - mcWip.McStop.Value.Ticks);
+                        item.WipCountup = (new TimeSpan(test)).ToString().Substring(0, 5);
+                    }
 
-
+                }
                 foreach (var deviceName in machineDevicesList)
                 {
                     List<FTSetup> McDevice = lstFTSetupAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList(); //กรอก Device
@@ -127,22 +137,10 @@ namespace WebApplication1.Controllers
 
                             if (sequence == mcinfo.Count - 1)
                                 countY++;
-                            ////int sequence = countX % McDevice.Count;
-                            //if (sequence != 0)
-                            //{
-                            //    item.Sequence = sequence;
-                            //}
-                            //else
-                            //{
-                            //    item.Sequence = McDevice.Count;
-                            //    countY++;
-                            //}
                             countX++;
                         }
 
                     }
-
-
                     int countMc = 1;
                     int lotOverShows = 0;
                     foreach (var mcData in McDevice.ToArray()) //เอาลอ็อตเข้าQue
@@ -202,6 +200,9 @@ namespace WebApplication1.Controllers
                 item.Production_LotNo = onMc.LotNo;
                 item.Production_LotDevice = onMc.FTDevice;
                 DateTime? production_Date = null;
+
+                
+
                 if (onMc.ProcessState == FTSetup.State.Run)
                 {
 
@@ -213,7 +214,8 @@ namespace WebApplication1.Controllers
                     var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
                     float time = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
 
-                    item.countDown = (new TimeSpan(0, (int)time, 0)).ToString().Substring(0, 5);
+                    item.countDown = (new TimeSpan(0, (int)time, 0)).ToString().Substring(0, 5); //run countdown
+
                     if (production_Date.HasValue)
                     {
                         item.Production_Date = production_Date.Value;
@@ -222,6 +224,7 @@ namespace WebApplication1.Controllers
 
 
                 }
+                
 
                 item.Status = onMc.ProcessState;
             }

@@ -634,6 +634,36 @@ namespace WebApplication1.Concrete
                 return accumulator;
             }
         }
+        public IEnumerable<McWIP> McWIP
+        {
+            get
+            {
+                List<McWIP> lstMcWip = new List<McWIP>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_wip_count]";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            McWIP mcWip = new McWIP();
 
+                            if (!(reader["McName"] is DBNull)) mcWip.McName = reader["McName"].ToString().Trim();
+                            if (!(reader["McId"] is DBNull)) mcWip.McId = (int)(reader["McId"]);
+                            if (!(reader["McStop"] is DBNull)) mcWip.McStop = (DateTime)(reader["McStop"]);
+
+                            //else ftWip.A4 = 0;
+
+                            lstMcWip.Add(mcWip);
+                        }
+                        conn.Close();
+                    }
+                    return lstMcWip;
+                }
+            }
+        }
     }
 }

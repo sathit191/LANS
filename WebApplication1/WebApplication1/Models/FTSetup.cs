@@ -35,6 +35,7 @@ namespace WebApplication1.Models
         public DateTime? Production_Datetime { get; set; }
         public string Production_DelayLot { get; set; }
         public string countDown { get; set; }
+        public string WipCountup { get; set; }
         public List<FTWip> LotQueue { get; set; }
         public int? OverPlan { get; set; }
         public string Mc_Color { get; set; }
