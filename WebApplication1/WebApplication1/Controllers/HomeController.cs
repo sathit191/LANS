@@ -217,8 +217,9 @@ namespace WebApplication1.Controllers
 
                     //if (item.Flow == "AUTO1")
                     //{
-                    TimeSpan StandardTime = new TimeSpan(0, (int)onMc.StandardTime, 0);
-                    production_Date = onMc.Updated_time.Value + StandardTime;
+                    double timeCal = (double)onMc.StandardTime / item.OpRate;
+                    TimeSpan StandardTime = new TimeSpan(0, (int)timeCal, 0);
+                    production_Date = onMc.Updated_time.Value +StandardTime;
 
                     var data = lstFTWips.Where(p => p.Lot_no == onMc.LotNo).Select(p => new { p.Lot_no, p.Kpcs, p.Qty_Production, p.StandardTime });
                     float time = data.FirstOrDefault().StandardTime * (float)data.FirstOrDefault().Qty_Production;
@@ -523,7 +524,6 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction("Index3");
         }
-
         public ActionResult CancelTypeChange(string McNo, int McId)
         {
 
@@ -539,7 +539,23 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction("Index3");
         }
+        public ActionResult InsertOPRate(int McId,float OpRate)
+        {
+            List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
+            var rowsetup = lstFTSetup.Where(p => p.McId == McId);
 
+            float OpratePer = OpRate / 100;
+
+            if (rowsetup.Count() > 0)
+            {
+                repository.UpdateOPRate(McId, OpratePer);
+            }
+            else
+            {
+                repository.InsertOPRate(McId, OpratePer);
+            }
+            return RedirectToAction("Index3");
+        }
         
     }
 }

@@ -36,6 +36,7 @@ namespace WebApplication1.Concrete
                             
                             if (!(reader["MCNo"] is DBNull)) fTSetup.MCNo = reader["MCNo"].ToString().Trim();
                             if (!(reader["McId"] is DBNull)) fTSetup.McId = (int)(reader["McId"]);
+                            if (!(reader["oprate"] is DBNull)) fTSetup.OpRate = (float)(reader["oprate"]);
                             if (!(reader["PackageName"] is DBNull)) fTSetup.PKName = reader["PackageName"].ToString().Trim();
                             if (!(reader["TesterType"] is DBNull)) fTSetup.TesterType = reader["TesterType"].ToString().Trim();
                             if (!(reader["TestBoxA"] is DBNull))
@@ -663,6 +664,66 @@ namespace WebApplication1.Concrete
                     }
                     return lstMcWip;
                 }
+            }
+        }
+        //public IEnumerable<OpRateSetting> opRates
+        //{
+        //    get
+        //    {
+        //        List<OpRateSetting> lstOpRate = new List<OpRateSetting>();
+        //        var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+        //        using (var cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.Text;
+        //            cmd.CommandText = "SELECT [mcid] ,[oprate] FROM [DBx].[dbo].[scheduler_oprate]";
+        //            conn.Open();
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    OpRateSetting opRate = new OpRateSetting();
+
+        //                    if (!(reader["mcid"] is DBNull)) opRate.McId = (int)(reader["mcid"]);
+        //                    if (!(reader["oprate"] is DBNull)) opRate.Oprate = (float)(reader["oprate"]);
+
+        //                    lstOpRate.Add(opRate);
+        //                }
+        //                conn.Close();
+        //            }
+        //            return lstOpRate;
+        //        }
+        //    }
+        //}
+        public void InsertOPRate(int McId,float OpRate)
+        {
+            
+            float OpratePer = OpRate / 100;
+           
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_oprate]([mcid],[oprate])" +
+                    " VALUES(@McId, @OpRate)";
+                cmd.Parameters.Add("@McId", System.Data.SqlDbType.Int).Value = McId;
+                cmd.Parameters.Add("@OpRate", System.Data.SqlDbType.Float).Value = OpratePer;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        public void UpdateOPRate(int McId, float OpRate)
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "UPDATE [DBx].[dbo].[scheduler_oprate]  SET [oprate] = @OpRate " +
+                    "WHERE [mcid] = @McId";
+                cmd.Parameters.Add("@McId", System.Data.SqlDbType.Int).Value = McId;
+                cmd.Parameters.Add("@OpRate", System.Data.SqlDbType.Real).Value = OpRate;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
             }
         }
     }

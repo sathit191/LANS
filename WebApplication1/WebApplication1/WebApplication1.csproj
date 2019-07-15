@@ -160,6 +160,7 @@
     <Compile Include="Models\FTWipOutPlan.cs" />
     <Compile Include="Models\LotFTinMc.cs" />
     <Compile Include="Models\McWIP.cs" />
+    <Compile Include="Models\OpRateSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -102,7 +102,7 @@
                         <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">3rd Lot</th>
                         <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">4th Lot</th>
                         <th class=" text-center" style=" vertical-align : middle; background-color :#96d677;" colspan="1">5th Lot</th>
-                        
+
                     </tr>
                     <tr>
                         @*<th class=" text-center" style="font-size : 20px; vertical-align : middle; background-color :#FFBE7D;">➀</th>
@@ -123,182 +123,194 @@
                 <tbody>
                     @foreach (var item in (List<WebApplication1.Models.FTSetup>)ViewBag.ftSetup)
                     {
-                    <tr style="height :30px">
-                        @*<td class="text-center PKName" style="vertical-align : middle; width : 120px;">
-            <span>@Html.DisplayFor(modelItem => item.PKName)</span>
-        </td>*@
-                        <td class="text-center MCNo" style="vertical-align : middle; width : 120px;">
-                            <b>@Html.DisplayFor(modelItem => item.MCNo)</b>
-                        </td>
-                        <td class="text-center" style="vertical-align : middle; width : 125px;">
-                            @Html.DisplayFor(modelItem => item.TesterType)
-                        </td>
-                        <td class="text-center" style="font-size:10px; vertical-align : middle; width : 25px;">
-                            @Html.DisplayFor(modelItem => item.TestBord)
-                        </td>
-                        <td class="text-center" style="font-size : 10px; vertical-align : middle; width : 25px;">
-                            @Html.DisplayFor(modelItem => item.TestProgram)
-                        </td>
-                        @*<td class="text-center" style=" font-size:smaller; vertical-align : middle; width : 20px;">
-            @Html.DisplayFor(modelItem => item.DutName)
-        </td>*@
-                        @switch (item.Flow)
-                        {
-                            case "AUTO1":
-                                <td class=" text-center" style="font-size:smaller; color : cadetblue; font : bold; vertical-align : middle; width : 25px;">
-                                    -40
-                                </td>
-                                break;
-                            case "AUTO2":
-                                <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
-                                    125
-                                </td>
-                                break;
-                            case "AUTO3":
-                                <td class=" text-center " style="font-size:smaller;vertical-align : middle; width : 25px;">
-                                    25
-                                </td>
-                                break;
-                            case "AUTO4":
+                        <tr style="height :30px">
+                            @*<td class="text-center PKName" style="vertical-align : middle; width : 120px;">
+                                    <span>@Html.DisplayFor(modelItem => item.PKName)</span>
+                                </td>*@
+                            <td class="text-center MCNo" style="vertical-align : middle; width : 120px;">
 
-                                <td class=" text-center" style="font-size:smaller;  font : bold; vertical-align : middle; width : 25px;">
-                                    25
-                                </td>
-                                break;
-                            default:
-                                <td></td>
-                                break;
-                        }
-                        @switch (item.Flow)
-                        {
-                            case "AUTO1":
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #E4D354;">
-                                    <b>@Html.DisplayFor(modelItem => item.Flow)</b>
-                                </td>
-                                break;
-                            case "AUTO2":
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #F6ABAB;">
-                                    <b>@Html.DisplayFor(modelItem => item.Flow)</b>
-                                </td>
-                                break;
-                            case "AUTO3":
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #8dcffd;">
-                                    <b>@Html.DisplayFor(modelItem => item.Flow)</b>
-                                </td>
-                                break;
-                            case "AUTO4":
-                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #96d677;">
-                                    <b>@Html.DisplayFor(modelItem => item.Flow)</b>
-                                </td>
-                                break;
+                                <b>
+                                    @Html.ActionLink(item.MCNo, "#", "#",
+                                                    new
+                                                         {
+                                                             @class = "my-class sendOprate",
+                                                             @data_toggle = "modal",
+                                                             @data_target = "#OpRateModal",
+                                                             @data_mcid = item.McId
+                                                         })
+                                </b>
 
-                            default:
-                                <td></td>
-                                break;
-                        }
-                        @*<td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #8dcffd;">
-            <b>@Html.DisplayFor(modelItem => item.Flow)</b>
-        </td>*@
-                        @*<td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
-            @Html.DisplayFor(modelItem => item.Option1)
-        </td>
-        <td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
-            @Html.DisplayFor(modelItem => item.Option2)
-        </td>*@
-
-                        @switch (item.Status)
-                        {
-                            case WebApplication1.Models.FTSetup.State.Wait:
-
-                                <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                    @Html.DisplayFor(modelItem => item.Status) <br />@item.WipCountup
-                                </td>
-                                break;
-                            case WebApplication1.Models.FTSetup.State.Run:
-                                <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-
-                                    @Html.DisplayFor(modelItem => item.Status)@*<p style="font-size:smaller;">*@<br />@item.countDown@*</p>*@
-                                </td>
-                                break;
-                            case WebApplication1.Models.FTSetup.State.Ready:
-                                <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                </td>
-                                break;
-                            case WebApplication1.Models.FTSetup.State.Setup:
-                                <td class=" text-center" style="background-color : cornflowerblue; color: black; font : bold; vertical-align : middle; width : 15px;">
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                </td>
-                                break;
-                            default:
-                                <td rowspan="2"></td>
-                                break;
-                        }
-                        @if (item.Production_DelayLot == "0")
-                        {
-                            <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;"><b>@Html.DisplayFor(modelItem => item.Production_LotDevice)</b></p></td>
-                        }
-                        else
-                        {
-                            <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;"><b>@Html.DisplayFor(modelItem => item.Production_LotDevice)</b></p></td>
-                        }
-                        @if (DateTime.Now > item.Production_Date)
-                        {
-                            <td class="text-center" style=" background-color : #ED94D3; font-size:smaller;font : bold; vertical-align : middle; width : 50px;">
-                                @Html.DisplayFor(modelItem => item.Production_Date)<br />
-                                @Html.DisplayFor(modelItem => item.Production_Time)
+                                @*<b>@Html.DisplayFor(modelItem => item.MCNo)</b>*@
                             </td>
-                        }
-                        else
-                        {
-                            <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 50px;">
-                                @Html.DisplayFor(modelItem => item.Production_Date)<br />
-                                @Html.DisplayFor(modelItem => item.Production_Time)
+                            <td class="text-center" style="vertical-align : middle; width : 125px;">
+                                @Html.DisplayFor(modelItem => item.TesterType)
                             </td>
-                        }
-                        @for (int i = 0; i < 4; i++)
-                        {
-                            if (item.LotQueue[i].Lot_no != "")
+                            <td class="text-center" style="font-size:10px; vertical-align : middle; width : 25px;">
+                                @Html.DisplayFor(modelItem => item.TestBord)
+                            </td>
+                            <td class="text-center" style="font-size : 10px; vertical-align : middle; width : 25px;">
+                                @Html.DisplayFor(modelItem => item.TestProgram)
+                            </td>
+                            @*<td class="text-center" style=" font-size:smaller; vertical-align : middle; width : 20px;">
+                                    @Html.DisplayFor(modelItem => item.DutName)
+                                </td>*@
+                            @switch (item.Flow)
                             {
-                                if (item.LotQueue[i].Lot_no == "Set Type Change")
-                                {
-                                    <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke;">
-                                        @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                                               new { @class = "textinvisible sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo,@data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
-                                        <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
-                                            <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
-                                        </p>
+                                case "AUTO1":
+                                    <td class=" text-center" style="font-size:smaller; color : cadetblue; font : bold; vertical-align : middle; width : 25px;">
+                                        -40
                                     </td>
-                                }
-                                else if (item.LotQueue[i].Lot_no == "Type Change")
-                                {
-                                    <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke; background-color : #009000;">
-                                        @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo,@data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
-                                        <p  style="font-size:10px; color : white;">
-                                            <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
-                                        </p>
+                                    break;
+                                case "AUTO2":
+                                    <td class=" text-center" style="font-size:smaller; color : orangered; font : bold; vertical-align : middle; width : 25px;">
+                                        125
                                     </td>
-                                }
-                                else
-                                {
-                                    <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke;">
-                                        @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
-                                                new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo,@data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
-                                        <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
-                                            <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
-                                        </p>
+                                    break;
+                                case "AUTO3":
+                                    <td class=" text-center " style="font-size:smaller;vertical-align : middle; width : 25px;">
+                                        25
                                     </td>
-                                }
+                                    break;
+                                case "AUTO4":
 
+                                    <td class=" text-center" style="font-size:smaller;  font : bold; vertical-align : middle; width : 25px;">
+                                        25
+                                    </td>
+                                    break;
+                                default:
+                                    <td></td>
+                                    break;
+                            }
+                            @switch (item.Flow)
+                            {
+                                case "AUTO1":
+                                    <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #E4D354;">
+                                        <b>@Html.DisplayFor(modelItem => item.Flow)</b>
+                                    </td>
+                                    break;
+                                case "AUTO2":
+                                    <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #F6ABAB;">
+                                        <b>@Html.DisplayFor(modelItem => item.Flow)</b>
+                                    </td>
+                                    break;
+                                case "AUTO3":
+                                    <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #8dcffd;">
+                                        <b>@Html.DisplayFor(modelItem => item.Flow)</b>
+                                    </td>
+                                    break;
+                                case "AUTO4":
+                                    <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #96d677;">
+                                        <b>@Html.DisplayFor(modelItem => item.Flow)</b>
+                                    </td>
+                                    break;
 
+                                default:
+                                    <td></td>
+                                    break;
+                            }
+                            @*<td class="text-center" style="font-size:smaller; vertical-align : middle; width : 25px; color: #8dcffd;">
+                                    <b>@Html.DisplayFor(modelItem => item.Flow)</b>
+                                </td>*@
+                            @*<td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
+                                    @Html.DisplayFor(modelItem => item.Option1)
+                                </td>
+                                <td class=" text-center" style="font-size : smaller; vertical-align : middle; width : 10px;">
+                                    @Html.DisplayFor(modelItem => item.Option2)
+                                </td>*@
+
+                            @switch (item.Status)
+                            {
+                                case WebApplication1.Models.FTSetup.State.Wait:
+
+                                    <td class=" text-center" style="background-color : yellow; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                        @Html.DisplayFor(modelItem => item.Status) <br />@item.WipCountup
+                                    </td>
+                                    break;
+                                case WebApplication1.Models.FTSetup.State.Run:
+                                    <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
+
+                                        @Html.DisplayFor(modelItem => item.Status)@*<p style="font-size:smaller;">*@<br />@item.countDown@*</p>*@
+                                    </td>
+                                    break;
+                                case WebApplication1.Models.FTSetup.State.Ready:
+                                    <td class=" text-center" style="background-color : aquamarine ; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    break;
+                                case WebApplication1.Models.FTSetup.State.Setup:
+                                    <td class=" text-center" style="background-color : cornflowerblue; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    break;
+                                default:
+                                    <td rowspan="2"></td>
+                                    break;
+                            }
+                            @if (item.Production_DelayLot == "0")
+                            {
+                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;"><b>@Html.DisplayFor(modelItem => item.Production_LotDevice)</b></p></td>
                             }
                             else
                             {
-                                <td></td>
+                                <td class="text-center" style="background-color : mediumpurple; font-size:smaller; vertical-align : middle; width : 80px;">@Html.DisplayFor(modelItem => item.Production_LotNo)<br /><p class="@Html.DisplayFor(modelItem => item.Mc_Color)" style="font-size:10px;"><b>@Html.DisplayFor(modelItem => item.Production_LotDevice)</b></p></td>
                             }
-                        }
-                    </tr>
+                            @if (DateTime.Now > item.Production_Date)
+                            {
+                                <td class="text-center" style=" background-color : #ED94D3; font-size:smaller;font : bold; vertical-align : middle; width : 50px;">
+                                    @Html.DisplayFor(modelItem => item.Production_Date)<br />
+                                    @Html.DisplayFor(modelItem => item.Production_Time)
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-center" style="font-size:smaller; vertical-align : middle; width : 50px;">
+                                    @Html.DisplayFor(modelItem => item.Production_Date)<br />
+                                    @Html.DisplayFor(modelItem => item.Production_Time)
+                                </td>
+                            }
+                            @for (int i = 0; i < 4; i++)
+                            {
+                                if (item.LotQueue[i].Lot_no != "")
+                                {
+                                    if (item.LotQueue[i].Lot_no == "Set Type Change")
+                                    {
+                                        <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke;">
+                                            @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
+                                                   new { @class = "textinvisible sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo, @data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
+                                            <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
+                                                <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
+                                            </p>
+                                        </td>
+                                    }
+                                    else if (item.LotQueue[i].Lot_no == "Type Change")
+                                    {
+                                        <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke; background-color : #009000;">
+                                            @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
+                                                    new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo, @data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
+                                            <p style="font-size:10px; color : white;">
+                                                <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
+                                            </p>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center DeviceName1" style="font-size:smaller;  vertical-align : middle; width : 80px; color : whitesmoke;">
+                                            @Html.ActionLink(item.LotQueue[i].Lot_no, "#", "#",
+                                                    new { @class = "my-class sendData", @data_toggle = "modal", @data_target = "#exampleModal", @data_mcno = item.MCNo, @data_mcid = item.McId, @data_device = item.DeviceName, @data_sequence = i + 2 })
+                                            <p class="@Html.DisplayFor(modelItem => item.LotQueue[i].S_Color)" style="font-size:10px;">
+                                                <b>@Html.DisplayFor(modelItem => item.LotQueue[i].FTDevice)</b>
+                                            </p>
+                                        </td>
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -321,7 +333,7 @@
                     <div id="container2"></div>
                 </div>
             </div>
-            
+
             <div>
                 <table id="WIPTable" class="table table-striped table-condensed table-bordered">
                     <thead>
@@ -346,82 +358,82 @@
                         @foreach (var item in (List<WebApplication1.Models.FTDenpyo_Calculate>)ViewBag.Denpyo_Calculates)
                         {
 
-                        <tr class="text-center">
-                            @*<td style="vertical-align : middle;">@item.PKGName</td>*@
-                            <td class="@item.TextColor" style="vertical-align : middle;"><b>@item.FTDevice</b></td>
-                            @if (@item.FL_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.FL_Calculate.ToString("0.0") H<p style=" color : black">@item.FL_Lot Lot.</p></td>
-                            }
-                            @if (@item.A1_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA1 == true)
+                            <tr class="text-center">
+                                @*<td style="vertical-align : middle;">@item.PKGName</td>*@
+                                <td class="@item.TextColor" style="vertical-align : middle;"><b>@item.FTDevice</b></td>
+                                @if (@item.FL_Calculate == 0)
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                                    <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.FL_Calculate.ToString("0.0") H<p style=" color : black">@item.FL_Lot Lot.</p></td>
                                 }
-                            }
-                            @if (@item.A2_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA2 == true)
+                                @if (@item.A1_Calculate == 0)
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                    if (item.SetOnMcA1 == true)
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                                    }
+                                }
+                                @if (@item.A2_Calculate == 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    if (item.SetOnMcA2 == true)
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
 
+                                    }
                                 }
-                            }
-                            @if (@item.A3_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA3 == true)
+                                @if (@item.A3_Calculate == 0)
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                    if (item.SetOnMcA3 == true)
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                    }
                                 }
-                            }
-                            @if (@item.A4_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA4 == true)
+                                @if (@item.A4_Calculate == 0)
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px; ">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    <td style="font-size:smaller; vertical-align : middle; color : blue; ">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                    if (item.SetOnMcA4 == true)
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px; ">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="font-size:smaller; vertical-align : middle; color : blue; ">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                    }
                                 }
-                            }
-                            <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;">Y  @item.Plan_yesterday.ToString("0")<br />T @item.Plan_today.ToString("0")</td>
-                            <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Result_yesterday.ToString("0")<br /> @item.Result_today.ToString("0")</td>
-                            <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Calulate_yesterday.ToString("0")<br /> @item.Calulate_today.ToString("0")</td>
-                        </tr>
+                                <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;">Y  @item.Plan_yesterday.ToString("0")<br />T @item.Plan_today.ToString("0")</td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Result_yesterday.ToString("0")<br /> @item.Result_today.ToString("0")</td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Calulate_yesterday.ToString("0")<br /> @item.Calulate_today.ToString("0")</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -429,7 +441,7 @@
 
 
         </div>
-        </div>
+    </div>
     @*--------------modal-------------------*@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" align="center">
         <div class="modal-dialog-centered" role="document" style="width : 300px;">
@@ -452,8 +464,8 @@
                             <label for="recipient-name" class="col-form-label">Change after(Lot.):</label>
                             <input type="text" class="form-control" id="Sequence">
                             <label for="recipient-name" class="col-form-label">Type Change Device:</label>
-                            @Html.DropDownList("DeviceName", ViewBag.devicefilter as SelectList, "All", new { @class = "form-control",@id="DeviceChange"  })
-                           
+                            @Html.DropDownList("DeviceName", ViewBag.devicefilter as SelectList, "All", new { @class = "form-control", @id = "DeviceChange" })
+
                             @*<input type="text" class="form-control" id="DeviceChange">*@
                         </div>
                     </form>
@@ -466,8 +478,39 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="OpRateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" align="center">
+        <div class="modal-dialog-centered" role="document" style="width : 300px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">OP Rate Setup</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="McId">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">OP Rate(%):</label>
+                            <input type="number" class="form-control" id="OpRate">
+                            @*<label for="recipient-name" class="col-form-label">Type Change Device:</label>*@
+                            @*@Html.DropDownList("DeviceName", ViewBag.devicefilter as SelectList, "All", new { @class = "form-control", @id = "DeviceChange" })*@
 
+                            @*<input type="text" class="form-control" id="DeviceChange">*@
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="btn btn-secondary" style="background-color : #F38080; color : white;" id="canceltypechange">Cancel</button>*@
+                    <button type="button" class="btn btn-primary" id="insertoprate">Save</button>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
 
 
@@ -570,6 +613,46 @@
             });
         });
         </script>
+        <script>//OPRate
+            $(".sendOprate").click(function () {
+                console.log("OK");
+
+                var mcid = $(this).data('mcid');
+
+                console.log(mcid);
+
+                $("#McId").val(mcid);
+            });
+            $("#insertoprate").click(function () {
+
+                var mcid = $("#McId").val();
+                var oprate = $("#OpRate").val();
+
+                console.log(mcid);
+                console.log(oprate);
+
+            $.ajax({
+                type: "GET",
+                 url: '@Url.Action("InsertOPRate", "Home")',
+                data: {
+                    'McId': mcid,
+                    'OpRate': oprate,
+
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    console.log(data);
+                    $('#OpRateModal').hide();
+                    location.reload();
+                },
+                error: function (data, status, jqXHR) {
+                    alert(jqXHR);
+                }
+            });
+            });
+        </script>
+
         <script>
             $(document).ready(function () {
                 $('#iTable').DataTable({

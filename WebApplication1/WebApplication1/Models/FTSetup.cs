@@ -15,6 +15,7 @@ namespace WebApplication1.Models
         public string PKName { get; set; }
         public string MCNo { get; set; }
         public int McId { get; set; }
+        public float OpRate { get; set; }
         public string TesterType { get; set; }
         public string TestBord { get; set; }
         public string DutName { get; set; }
