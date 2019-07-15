@@ -104,7 +104,16 @@ namespace WebApplication1.Controllers
                     if (mcWip != null)
                     {
                         long test = (long)(DateTime.Now.Ticks - mcWip.McStop.Value.Ticks);
-                        item.WipCountup = (new TimeSpan(test)).ToString().Substring(0, 5);
+                        TimeSpan wait = (new TimeSpan(test));
+
+                        if (wait.ToString("%d") != "0")
+                        {
+                            item.WipCountup = wait.ToString("%d") + "." + wait.ToString("hh") + ":" + wait.ToString("mm");
+                        }else
+                        {
+                            item.WipCountup = wait.ToString("hh") + ":" + wait.ToString("mm");
+                        }
+                        //item.WipCountup = (new TimeSpan(test)).ToString("%d.%h:%m");
                     }
 
                 }
