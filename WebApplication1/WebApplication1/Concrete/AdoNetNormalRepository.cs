@@ -697,7 +697,7 @@ namespace WebApplication1.Concrete
         public void InsertOPRate(int McId,float OpRate)
         {
             
-            float OpratePer = OpRate / 100;
+            //float OpratePer = OpRate / 100;
            
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
@@ -705,7 +705,7 @@ namespace WebApplication1.Concrete
                 cmd.CommandText = "INSERT INTO [DBx].[dbo].[scheduler_oprate]([mcid],[oprate])" +
                     " VALUES(@McId, @OpRate)";
                 cmd.Parameters.Add("@McId", System.Data.SqlDbType.Int).Value = McId;
-                cmd.Parameters.Add("@OpRate", System.Data.SqlDbType.Float).Value = OpratePer;
+                cmd.Parameters.Add("@OpRate", System.Data.SqlDbType.Float).Value = OpRate;
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 conn.Close();
@@ -726,5 +726,22 @@ namespace WebApplication1.Concrete
                 conn.Close();
             }
         }
+
+        public void UpdateOPRateGroup(int GroupId, float OpRate)
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "UPDATE [DBx].[dbo].[scheduler_oprate]  SET [oprate] = @OpRate " +
+                    "WHERE [setupid] = @GroupId";
+                cmd.Parameters.Add("@GroupId", System.Data.SqlDbType.Int).Value = GroupId;
+                cmd.Parameters.Add("@OpRate", System.Data.SqlDbType.Real).Value = OpRate;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+
     }
 }

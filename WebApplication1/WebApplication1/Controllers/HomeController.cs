@@ -556,6 +556,18 @@ namespace WebApplication1.Controllers
             }
             return RedirectToAction("Index3");
         }
-        
+        public ActionResult InsertOPRateGroup(int GroupId, float OpRate)
+        {
+            
+            float OpratePer = OpRate / 100;
+            if(OpratePer < 0 || OpratePer > 1)
+            {
+                OpratePer = 1;
+            }
+                repository.UpdateOPRateGroup(GroupId, OpratePer);
+           
+            return RedirectToAction("Index3");
+        }
+
     }
 }

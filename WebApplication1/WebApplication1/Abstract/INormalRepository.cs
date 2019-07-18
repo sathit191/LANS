@@ -22,5 +22,6 @@ namespace WebApplication1.Abstract
         void CencelTc(string McNo);
         void InsertOPRate(int McId, float OpRate);
         void UpdateOPRate(int McId, float OpRate);
+        void UpdateOPRateGroup(int GroupId, float OpRate);
     }
 }
