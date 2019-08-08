@@ -39,6 +39,7 @@ namespace WebApplication1.Controllers
             Debug.Print("repository.Plan:" + (DateTime.Now - dateTime).ToString());
             List<McWIP> lstMcWIP = (List<McWIP>)repository.McWIP;
             Debug.Print("repository.MCWIP:" + (DateTime.Now - dateTime).ToString());
+            List<LotFTinMc> lstLotinMC = (List<LotFTinMc>)repository.LotFTinMcs;
             //---------------------------------------------------------------------------------------------------
             //Main table------------------------------------------------------------------------------------------
             List<FTWip> lstFTWipOut = new List<FTWip>();
@@ -201,7 +202,7 @@ namespace WebApplication1.Controllers
             } //lot wip add to Que
             Debug.Print("lot wip add to Que:" + (DateTime.Now - dateTime).ToString());
 
-            List<LotFTinMc> lotFTinMcs = (List<LotFTinMc>)repository.LotFTinMcs;
+            List<LotFTinMc> lotFTinMcs = lstLotinMC;
             Debug.Print("repository.LotFTinMcs:" + (DateTime.Now - dateTime).ToString());
             foreach (var item in lstFTSetup)
             {
@@ -381,12 +382,16 @@ namespace WebApplication1.Controllers
 
                     };
                     Debug.Print("Create Denpyo:" + (DateTime.Now - dateTime).ToString());
-                    var DeviceOnMc = lstFTSetup.Select(p => new { p.DeviceName ,p.Flow }).OrderBy(p => p.Flow).Distinct().ToList();
-                    var lstSetupDeviceOnMC = DeviceOnMc.Where(p => p.DeviceName == item.DeviceName);
+
+                    var DeviceSetOnMc = lstFTSetup.Where(p=>p.Production_LotNo != null).Select(p => new { p.DeviceName ,p.Flow ,p.MCNo }).OrderBy(p => p.Flow).Distinct().ToList();
+                    //var DeviceOnMc = lstFTSetup.Where(p=> p.DeviceName ==  lstLotinMC.Where()).OrderBy(p => p.Flow).Distinct().ToList();
+                    var lstSetupDeviceOnMC = DeviceSetOnMc.Where(p => p.DeviceName == item.DeviceName);
 
                     foreach (var taget in lstSetupDeviceOnMC)
                     {
-                        if (item.DeviceName == lstSetupDeviceOnMC.FirstOrDefault().DeviceName)
+
+                        //var DeviceInMc = lstLotinMC.Where(p => p.Device == taget.DeviceName && p.MCName == taget.MCNo).Count();
+                        if (item.DeviceName == lstSetupDeviceOnMC.FirstOrDefault().DeviceName )
                         {
                             switch (taget.Flow)
                             {
