@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -199,6 +200,7 @@ namespace WebApplication1.Controllers
                 var result = lstFTWipsAuto1.Where(x => !machineDevicesList.Where(y => y.DeviceName == x.DeviceName).Any()).ToList();
             } //lot wip add to Que
             Debug.Print("lot wip add to Que:" + (DateTime.Now - dateTime).ToString());
+
             List<LotFTinMc> lotFTinMcs = (List<LotFTinMc>)repository.LotFTinMcs;
             Debug.Print("repository.LotFTinMcs:" + (DateTime.Now - dateTime).ToString());
             foreach (var item in lstFTSetup)
@@ -259,7 +261,7 @@ namespace WebApplication1.Controllers
 
             List<Flow> flows = new List<Flow>();
 
-            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).OrderBy(p => p.FTDevice).Distinct().ToList();
+            var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).Distinct().ToList();
 
             SelectList devicefilter = new SelectList(DeviceGroup, "DeviceName", "FTDevice");//repository.fTSetups.Distinct().ToList(), "DeviceName", "DeviceName");
             ViewBag.devicefilter = devicefilter;
@@ -568,6 +570,297 @@ namespace WebApplication1.Controllers
            
             return RedirectToAction("Index3");
         }
+        public ActionResult TPMonitor()
+        {
+            //List<FTSetup> lstFTSetup = (List<FTSetup>)repository.fTSetups;
+            DateTime dateTime = DateTime.Now;
 
+            List<TPWip> lstTPWip = (List<TPWip>)repository.TPWips;
+            List<TPSetup> lstTPSetup = (List<TPSetup>)repository.TPSetups;
+            List<TPQAAccumulate> lstTPQAacc = (List<TPQAAccumulate>)repository.TPQAaccumulates;
+            List<Accumulator_TP> lstAccumulator = (List<Accumulator_TP>)repository.Accumulators_TP;
+            //List<Accumulator_QA> lstAccumulator_QA = (List<Accumulator_QA>)repository.Accumulators_QA;
+            List<TPLotinMc> lstTPrunOnMc = (List<TPLotinMc>)repository.LotTPinMcs;
+
+            Debug.Print("Setup MC" + (DateTime.Now - dateTime).ToString());
+            ///Setup MC/////////////////////////////////////////////////////////////////////////////////////
+
+            var pkglist = lstTPSetup.Where(p => p.PKGName != null).Select(p => new { p.PKGName }).Distinct().ToList();
+            foreach (var list in pkglist)
+            {
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_set_scheduler_tp_qa_setup_mc]";
+                    cmd.Parameters.Add("@PKG", System.Data.SqlDbType.NVarChar).Value = list.PKGName;
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+
+            ////////////END SETUP MC//////////////////////////////////////////////////////////////////////////
+            Debug.Print("END SETUP MC:" + (DateTime.Now - dateTime).ToString());
+
+
+            var machineDevicesList = lstTPSetup.Select(x => new { x.DeviceName }).Distinct().ToList();
+
+            foreach (var item in machineDevicesList) // เอาล็อตเข้าคิว
+            {
+                var mclist = lstTPSetup.Where(p => p.DeviceName == item.DeviceName).ToList();
+                // รายการMC
+                var lotlist = lstTPWip.Where(p => p.DeviceName == item.DeviceName).ToList(); // รายการ Lot 
+
+                int countX = 1;
+                foreach (var lotsTP in lotlist)
+                {
+                    //    //var machineSetup = machineManualSetupList.Where(x => x.Sequence == countY && x.DeviceNow == deviceName.DeviceName).ToList();
+                   // var Mcname = lstTPSetup.Where(p => p.DeviceName == lotsTP.DeviceName).ToList();
+                    //    var machineManualSetupListTmp = machineManualSetupSittingList.Where(y => y.DeviceNow == deviceName.DeviceName && y.Sequence <= countY).ToList();
+                    //    foreach (var mcSetup in machineManualSetupListTmp)
+                    //    {
+                    //        mcSetup.MachienDisable = true;
+                    //    }
+                    //    var machineManualSetupDisable = machineManualSetupListTmp.Where(y => y.MachienDisable == true).ToList();
+                    //    var mcinfo = machineSetupList.Where(x => machineManualSetupDisable.Where(y => y.MachineNo != x.MachineNo).Any() || machineManualSetupDisable.Count == 0).ToList();
+                    
+                    if (mclist.Count != 0)
+                    {
+                        int sequence = (countX + 1) % mclist.Count;
+                        lotsTP.McWip = mclist[sequence].MCNo;
+
+                        countX++;
+                    }
+
+                }
+
+                int countMc = 1;
+                //int lotOverShows = 0;
+                foreach (var mcData in mclist.ToArray()) //เอาลอ็อตเข้าQue
+                {
+                    
+
+                    List<TPWip> lstTP = new List<TPWip>();
+                    for (int i = 2; i <= 10; i++)
+                    {
+                        List<TPWip> lstTPinMC = lotlist.Where(x => x.McWip == mcData.MCNo).ToList();
+                        
+
+                        foreach (var lotSequence in lstTPinMC)
+                        {
+                            lstTP.Add(lotSequence);
+                        }
+                        for (int k = 0; k < 9 - lstTPinMC.Count; k++)
+                        {
+                            string device = "";
+                            string lotno = "";
+                            //if (k == 0)
+                            //{
+                            //    device = machineManualSetupList.Where(x => x.MachineNo == mcData.MCNo).Select(x => x.DeviceChange).FirstOrDefault();
+                            //    if (device != null)
+                            //    {
+                            //        lotno = "Type Change";
+                            //    }
+                            //    else
+                            //    {
+                            //        lotno = "Set Type Change";
+
+                            //    }
+                            //}
+                            TPWip TPWip = new TPWip();
+                            TPWip.DeviceName = device;
+                            TPWip.LotNo = lotno;
+                            //fTWip.S_Color = "TypeChange";
+                            lstTP.Add(TPWip);
+                        }
+                        //if (lstTPinMC.Count() - 4 > 0)
+                        //{
+                        //    lotOverShows = lstFTWipsAuto1OnMc.Count() - 4;
+                        //}
+
+                    }
+                    mcData.LotQueue = lstTP;
+                    //mcData.OverPlan = lotOverShows;
+                    countMc++;
+                }
+
+                foreach (var mcData in mclist.ToArray())
+                {
+                    TPLotinMc onMc = lstTPrunOnMc.Where(p => p.McName == mcData.MCNo).FirstOrDefault();
+                    if (onMc == null)
+                        continue;
+                    mcData.Production_LotNo = onMc.LotNo;
+                    mcData.Production_LotDevice = onMc.DeviceName;
+                    mcData.Status = onMc.ProcessState;
+                    DateTime? production_Date = null;
+                    if (onMc.ProcessState == TPSetup.State.Run)
+                    {
+
+                        //if (item.Flow == "AUTO1")
+                        //{
+                        double timeCal = (double)onMc.StandardTime /*/ item.OpRate*/;
+                        TimeSpan StandardTime = new TimeSpan(0, (int)timeCal, 0);
+                        production_Date = onMc.UpDateTime + StandardTime;
+
+                        //var data = lstTPWip.Where(p => p.LotNo == onMc.LotNo).Select(p => new { p.LotNo, p.Kpcs, p.QtyProduction, p.StandareTime });
+                        //float time = data.FirstOrDefault().StandareTime * (float)data.FirstOrDefault().QtyProduction;
+
+                        //item.countDown = (new TimeSpan(0, (int)time, 0)).ToString().Substring(0, 5); //run countdown
+
+                        if (production_Date.HasValue)
+                        {
+                            mcData.Production_Date = production_Date.Value;
+                            mcData.Production_Time = production_Date.Value;
+                        }
+
+
+                    }
+                }
+
+            }
+
+            //var devicenameTP = lstTPQAacc.Where(p => p.JobId == 236 || p.JobId == 289).Select(p => new { p.DeviceName }).Distinct().ToList();
+            //List<FTDenpyo_Calculate> fTDenpyo_Calculates = new List<FTDenpyo_Calculate>();
+            List<Calculate_TP> calculates = new List<Calculate_TP>();
+            //List<ChartShow> chartShows = new List<ChartShow>();
+
+            var devicename = lstTPQAacc.Select(p => new { p.DeviceName , p.PKGName }).Distinct().ToList();
+            //var chartshow = new ChartShow();
+            //foreach (var item in devicename)
+            //{
+            //    chartshow.DeviceName = item.DeviceName;
+            //    chartshow.QALot = 0;
+            //    chartshow.TPLot = 0;
+
+                
+            //}
+            foreach (var item in devicename) // TP WIP calculate
+            {
+
+                
+                //var PlanAndResult = lstAccumulator_TP.Where(p => p.DeviceName == item.DeviceName).FirstOrDefault();
+                
+                var addTable = new Calculate_TP
+                {
+                    PKGName =item.PKGName,
+                    DeviceName = item.DeviceName
+                };
+                calculates.Add(addTable);
+
+                var lotTP = lstTPQAacc.Where(p =>p.JobId == 236 && p.DeviceName == item.DeviceName && p.PKGName == item.PKGName|| p.JobId == 289 && p.DeviceName == item.DeviceName && p.PKGName == item.PKGName).FirstOrDefault();
+                if (lotTP != null)
+                {
+                    addTable.TPLot = lotTP.SumLots;
+                    addTable.SumRunTime = lotTP.StandardTime;
+                }
+                var lotQA = lstTPQAacc.Where(p => p.JobId == 122 && p.DeviceName == item.DeviceName && p.PKGName == item.PKGName || p.JobId == 316 && p.DeviceName == item.DeviceName && p.PKGName == item.PKGName).FirstOrDefault();
+                if(lotQA != null)
+                {
+                    addTable.QALot = lotQA.SumLots;
+                }
+
+                var accumulate = lstAccumulator.Where(p => p.DeviceName == item.DeviceName && p.PKG == item.PKGName).FirstOrDefault();
+                if(accumulate != null)
+                {
+                    addTable.Plan_today = accumulate.Kpcs_PlanT / 1000;
+                    addTable.Result_today = accumulate.Kpcs_ResultT / 1000;
+                    addTable.Calulate_today = accumulate.Kpcs_SumT / 1000;
+
+                    addTable.Plan_yesterday = accumulate.Kpcs_PlanY / 1000;
+                    addTable.Result_yesterday = accumulate.Kpcs_ResultY / 1000;
+                    addTable.Calulate_yesterday = accumulate.Kpcs_SumY / 1000;
+
+                }
+                //if (PlanAndResult != null)
+                //{
+                //    addTable.Plan_today = PlanAndResult.Kpcs_PlanT / 1000;
+                //    addTable.Result_today = PlanAndResult.Kpcs_ResultT / 1000;
+                //    addTable.Plan_yesterday = PlanAndResult.Kpcs_PlanY / 1000;
+                //    addTable.Result_yesterday = PlanAndResult.Kpcs_ResultY / 1000;
+                //    addTable.Calulate_today = (PlanAndResult.Kpcs_ResultT / 1000) - (PlanAndResult.Kpcs_PlanT / 1000);
+                //    addTable.Calulate_yesterday = (PlanAndResult.Kpcs_ResultY / 1000) - (PlanAndResult.Kpcs_PlanY / 1000);
+                //}
+
+
+                //DateTime dateS = DateTime.Now;
+                //DateTime dateE = new DateTime(DateTime.Now.AddDays(1).Year, DateTime.Now.AddDays(1).Month, DateTime.Now.AddDays(1).Day, 8, 0, 0);
+                //float countdownHours = (float)((dateE - dateS).TotalHours);
+
+                //foreach (var tpwip in lstTPWip)
+                //{
+                //    if (tpwip.DeviceName == item.DeviceName)
+                //    {
+                //        // List<Calculate_TP> calculate_TPs = (List<Calculate_TP>)repository.Accumulators_TP;
+                //        var xx = calculates.Where(p => p.DeviceName == tpwip.DeviceName).FirstOrDefault();
+
+                //        if (countdownHours - (tpwip.StandareTime/60) > 0)
+                //        {
+                //            xx.Result_today += tpwip.Kpcs / 1000;
+                //            xx.Calulate_today = addTable.Result_today - addTable.Plan_today;
+                //            countdownHours -= tpwip.StandareTime;
+                //        }
+                //    }
+                //}
+
+
+                //calculates.Add(addTable);
+            }
+
+            //var devicenameQA = lstTPQAacc.Where(p => p.JobId == 122 || p.JobId == 316).Select(p => new { p.DeviceName }).Distinct().ToList();
+            //foreach (var item in devicenameQA) // QA WIP calculate
+            //{
+
+            //    var lotQA = lstTPQAacc.Where(p => p.JobId == 122 && p.DeviceName == item.DeviceName || p.JobId == 316 && p.DeviceName == item.DeviceName);
+            //    var PlanAndResult = lstAccumulator_QA.Where(p => p.DeviceName == item.DeviceName).FirstOrDefault();
+
+
+            //    var addTable = new Calculate_TP
+            //    {
+            //        DeviceName = item.DeviceName,
+            //        SumLots = lotQA.First().SumLots,
+            //        SumRunTime = lotQA.First().StandardTime,
+            //        Job = "QA",
+            //        //Plan_today = PlanAndResult.Kpcs_PlanT / 1000,
+            //        //Result_today = PlanAndResult.Kpcs_ResultT / 1000,
+            //        //Plan_yesterday = PlanAndResult.Kpcs_PlanY / 1000,
+            //        //Result_yesterday = PlanAndResult.Kpcs_ResultY / 1000,
+            //        //Calulate_today = (PlanAndResult.Kpcs_ResultT / 1000) - (PlanAndResult.Kpcs_PlanT / 1000),
+            //        //Calulate_yesterday = (PlanAndResult.Kpcs_ResultY / 1000) - (PlanAndResult.Kpcs_PlanY / 1000)
+
+            //    };
+
+            //    if (PlanAndResult != null)
+            //    {
+            //        addTable.Plan_today = PlanAndResult.Kpcs_PlanT / 1000;
+            //        addTable.Result_today = PlanAndResult.Kpcs_ResultT / 1000;
+            //        addTable.Plan_yesterday = PlanAndResult.Kpcs_PlanY / 1000;
+            //        addTable.Result_yesterday = PlanAndResult.Kpcs_ResultY / 1000;
+            //        addTable.Calulate_today = (PlanAndResult.Kpcs_ResultT / 1000) - (PlanAndResult.Kpcs_PlanT / 1000);
+            //        addTable.Calulate_yesterday = (PlanAndResult.Kpcs_ResultY / 1000) - (PlanAndResult.Kpcs_PlanY / 1000);
+            //    }
+
+
+            //    calculates.Add(addTable);
+
+
+            //}
+
+            //var lstAccQA = calculates.ToList();
+            
+            var lstAccB20W = calculates.Where(p => p.PKGName == "SSOP-B20W").ToList();
+            var lstAccB28W = calculates.Where(p => p.PKGName == "SSOP-B28W").ToList();
+            //var lstAccTP = calculates.Where(p=>p.PKGName == "SSOP-B20W").ToList();
+
+            ViewBag.TPSetup = lstTPSetup;
+            ViewBag.TPWip = lstTPWip;
+
+            ViewBag.AccuB20W = lstAccB20W;
+            ViewBag.AccuB28W = lstAccB28W;
+            //ViewBag.QAAccumulate = lstAccQA;
+
+            ViewBag.TP_plan_result = "";
+            return View();
+        }
     }
 }

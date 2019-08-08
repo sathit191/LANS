@@ -154,6 +154,7 @@
     </Compile>
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Accumulator_Plan.cs" />
+    <Compile Include="Models\Accumulator_TP.cs" />
     <Compile Include="Models\FTDenpyo.cs" />
     <Compile Include="Models\FTMachineSchedulerSetup.cs" />
     <Compile Include="Models\FTSetup.cs" />
@@ -163,6 +164,10 @@
     <Compile Include="Models\LotFTinMc.cs" />
     <Compile Include="Models\McWIP.cs" />
     <Compile Include="Models\OpRateSetting.cs" />
+    <Compile Include="Models\TPLotinMc.cs" />
+    <Compile Include="Models\TPQAAccumulate.cs" />
+    <Compile Include="Models\TPSetup.cs" />
+    <Compile Include="Models\TPWip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -185,6 +190,7 @@
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Home\Index3.cshtml" />
     <Content Include="Scripts\Thai.json" />
+    <Content Include="Views\Home\TPMonitor.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

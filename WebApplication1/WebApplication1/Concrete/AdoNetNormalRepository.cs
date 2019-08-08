@@ -666,34 +666,6 @@ namespace WebApplication1.Concrete
                 }
             }
         }
-        //public IEnumerable<OpRateSetting> opRates
-        //{
-        //    get
-        //    {
-        //        List<OpRateSetting> lstOpRate = new List<OpRateSetting>();
-        //        var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandType = System.Data.CommandType.Text;
-        //            cmd.CommandText = "SELECT [mcid] ,[oprate] FROM [DBx].[dbo].[scheduler_oprate]";
-        //            conn.Open();
-        //            using (var reader = cmd.ExecuteReader())
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    OpRateSetting opRate = new OpRateSetting();
-
-        //                    if (!(reader["mcid"] is DBNull)) opRate.McId = (int)(reader["mcid"]);
-        //                    if (!(reader["oprate"] is DBNull)) opRate.Oprate = (float)(reader["oprate"]);
-
-        //                    lstOpRate.Add(opRate);
-        //                }
-        //                conn.Close();
-        //            }
-        //            return lstOpRate;
-        //        }
-        //    }
-        //}
         public void InsertOPRate(int McId,float OpRate)
         {
             
@@ -736,6 +708,381 @@ namespace WebApplication1.Concrete
                     "WHERE [setupid] = @GroupId";
                 cmd.Parameters.Add("@GroupId", System.Data.SqlDbType.Int).Value = GroupId;
                 cmd.Parameters.Add("@OpRate", System.Data.SqlDbType.Real).Value = OpRate;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+        public IEnumerable<TPWip> TPWips
+        {
+            get
+            {
+                List<TPWip> TPWip = new List<TPWip>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_wip]";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // FTWip ftWip = new FTWip();
+                            TPWip tp = new TPWip();
+                            if (!(reader["pkg_name"] is DBNull)) tp.PKGName = reader["pkg_name"].ToString().Trim();
+                            if (!(reader["device_name"] is DBNull)) tp.DeviceName = reader["device_name"].ToString().Trim();
+                            if (!(reader["lot_no"] is DBNull)) tp.LotNo = reader["lot_no"].ToString().Trim();
+                            if (!(reader["mc_name"] is DBNull)) tp.Mcname = reader["mc_name"].ToString().Trim();
+                            if (!(reader["job_id"] is DBNull)) tp.JobId = (int)reader["job_id"];
+                            if (!(reader["job_name"] is DBNull)) tp.JobName = reader["job_name"].ToString().Trim();
+                            if (!(reader["kpcs"] is DBNull)) tp.Kpcs = (int)reader["kpcs"];
+                            if (!(reader["qty_production"] is DBNull)) tp.QtyProduction = (float)reader["qty_production"];
+                            if (!(reader["state"] is DBNull)) tp.State = (int)reader["state"];
+                            if (!(reader["standare_time"] is DBNull)) tp.StandareTime = (float)reader["standare_time"];
+                            if (!(reader["update_at"] is DBNull)) tp.UpdateAt = (DateTime)reader["update_at"];
+
+                            TPWip.Add(tp);
+                        }
+                        conn.Close();
+                    }
+                    return TPWip;
+                }
+            }
+        }
+        public IEnumerable<TPSetup> TPSetups
+        {
+
+            get
+            {
+                List<TPSetup> TPSetup = new List<TPSetup>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_setup_mc]" +
+                        "" +
+                        "";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            TPSetup setup = new TPSetup();
+
+                            if (!(reader["pkgname"] is DBNull)) setup.PKGName = reader["pkgname"].ToString().Trim();
+                            if (!(reader["mcname"] is DBNull)) setup.MCNo = reader["mcname"].ToString().Trim();
+                            if (!(reader["mcid"] is DBNull)) setup.McId = (int)reader["mcid"];
+                            if (!(reader["mctype"] is DBNull)) setup.MCType = reader["mctype"].ToString().Trim();
+                            if (!(reader["devicename"] is DBNull)) setup.DeviceName = reader["devicename"].ToString().Trim();
+                            TPSetup.Add(setup);
+                        }
+                        conn.Close();
+                    }
+                    return TPSetup;
+                }
+            }
+        }
+        public IEnumerable<TPQAAccumulate> TPQAaccumulates
+        {
+            get
+            {
+                List<TPQAAccumulate> TPQAAccumulates = new List<TPQAAccumulate>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_qa_calculate]";
+                        
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            TPQAAccumulate accumulate = new TPQAAccumulate();
+
+                            if (!(reader["pkgname"] is DBNull)) accumulate.PKGName = reader["pkgname"].ToString().Trim();
+                            if (!(reader["devicename"] is DBNull)) accumulate.DeviceName = reader["devicename"].ToString().Trim();
+                            if (!(reader["jobname"] is DBNull)) accumulate.JobName = reader["jobname"].ToString().Trim();
+                            if (!(reader["jobid"] is DBNull)) accumulate.JobId = (int)reader["jobid"];
+                            if (!(reader["sumlots"] is DBNull)) accumulate.SumLots = (float)reader["sumlots"];
+                            if (!(reader["sumkpcs"] is DBNull)) accumulate.SumKpcs = (float)reader["sumkpcs"];
+                            if (!(reader["state"] is DBNull)) accumulate.State = (int)reader["state"];
+                            if (!(reader["standardtime"] is DBNull)) accumulate.StandardTime = (int)reader["standardtime"]/60;
+                            TPQAAccumulates.Add(accumulate);
+                        }
+                        conn.Close();
+                    }
+                    return TPQAAccumulates;
+                }
+            }
+        }
+        public IEnumerable<Accumulator_TP> Accumulators_TP
+        {
+            get
+            {
+                #region Get Date Today
+                DateTime dtResultStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 8, 0, 0);
+                DateTime dtResultEnd = DateTime.Now; 
+                DateTime dtPlanStart = new DateTime(dtResultStart.AddDays(-11).Year, dtResultStart.AddDays(-11).Month, dtResultStart.AddDays(-11).Day, 8, 0, 0);
+                DateTime dtPlanEnd = new DateTime(dtResultEnd.AddDays(-11).Year, dtResultEnd.AddDays(-11).Month, dtResultEnd.AddDays(-11).Day, 8, 0, 0);
+                #endregion
+                #region Get Date Result
+                DateTime dtYResultStart = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, 1, 8, 0, 0);
+                DateTime dtYResultEnd = DateTime.Now.AddDays(-1); 
+                DateTime dtYPlanStart = new DateTime(dtYResultStart.AddDays(-11).Year, dtYResultStart.AddDays(-11).Month, dtYResultStart.AddDays(-11).Day, 8, 0, 0);
+                DateTime dtYPlanEnd = new DateTime(dtYResultEnd.AddDays(-11).Year, dtYResultEnd.AddDays(-11).Month, dtYResultEnd.AddDays(-11).Day, 8, 0, 0);
+                #endregion
+
+                List<Accumulator_TP> accumulator = new List<Accumulator_TP>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                #region accumerlaet today
+                using (var cmd = conn.CreateCommand()) //accumerlaet plan today
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_accumulate_result]";
+                    cmd.Parameters.Add("@ResultDateStart", System.Data.SqlDbType.DateTime).Value = dtResultStart;
+                    cmd.Parameters.Add("@ResultDateEnd", System.Data.SqlDbType.DateTime).Value = dtResultEnd;
+                    cmd.Parameters.Add("@PlanDateStart", System.Data.SqlDbType.DateTime).Value = dtPlanStart;
+                    cmd.Parameters.Add("@PlanDateEnd", System.Data.SqlDbType.DateTime).Value = dtPlanEnd;
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // FTWip ftWip = new FTWip();
+                            Accumulator_TP accumulator_Plan = new Accumulator_TP();
+                            if (!(reader["pkgname"] is DBNull)) accumulator_Plan.PKG = reader["pkgname"].ToString().Trim();
+                            if (!(reader["devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["devicename"].ToString().Trim();
+                           
+                            if (!(reader["input"] is DBNull)) accumulator_Plan.Kpcs_PlanT = (int)reader["input"];
+                            if (!(reader["output"] is DBNull)) accumulator_Plan.Kpcs_ResultT = (int)reader["output"];
+                            if (!(reader["summary"] is DBNull)) accumulator_Plan.Kpcs_SumT = (int)reader["summary"];
+
+                            accumulator.Add(accumulator_Plan);
+                        }
+                        conn.Close();
+                    }
+
+                    //return accumulator;
+                }
+                #endregion
+                #region accumerlaet yesterdar
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_accumulate_result]";
+                    cmd.Parameters.Add("@ResultDateStart", System.Data.SqlDbType.DateTime).Value = dtYResultStart;
+                    cmd.Parameters.Add("@ResultDateEnd", System.Data.SqlDbType.DateTime).Value = dtYResultEnd;
+                    cmd.Parameters.Add("@PlanDateStart", System.Data.SqlDbType.DateTime).Value = dtYPlanStart;
+                    cmd.Parameters.Add("@PlanDateEnd", System.Data.SqlDbType.DateTime).Value = dtYPlanEnd;
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (!(reader["Devicename"] is DBNull))
+                            {
+                                foreach (Accumulator_TP item in accumulator)
+                                {
+                                    if (reader["Devicename"].ToString().Trim() == item.DeviceName)
+                                    {
+                                        if (!(reader["input"] is DBNull)) item.Kpcs_PlanY = (int)reader["input"];
+                                        if (!(reader["output"] is DBNull)) item.Kpcs_ResultY = (int)reader["output"];
+                                        if (!(reader["summary"] is DBNull)) item.Kpcs_SumY = (int)reader["summary"];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        conn.Close();
+                    }
+                }
+                #endregion
+                return accumulator;
+            }
+        }
+        //public IEnumerable<Accumulator_QA> Accumulators_QA
+        //{
+        //    get
+        //    {
+        //        #region Get Date Today
+        //        DateTime dtResultStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 8, 0, 0);
+        //        DateTime dtResultEnd = DateTime.Now;
+        //        DateTime dtPlanStart = new DateTime(dtResultStart.AddDays(-12).Year, dtResultStart.AddDays(-12).Month, dtResultStart.AddDays(-12).Day, 8, 0, 0);
+        //        DateTime dtPlanEnd = new DateTime(dtResultEnd.AddDays(-12).Year, dtResultEnd.AddDays(-12).Month, dtResultEnd.AddDays(-12).Day, 8, 0, 0);
+        //        #endregion
+        //        #region Get Date Result
+        //        DateTime dtYResultStart = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, 1, 8, 0, 0);
+        //        DateTime dtYResultEnd = DateTime.Now.AddDays(-1);
+        //        DateTime dtYPlanStart = new DateTime(dtYResultStart.AddDays(-12).Year, dtYResultStart.AddDays(-12).Month, dtYResultStart.AddDays(-12).Day, 8, 0, 0);
+        //        DateTime dtYPlanEnd = new DateTime(dtYResultEnd.AddDays(-12).Year, dtYResultEnd.AddDays(-12).Month, dtYResultEnd.AddDays(-12).Day, 8, 0, 0);
+        //        #endregion
+
+        //        List<Accumulator_QA> accumulator = new List<Accumulator_QA>();
+        //        var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+        //        #region accumerlaet plan today
+        //        using (var cmd = conn.CreateCommand()) //accumerlaet plan today
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
+        //            cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtPlanStart;
+        //            cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtPlanEnd;
+        //            conn.Open();
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    // FTWip ftWip = new FTWip();
+        //                    Accumulator_QA accumulator_Plan = new Accumulator_QA();
+        //                    if (!(reader["Devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["Devicename"].ToString().Trim();
+
+        //                    if (!(reader["Kpcs"] is DBNull)) accumulator_Plan.Kpcs_PlanT = int.Parse(reader["Kpcs"].ToString().Trim());
+
+        //                    accumulator.Add(accumulator_Plan);
+        //                }
+        //                conn.Close();
+        //            }
+
+        //            //return accumulator;
+        //        }
+        //        #endregion
+        //        #region accumerlaet result today
+        //        using (var cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_qa_accumulate_result]";
+        //            cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtResultStart;
+        //            cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtResultEnd;
+        //            conn.Open();
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    if (!(reader["Devicename"] is DBNull))
+        //                    {
+        //                        foreach (Accumulator_QA item in accumulator)
+        //                        {
+        //                            if (reader["Devicename"].ToString().Trim() == item.DeviceName)
+        //                            {
+        //                                if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultT = int.Parse(reader["Kpcs"].ToString().Trim());
+        //                                break;
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                conn.Close();
+        //            }
+        //        }
+        //        #endregion
+        //        #region accumerlaet plan yesterdar
+        //        using (var cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
+        //            cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtYPlanStart;
+        //            cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtYPlanEnd;
+        //            conn.Open();
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    if (!(reader["Devicename"] is DBNull))
+        //                    {
+        //                        foreach (Accumulator_QA item in accumulator)
+        //                        {
+        //                            if (reader["Devicename"].ToString().Trim() == item.DeviceName)
+        //                            {
+        //                                if (!(reader["Kpcs"] is DBNull)) item.Kpcs_PlanY = int.Parse(reader["Kpcs"].ToString().Trim());
+        //                                break;
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                conn.Close();
+        //            }
+        //        }
+        //        #endregion
+        //        #region accumerlaet result yesterday
+        //        using (var cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_qa_accumulate_result]";
+        //            cmd.Parameters.Add("@DateStart", System.Data.SqlDbType.DateTime).Value = dtYResultStart;
+        //            cmd.Parameters.Add("@DateEnd", System.Data.SqlDbType.DateTime).Value = dtYResultEnd;
+        //            conn.Open();
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    if (!(reader["Devicename"] is DBNull))
+        //                    {
+        //                        foreach (Accumulator_QA item in accumulator)
+        //                        {
+        //                            if (reader["Devicename"].ToString().Trim() == item.DeviceName)
+        //                            {
+        //                                if (!(reader["Kpcs"] is DBNull)) item.Kpcs_ResultY = int.Parse(reader["Kpcs"].ToString().Trim());
+        //                                break;
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                conn.Close();
+        //            }
+        //        }
+        //        #endregion
+        //        return accumulator;
+        //    }
+        //}
+        public IEnumerable<TPLotinMc> LotTPinMcs
+        {
+            get
+            {
+                List<TPLotinMc> TPLotinMc = new List<TPLotinMc>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_in_machine]";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // FTWip ftWip = new FTWip();
+                            TPLotinMc tpinmc = new TPLotinMc();
+                            if (!(reader["lotId"] is DBNull)) tpinmc.LotID =(int)reader["lotId"];
+                            if (!(reader["lotno"] is DBNull)) tpinmc.LotNo = reader["lotno"].ToString().Trim();
+                            if (!(reader["devicename"] is DBNull)) tpinmc.DeviceName = reader["devicename"].ToString().Trim();
+                            if (!(reader["mcname"] is DBNull)) tpinmc.McName = reader["mcname"].ToString().Trim();
+                            //if (!(reader["process_state"] is DBNull)) tpinmc.ProcessState = (int)reader["process_state"];
+                            if (!(reader["process_state"] is DBNull))
+                            {
+                                if (reader["process_state"].ToString() == "1")
+                                    tpinmc.ProcessState = TPSetup.State.Setup;
+                                else if (reader["process_state"].ToString() == "2")
+                                    tpinmc.ProcessState = TPSetup.State.Run;
+
+                            }
+                            if (!(reader["update_time"] is DBNull)) tpinmc.UpDateTime =(DateTime)reader["update_time"];
+                            if (!(reader["standardtime"] is DBNull)) tpinmc.StandardTime = (int)reader["standardtime"];
+
+                            TPLotinMc.Add(tpinmc);
+                        }
+                        conn.Close();
+                    }
+                    return TPLotinMc;
+                }
+            }
+        }
+        public void MCSetup(string PKGname)
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_set_scheduler_tp_qa_setup_mc]";
+                cmd.Parameters.Add("@PKG", System.Data.SqlDbType.NVarChar).Value = PKGname;
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 conn.Close();
