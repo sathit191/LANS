@@ -33,6 +33,14 @@ namespace WebApplication1.Models
         public int A2_Lot { get; set; }
         public int A3_Lot { get; set; }
         public int A4_Lot { get; set; }
+        public int A1_Hold { get; set; }
+        public int A2_Hold { get; set; }
+        public int A3_Hold { get; set; }
+        public int A4_Hold { get; set; }
+        public int A1_Sum { get; set; }
+        public int A2_Sum { get; set; }
+        public int A3_Sum { get; set; }
+        public int A4_Sum { get; set; }
         public float Plan_today { get; set; }
         public float Result_today { get; set; }
         public float Calulate_today { get; set; }

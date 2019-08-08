@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
             int countColor = 1;
             foreach (var deviceName in ColorList)
             {
-                List<FTWip> WipDevice = lstFTWips.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
+                List<FTWip> WipDevice = lstFTWips.Where(x => x.DeviceName == deviceName.DeviceName ).ToList();
                 List<FTSetup> ColorOnMc = lstFTSetup.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
 
                 foreach (var item in WipDevice)
@@ -70,7 +70,7 @@ namespace WebApplication1.Controllers
             for (int J = 1; J <= 4; J++)
             {
                 List<FTSetup> lstFTSetupAuto1 = lstFTSetup.Where(x => x.Flow == "AUTO" + J).OrderBy(x => x.MCNo).ToList(); //หาเครื่องกรอก Auto
-                List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" + J && x.Lot_State == FTWip.LotState.Wip).OrderBy(x => x.Lot_no).ToList();
+                List<FTWip> lstFTWipsAuto1 = lstFTWips.Where(x => x.JobName == "AUTO" + J && x.Lot_State == FTWip.LotState.Wip && x.qualitystate == 0).OrderBy(x => x.Lot_no).ToList();
 
                 var machineDevicesList = lstFTSetupAuto1.Select(x => new { x.DeviceName }).Distinct().ToList();
 
@@ -248,7 +248,7 @@ namespace WebApplication1.Controllers
             //-----------------------------------------------------------------------------------------------------
             //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
-            var DeviceList = from Group in lstFTWips// lstFTWipOut
+            var DeviceList = from Group in lstFTWips.Where(p=>p.qualitystate != 6)// lstFTWipOut
                              group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
 
                              select new FTWipOutPlan
@@ -260,6 +260,19 @@ namespace WebApplication1.Controllers
                                  SumKpcs = list.Sum(p => p.Kpcs)
                              };
 
+            var Holdlot = from Group in lstFTWips.Where(p => p.qualitystate == 6)// listHoldlot
+                             group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
+
+                             select new FTWipOutPlan
+                             {
+                                 Flow = list.Key.JobName,
+                                 FTDevice = list.Key.FTDevice,
+                                 DeviceName = list.Key.DeviceName,
+                                 Count = list.Count(),
+                                 SumKpcs = list.Sum(p => p.Kpcs)
+                             };
+
+            
             List<Flow> flows = new List<Flow>();
 
             var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).Distinct().ToList();
@@ -267,7 +280,8 @@ namespace WebApplication1.Controllers
             SelectList devicefilter = new SelectList(DeviceGroup, "DeviceName", "FTDevice");//repository.fTSetups.Distinct().ToList(), "DeviceName", "DeviceName");
             ViewBag.devicefilter = devicefilter;
 
-            foreach (var item in DeviceGroup)
+            
+                foreach (var item in DeviceGroup)
             {
                 // List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
                 string name = item.FTDevice.ToString();
@@ -325,12 +339,62 @@ namespace WebApplication1.Controllers
                     }
                 }
 
+                
+
                 //    //    var addData = flows.Where(p => p.Name == item.DeviceName).SingleOrDefault();
 
                 //    //    //string data = "[49.9, 71.5, 106.4, 129.2]";
 
 
             }
+            ///////HOLD LOT ////////////////////
+            if (Holdlot.Count() > 0)
+            {
+                var addflow = new Flow
+                {
+                    Name = "LotHold",
+                    A1 = 0,
+                    A2 = 0,
+                    A3 = 0,
+                    A4 = 0,
+                    FL = 0,
+                    A1_Kpcs = 0,
+                    A2_Kpcs = 0,
+                    A3_Kpcs = 0,
+                    A4_Kpcs = 0,
+                    FL_Kpcs = 0,
+                    //Color = color
+                };
+                flows.Add(addflow);
+            }
+
+            foreach (var list in Holdlot)
+            {
+                var row = flows.Where(p => p.Name == "LotHold").SingleOrDefault();
+
+                if (list.Flow == "AUTO1")
+                {
+                    row.A1 = list.Count;
+                    row.A1_Kpcs = (float)list.SumKpcs / 1000;
+
+                }
+                else if (list.Flow == "AUTO2")
+                {
+                    row.A2 = list.Count;
+                    row.A2_Kpcs = (float)list.SumKpcs / 1000;
+                }
+                else if (list.Flow == "AUTO3")
+                {
+                    row.A3 = list.Count;
+                    row.A3_Kpcs = (float)list.SumKpcs / 1000;
+                }
+                else if (list.Flow == "AUTO4")
+                {
+                    row.A4 = list.Count;
+                    row.A4_Kpcs = (float)list.SumKpcs / 1000;
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////////
             string command = "";
             foreach (var item in flows)
             {
@@ -378,7 +442,15 @@ namespace WebApplication1.Controllers
                         A3_Calculate = 0,
                         A3_Lot = 0,
                         A4_Calculate = 0,
-                        A4_Lot = 0
+                        A4_Lot = 0,
+
+                        A1_Hold = 0,
+
+                        A2_Hold = 0,
+                        
+                        A3_Hold = 0,
+
+                        A4_Hold = 0
 
                     };
                     Debug.Print("Create Denpyo:" + (DateTime.Now - dateTime).ToString());
@@ -450,22 +522,22 @@ namespace WebApplication1.Controllers
                     var selectrow = fTDenpyo_Calculates.Where(p => p.PKGName == row.PKGName && p.DeviceName == row.DeviceName).SingleOrDefault();
                     //var selectTempSq = ft
 
-                    if (row.JobId == "106")
+                    if (row.JobId == "106" && row.qualitystate != 6)
                     {
                         selectrow.A1_Lot++;
                         selectrow.A1_Calculate += row.StandardTime / 60;
                     }
-                    else if (row.JobId == "108")
+                    else if (row.JobId == "108" && row.qualitystate != 6)
                     {
                         selectrow.A2_Lot++;
                         selectrow.A2_Calculate += row.StandardTime / 60;
                     }
-                    else if (row.JobId == "110")
+                    else if (row.JobId == "110" && row.qualitystate != 6)
                     {
                         selectrow.A3_Lot++;
                         selectrow.A3_Calculate += row.StandardTime / 60;
                     }
-                    else if (row.JobId == "119")
+                    else if (row.JobId == "119" && row.qualitystate != 6)
                     {
                         selectrow.A4_Lot++;
                         selectrow.A4_Calculate += row.StandardTime / 60;
@@ -476,6 +548,32 @@ namespace WebApplication1.Controllers
                         selectrow.FL_Calculate += row.StandardTime / 60;
                     }
 
+                    /////////////////////////HOLD//////////////////////////////////////
+                    if (row.JobId == "106" && row.qualitystate == 6)
+                    {
+                        selectrow.A1_Hold++;
+                        selectrow.A1_Sum = selectrow.A1_Lot + selectrow.A1_Hold;
+                        //selectrow.A1_Calculate += row.StandardTime / 60;
+                    }
+                    else if (row.JobId == "108" && row.qualitystate == 6)
+                    {
+                        selectrow.A2_Hold++;
+                        selectrow.A2_Sum = selectrow.A2_Lot + selectrow.A2_Hold;
+                        // selectrow.A2_Calculate += row.StandardTime / 60;
+                    }
+                    else if (row.JobId == "110" && row.qualitystate == 6)
+                    {
+                        selectrow.A3_Hold++;
+                        //selectrow.A3_Calculate += row.StandardTime / 60;
+                        selectrow.A3_Sum = selectrow.A3_Lot + selectrow.A3_Hold;
+                    }
+                    else if (row.JobId == "119" && row.qualitystate == 6)
+                    {
+                        selectrow.A4_Hold++;
+                        selectrow.A4_Sum = selectrow.A4_Lot + selectrow.A4_Hold;
+                        //selectrow.A4_Calculate += row.StandardTime / 60;
+                    }
+                    ///////////////////////////////////////////////////////////////
                     if (row.JobId == "119" && row.MachineWip != null && countdownHours > row.StandardTime / 60) //WIP Plan 
                     {
                         selectrow.Result_today += (float)row.Kpcs / 1000;
@@ -504,6 +602,8 @@ namespace WebApplication1.Controllers
                     //    {
 
                 }
+
+
                 Debug.Print("Get Denpyo2:" + count.ToString() + "=>" + (DateTime.Now - dateTime).ToString());
                 count++;
 
@@ -853,8 +953,8 @@ namespace WebApplication1.Controllers
 
             //var lstAccQA = calculates.ToList();
             
-            var lstAccB20W = calculates.Where(p => p.PKGName == "SSOP-B20W").ToList();
-            var lstAccB28W = calculates.Where(p => p.PKGName == "SSOP-B28W").ToList();
+            var lstAccB20W = calculates.Where(p => p.PKGName == "SSOP-B20W").OrderBy(p=> p.Calulate_today).ToList();
+            var lstAccB28W = calculates.Where(p => p.PKGName == "SSOP-B28W").OrderBy(p => p.Calulate_today).ToList();
             //var lstAccTP = calculates.Where(p=>p.PKGName == "SSOP-B20W").ToList();
 
             ViewBag.TPSetup = lstTPSetup;

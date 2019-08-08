@@ -271,7 +271,7 @@ namespace WebApplication1.Concrete
                                 }
                             }
                             if (!(reader["job_Id"] is DBNull)) ftWip.JobId = reader["job_Id"].ToString().Trim();
-
+                            if (!(reader["quality_state"] is DBNull)) ftWip.qualitystate = int.Parse(reader["quality_state"].ToString().Trim());
                             //if (!(reader["timeAuto1"] is DBNull)) ftWip.A1 = float.Parse(reader["timeAuto1"].ToString().Split(' ')[1]); 
                             //else ftWip.A1 = 0;
                             //if (!(reader["timeAuto2"] is DBNull) && reader["timeAuto2"].ToString() != "") ftWip.A2 = float.Parse(reader["timeAuto2"].ToString().Split(' ')[1]);
