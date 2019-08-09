@@ -248,7 +248,7 @@ namespace WebApplication1.Controllers
             //-----------------------------------------------------------------------------------------------------
             //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
-            var DeviceList = from Group in lstFTWips.Where(p=>p.qualitystate != 6)// lstFTWipOut
+            var DeviceList = from Group in lstFTWips.Where(p=>p.qualitystate != 6 && p.NextJob == null)// lstFTWipOut
                              group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
 
                              select new FTWipOutPlan
@@ -260,7 +260,7 @@ namespace WebApplication1.Controllers
                                  SumKpcs = list.Sum(p => p.Kpcs)
                              };
 
-            var Holdlot = from Group in lstFTWips.Where(p => p.qualitystate == 6)// listHoldlot
+            var Holdlot = from Group in lstFTWips.Where(p => p.qualitystate == 6 && p.NextJob == null)// listHoldlot
                              group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
 
                              select new FTWipOutPlan
@@ -271,8 +271,18 @@ namespace WebApplication1.Controllers
                                  Count = list.Count(),
                                  SumKpcs = list.Sum(p => p.Kpcs)
                              };
+            var INSPLot = from Group in lstFTWips.Where(p => p.qualitystate == 4 && p.NextJob != null)// listINSP
+                          group Group by new { Group.NextJob, Group.DeviceName, Group.FTDevice } into list
 
-            
+                          select new FTWipOutPlan
+                          {
+                              Flow = list.Key.NextJob,
+                              FTDevice = list.Key.FTDevice,
+                              DeviceName = list.Key.DeviceName,
+                              Count = list.Count(),
+                              SumKpcs = list.Sum(p => p.Kpcs)
+                          };
+
             List<Flow> flows = new List<Flow>();
 
             var DeviceGroup = lstFTWips.Select(p => new { p.DeviceName, p.FTDevice, p.S_Color }).Distinct().ToList();
@@ -315,6 +325,7 @@ namespace WebApplication1.Controllers
                     {
                         row.A1 = list.Count;
                         row.A1_Kpcs = (float)list.SumKpcs / 1000;
+                        
 
                     }
                     else if (list.Flow == "AUTO2")
@@ -347,7 +358,57 @@ namespace WebApplication1.Controllers
 
 
             }
-            ///////HOLD LOT ////////////////////
+            #region INSPLot
+            if (INSPLot.Count() > 0)
+            {
+                var addflow = new Flow
+                {
+                    Name = "INSP",
+                    A1 = 0,
+                    A2 = 0,
+                    A3 = 0,
+                    A4 = 0,
+                    FL = 0,
+                    A1_Kpcs = 0,
+                    A2_Kpcs = 0,
+                    A3_Kpcs = 0,
+                    A4_Kpcs = 0,
+                    FL_Kpcs = 0,
+                    //Color = color
+                };
+                flows.Add(addflow);
+            }
+
+            foreach (var list in INSPLot)
+            {
+                var row = flows.Where(p => p.Name == "INSP").SingleOrDefault();
+
+                if (list.Flow == "AUTO1")
+                {
+                    row.A1 = list.Count;
+                    row.A1_Kpcs = (float)list.SumKpcs / 1000;
+
+                }
+                else if (list.Flow == "AUTO2")
+                {
+                    row.A2 = list.Count;
+                    row.A2_Kpcs = (float)list.SumKpcs / 1000;
+                }
+                else if (list.Flow == "AUTO3")
+                {
+                    row.A3 = list.Count;
+                    row.A3_Kpcs = (float)list.SumKpcs / 1000;
+                }
+                else if (list.Flow == "AUTO4")
+                {
+                    row.A4 = list.Count;
+                    row.A4_Kpcs = (float)list.SumKpcs / 1000;
+                }
+            }
+            #endregion
+
+
+            #region HoldLot
             if (Holdlot.Count() > 0)
             {
                 var addflow = new Flow
@@ -394,15 +455,28 @@ namespace WebApplication1.Controllers
                     row.A4_Kpcs = (float)list.SumKpcs / 1000;
                 }
             }
-            //////////////////////////////////////////////////////////////////////////////
+            #endregion
+
             string command = "";
             foreach (var item in flows)
             {
-                command += "{";
-                command += "name: '" + item.Name + "',";
-                command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]},";
+                if(item.Name == "LotHold")
+                {
+                    command += "{";
+                    command += "name: '" + item.Name + "',";
+                    command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]," +
+                               "color : '#CD5C5C'},";
+                }
+                else
+                {
+                    command += "{";
+                    command += "name: '" + item.Name + "',";
+                    command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]}," ;
+                }
+                
             }
             string commandKpcs = "";
+
             foreach (var item in flows)
             {
                 commandKpcs += "{";
@@ -410,6 +484,8 @@ namespace WebApplication1.Controllers
                 commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," +
                     item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "]},";
             }
+
+            
 
             ViewBag.lstFlow = command;
             ViewBag.chartKpcs = commandKpcs;
@@ -594,7 +670,19 @@ namespace WebApplication1.Controllers
                         countdownHours -= row.A4;
                     }
 
+                    #region HourChart
+                        string cmdHour = "";
 
+                        foreach (var data in fTDenpyo_Calculates)
+                        {
+                        cmdHour += "{";
+                        cmdHour += "name: '" + data.DeviceName + "',";
+                        cmdHour += "data: [" + data.FL_Calculate.ToString("n1") + "," + data.A2_Calculate.ToString("n1") + "," + data.A3_Calculate.ToString("n1") + "," +
+                                data.A3_Calculate.ToString("n1") + "," + data.A4_Calculate.ToString("n1") + "]},";
+                        }
+
+                    ViewBag.HourChart = cmdHour;
+                    #endregion
                     //}
                     //foreach (var device in DeviceGroup)
                     //{
@@ -608,7 +696,19 @@ namespace WebApplication1.Controllers
                 count++;
 
             }
+
+           // ViewBag.HourChart = cmdHour;
             ViewBag.Denpyo_Calculates = fTDenpyo_Calculates;
+
+            //string commandHour = "";
+
+            //foreach (var item in flows)
+            //{
+            //    commandHour += "{";
+            //    commandHour += "name: '" + item.Name + "',";
+            //    commandHour += "data: [" + ""+ "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," +
+            //        item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "]},";
+            //}
             Debug.Print("Get Denpyo:" + (DateTime.Now - dateTime).ToString());
             //-----------------------------------------------------------------------------------------------------
             return View();

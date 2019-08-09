@@ -11,6 +11,7 @@ namespace WebApplication1.Models
         public string PKGName { get; set; }
         public string Lot_no { get; set; }
         public string JobName { get; set; }
+        public string NextJob { get; set; }
         public string Updated_at { get; set; }
         public string DeviceName { get; set; }
         public string FTDevice { get; set; }
@@ -34,5 +35,6 @@ namespace WebApplication1.Models
         public float A4 { get; set; }
         public float StandardTime { get; set; }
         public int qualitystate { get; set; }
+        
     }
 }

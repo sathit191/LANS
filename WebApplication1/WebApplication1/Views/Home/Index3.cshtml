@@ -372,6 +372,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#Kpcs">Kpcs.</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#Hour">Hour.</a>
+                </li>
             </ul>
             <div class="tab-content border mb-3">
                 <div id="Lots" class="tab-pane active">
@@ -379,6 +382,9 @@
                 </div>
                 <div id="Kpcs" class="tab-pane ">
                     <div id="container2"></div>
+                </div>
+                <div id="Hour" class="tab-pane ">
+                    <div id="HourChart"></div>
                 </div>
             </div>
 
@@ -406,146 +412,146 @@
                         @foreach (var item in (List<WebApplication1.Models.FTDenpyo_Calculate>)ViewBag.Denpyo_Calculates)
                         {
 
-                        <tr class="text-center">
-                            @*<td style="vertical-align : middle;">@item.PKGName</td>*@
-                            <td class="@item.TextColor" style="vertical-align : middle;"><b>@item.FTDevice</b></td>
-                            @if (@item.FL_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.FL_Calculate.ToString("0.0") H<p style=" color : black">@item.FL_Lot Lot.</p></td>
-                            }
-                            @if (@item.A1_Calculate == 0 && item.A1_Hold == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA1 == true)
+                            <tr class="text-center">
+                                @*<td style="vertical-align : middle;">@item.PKGName</td>*@
+                                <td class="@item.TextColor" style="vertical-align : middle;"><b>@item.FTDevice</b></td>
+                                @if (@item.FL_Calculate == 0)
                                 {
-                                    if (item.A1_Hold != 0)
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Hold/@item.A1_Sum Lot.</p></td>
-                                    }
-                                    else
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
-                                    }
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    if (item.A1_Hold != 0)
+                                    <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.FL_Calculate.ToString("0.0") H<p style=" color : black">@item.FL_Lot Lot.</p></td>
+                                }
+                                @if (@item.A1_Calculate == 0 && item.A1_Hold == 0)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    if (item.SetOnMcA1 == true)
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;"> @item.A1_Calculate.ToString("0.0") H < p style = " color : black" > @item.A1_Hold / @item.A1_Sum Lot.</ p ></td>
+                                        if (item.A1_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Hold/@item.A1_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Lot Lot.</p></td>
+                                        }
                                     }
                                     else
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue;"> @item.A1_Calculate.ToString("0.0") H < p style = " color : black" > @item.A1_Lot Lot.</ p ></td>
-                                    }
+                                        if (item.A1_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;"> @item.A1_Calculate.ToString("0.0") H < p style = " color : black" > @item.A1_Hold / @item.A1_Sum Lot.</ p ></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue;"> @item.A1_Calculate.ToString("0.0") H < p style = " color : black" > @item.A1_Lot Lot.</ p ></td>
+                                        }
 
+                                    }
                                 }
-                            }
-                            @if (@item.A2_Calculate == 0 && item.A2_Hold == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA2 == true)
+                                @if (@item.A2_Calculate == 0 && item.A2_Hold == 0)
                                 {
-                                    if (item.A2_Hold != 0)
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
-                                    }
-                                    else
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
-                                    }
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    if (item.A2_Hold != 0)
+                                    if (item.SetOnMcA2 == true)
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
+                                        if (item.A2_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                        }
                                     }
                                     else
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                        if (item.A2_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Lot Lot.</p></td>
+                                        }
                                     }
                                 }
-                            }
-                            @if (@item.A3_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                @*if (item.SetOnMcA3 == true)
-            {
-                <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
-            }
-            else
-            {
-                <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
-            }*@
-                                if (item.SetOnMcA3 == true)
+                                @if (@item.A3_Calculate == 0)
                                 {
-                                    if (item.A3_Hold != 0)
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
-                                    }
-                                    else
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
-                                    }
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    if (item.A3_Hold != 0)
+                                    @*if (item.SetOnMcA3 == true)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                        }*@
+                                    if (item.SetOnMcA3 == true)
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
+                                        if (item.A3_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                        }
                                     }
                                     else
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                        if (item.A3_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Lot Lot.</p></td>
+                                        }
                                     }
                                 }
-                            }
-                            @if (@item.A4_Calculate == 0)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (item.SetOnMcA4 == true)
+                                @if (@item.A4_Calculate == 0)
                                 {
-                                    if (item.A4_Hold != 0)
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
-                                    }
-                                    else
-                                    {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
-                                    }
+                                    <td></td>
                                 }
                                 else
                                 {
-                                    if (item.A4_Hold != 0)
+                                    if (item.SetOnMcA4 == true)
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
+                                        if (item.A4_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; border-color : #42BA53; border-width : 2px;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                        }
                                     }
                                     else
                                     {
-                                        <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                        if (item.A4_Hold != 0)
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Lot Lot.</p></td>
+                                        }
                                     }
                                 }
-                            }
-                            <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;">Y  @item.Plan_yesterday.ToString("0")<br />T @item.Plan_today.ToString("0")</td>
-                            <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Result_yesterday.ToString("0")<br /> @item.Result_today.ToString("0")</td>
-                            <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Calulate_yesterday.ToString("0")<br /> @item.Calulate_today.ToString("0")</td>
-                        </tr>
+                                <td style="font-size:smaller; vertical-align : middle; vertical-align : middle;">Y  @item.Plan_yesterday.ToString("0")<br />T @item.Plan_today.ToString("0")</td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Result_yesterday.ToString("0")<br /> @item.Result_today.ToString("0")</td>
+                                <td style="font-size:smaller; vertical-align : middle;vertical-align : middle;"> @item.Calulate_yesterday.ToString("0")<br /> @item.Calulate_today.ToString("0")</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -1011,6 +1017,59 @@
     }
   },
   series: [ @Html.Raw(ViewBag.chartKpcs)]
+            });
+    </script>
+
+    <script>
+
+            Highcharts.chart('HourChart', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'FT WIP Data SSOP-B20W'
+  },
+  xAxis: {
+    categories: ['FL','AUTO1', 'AUTO2', 'AUTO3', 'AUTO4']
+  },
+  yAxis: {
+    min: 0,
+    title: {
+      text: 'Lead Time (Hour.)'
+    },
+    stackLabels: {
+      enabled: true,
+      style: {
+        fontWeight: 'bold',
+        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+      }
+    }
+  },
+  //legend: {
+  //  align: 'right',
+  //  x: -30,
+  //  verticalAlign: 'top',
+  //  y: 25,
+  //  floating: true,
+  //  backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+  //  borderColor: '#CCC',
+  //  borderWidth: 1,
+  //  shadow: false
+  //},
+  tooltip: {
+    headerFormat: '<b>{point.x} </b><br/>',
+    pointFormat: '{series.name}:{point.y} Hour.<br/>Total:{point.stackTotal} Hour.<br/>'
+  },
+  plotOptions: {
+    column: {
+      stacking: 'normal',
+      dataLabels: {
+        enabled: true,
+        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor)|| 'white'
+      }
+    }
+  },
+  series: [ @Html.Raw(ViewBag.HourChart)]
             });
     </script>
 }

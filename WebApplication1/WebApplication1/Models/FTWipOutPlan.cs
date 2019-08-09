@@ -26,6 +26,10 @@ namespace WebApplication1.Models
         public float A2_Kpcs { get; set; }
         public float A3_Kpcs { get; set; }
         public float A4_Kpcs { get; set; }
+        public float A1_Hour { get; set; }
+        public float A2_Hour { get; set; }
+        public float A3_Hour { get; set; }
+        public float A4_Hour { get; set; }
         public float FL_Kpcs { get; set; }
         public string Color { get; set; }
         public int[] Data { get; set; }
