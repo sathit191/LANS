@@ -102,16 +102,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\imp\LANSLogo.png" />
     <Content Include="Content\select2.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\toggle\bootstrap4-toggle.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Images\8655.png_860.png" />
@@ -121,6 +128,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\CSS\WIP.css" />
     <Content Include="Scripts\dataTables.bootstrap.min.css" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
     <Content Include="Scripts\datatables.min.js" />
@@ -161,6 +169,7 @@
     <Compile Include="Models\FTTypeChange.cs" />
     <Compile Include="Models\FTWip.cs" />
     <Compile Include="Models\FTWipOutPlan.cs" />
+    <Compile Include="Models\LimitFlow.cs" />
     <Compile Include="Models\LotFTinMc.cs" />
     <Compile Include="Models\McWIP.cs" />
     <Compile Include="Models\OpRateSetting.cs" />

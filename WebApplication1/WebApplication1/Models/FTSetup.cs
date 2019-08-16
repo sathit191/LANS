@@ -47,7 +47,11 @@ namespace WebApplication1.Models
             Wait = 0,
             Setup = 1,
             Run = 2,
-            Ready = 3
+            Ready = 3,
+            Limit = 4,
+            BM = 5,
+            PM = 6
+
         }
         
 

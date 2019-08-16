@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="300" />
     @*<title>@ViewBag.Title - My ASP.NET App5555ion</title>*@
-    
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    @*<link rel="icon" href="~/Content/imp/LANSLogo.png" type="image/x-icon" />*@
+    <title>@ViewBag.Title</title>
+
+    <link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Scripts/datatable/dataTables.bootstrap.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
 
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Kanit&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <a class="navbar-brand">
-            LSI ASSY Navi System
+    
+    <div class="navbar navbar-inverse navbar-fixed-top "  role="navigation">
+        
+        <a class="navbar-brand" style="vertical-align : middle;">
+            <img src="~/Content/imp/LANSLogo.png" style="width:108px;height:30px;" />
         </a>
-        <a class="navbar-brand" href="@Url.Action("Index3")">
+        <a class="navbar-brand" style="color : whitesmoke;" href="@Url.Action("Index3")">
             FTWip
         </a>
-        <a class="navbar-brand" href="@Url.Action("TPMonitor")">
+        <a class="navbar-brand" style="color : whitesmoke;" href="@Url.Action("TPMonitor")">
             TPWip
         </a>
 
@@ -30,8 +35,7 @@
     <div style="padding-left :1%; padding-right : 1%;">
         @RenderBody()
         <hr />
-        <footer>
-        </footer>
+        <footer></footer>
     </div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>

@@ -405,7 +405,6 @@ namespace WebApplication1.Concrete
         //        }
         //    }
         //}
-
         public IEnumerable<FTMachineSchedulerSetup> FTSchedulerSetup(List<int> mcNoList)
         {
 
@@ -1090,6 +1089,48 @@ namespace WebApplication1.Concrete
             }
         }
 
+        public void SetTPCalculate() // test
+        {
+            var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_set_scheduler_tp_qa_calculate]";
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        public IEnumerable<LimitFlow> LimitFlows
+        {
+            get
+            {
+                List<LimitFlow> limitFlows = new List<LimitFlow>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_lock_flow]";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            LimitFlow limit = new LimitFlow();
+                            if (!(reader["Name"] is DBNull)) limit.Name = reader["Name"].ToString().Trim();
+                            if (!(reader["PKG"] is DBNull)) limit.PKG = reader["PKG"].ToString().Trim();
+                            if (!(reader["Flow"] is DBNull)) limit.Flow = reader["Flow"].ToString().Trim();
+                            if (!(reader["is_alarmed"] is DBNull)) limit.IsAlarmed = int.Parse(reader["is_alarmed"].ToString().Trim());
+
+                            limitFlows.Add(limit);
+                        }
+                        conn.Close();
+                    }
+                    return limitFlows;
+                }
+            }
+        }
 
     }
 }

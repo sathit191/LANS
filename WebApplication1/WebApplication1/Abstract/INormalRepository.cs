@@ -29,5 +29,9 @@ namespace WebApplication1.Abstract
         void UpdateOPRate(int McId, float OpRate);
         void UpdateOPRateGroup(int GroupId, float OpRate);
         void MCSetup(string PKGname);
+        void SetTPCalculate(); // test
+        IEnumerable<LimitFlow> LimitFlows { get; }
+
+
     }
 }
