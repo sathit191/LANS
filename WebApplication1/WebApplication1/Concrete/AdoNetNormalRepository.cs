@@ -33,7 +33,7 @@ namespace WebApplication1.Concrete
                         while (reader.Read())
                         {
                             FTSetup fTSetup = new FTSetup();
-                            
+
                             if (!(reader["MCNo"] is DBNull)) fTSetup.MCNo = reader["MCNo"].ToString().Trim();
                             if (!(reader["McId"] is DBNull)) fTSetup.McId = (int)(reader["McId"]);
                             if (!(reader["oprate"] is DBNull)) fTSetup.OpRate = (float)(reader["oprate"]);
@@ -253,19 +253,19 @@ namespace WebApplication1.Concrete
                             if (!(reader["StandardTime"] is DBNull)) ftWip.StandardTime = (int)reader["StandardTime"];
                             if (!(reader["Kpcs"] is DBNull)) ftWip.Kpcs = int.Parse(reader["Kpcs"].ToString().Trim());
                             if (!(reader["state"] is DBNull)) {
-                               string state = reader["state"].ToString().Trim();
+                                string state = reader["state"].ToString().Trim();
                                 if (state == "0" || state == "100")
                                 {
                                     ftWip.Lot_State = FTWip.LotState.Wip;
                                 }
-                                else if(state == "1" || state == "101")
+                                else if (state == "1" || state == "101")
                                 {
                                     ftWip.Lot_State = FTWip.LotState.Setup;
                                 }
-                                else if (state =="2" || state == "102")
+                                else if (state == "2" || state == "102")
                                 {
                                     ftWip.Lot_State = FTWip.LotState.Start;
-                                }else
+                                } else
                                 {
                                     ftWip.Lot_State = FTWip.LotState.Other;
                                 }
@@ -417,7 +417,7 @@ namespace WebApplication1.Concrete
                 conn.Open();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_sequence]";
-                
+
 
                 foreach (var machineNo in mcNoList)
                 {
@@ -435,8 +435,8 @@ namespace WebApplication1.Concrete
                             if (!(reader["device_set"] is DBNull)) ftSchedulerSetup.DeviceChange = ((string)reader["device_set"]).Trim();
                             if (!(reader["device_now"] is DBNull)) ftSchedulerSetup.DeviceNow = ((string)reader["device_now"]).Trim();
                             if (!(reader["device_set_date"] is DBNull)) ftSchedulerSetup.DateChange = (DateTime)reader["device_set_date"];
-                             ftSchedulerSetup.MachienDisable = false;
-                             ftSchedulerSetupList.Add(ftSchedulerSetup);
+                            ftSchedulerSetup.MachienDisable = false;
+                            ftSchedulerSetupList.Add(ftSchedulerSetup);
                         }
 
                     }
@@ -464,7 +464,7 @@ namespace WebApplication1.Concrete
             }
         }
 
-        public void UpdateData(string McNo,int McId, int Sequence, string Device, string DeviceChange)
+        public void UpdateData(string McNo, int McId, int Sequence, string Device, string DeviceChange)
         {
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
@@ -521,7 +521,7 @@ namespace WebApplication1.Concrete
                 #endregion
 
                 List<Accumulator_Plan> accumulator = new List<Accumulator_Plan>();
-                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);  
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
                 #region accumerlaet plan today
                 using (var cmd = conn.CreateCommand()) //accumerlaet plan today
                 {
@@ -577,7 +577,7 @@ namespace WebApplication1.Concrete
                 }
                 #endregion
                 #region accumerlaet plan yesterdar
-                using (var cmd = conn.CreateCommand()) 
+                using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_ft_accumulate_plan]";
@@ -666,11 +666,11 @@ namespace WebApplication1.Concrete
                 }
             }
         }
-        public void InsertOPRate(int McId,float OpRate)
+        public void InsertOPRate(int McId, float OpRate)
         {
-            
+
             //float OpratePer = OpRate / 100;
-           
+
             var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
             using (var cmd = conn.CreateCommand())
             {
@@ -793,7 +793,7 @@ namespace WebApplication1.Concrete
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_tp_qa_calculate]";
-                        
+
                     conn.Open();
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -808,7 +808,7 @@ namespace WebApplication1.Concrete
                             if (!(reader["sumlots"] is DBNull)) accumulate.SumLots = (float)reader["sumlots"];
                             if (!(reader["sumkpcs"] is DBNull)) accumulate.SumKpcs = (float)reader["sumkpcs"];
                             if (!(reader["state"] is DBNull)) accumulate.State = (int)reader["state"];
-                            if (!(reader["standardtime"] is DBNull)) accumulate.StandardTime = (int)reader["standardtime"]/60;
+                            if (!(reader["standardtime"] is DBNull)) accumulate.StandardTime = (int)reader["standardtime"] / 60;
                             TPQAAccumulates.Add(accumulate);
                         }
                         conn.Close();
@@ -823,13 +823,13 @@ namespace WebApplication1.Concrete
             {
                 #region Get Date Today
                 DateTime dtResultStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 8, 0, 0);
-                DateTime dtResultEnd = DateTime.Now; 
+                DateTime dtResultEnd = DateTime.Now;
                 DateTime dtPlanStart = new DateTime(dtResultStart.AddDays(-11).Year, dtResultStart.AddDays(-11).Month, dtResultStart.AddDays(-11).Day, 8, 0, 0);
                 DateTime dtPlanEnd = new DateTime(dtResultEnd.AddDays(-11).Year, dtResultEnd.AddDays(-11).Month, dtResultEnd.AddDays(-11).Day, 8, 0, 0);
                 #endregion
                 #region Get Date Result
                 DateTime dtYResultStart = new DateTime(DateTime.Now.AddDays(-1).Year, DateTime.Now.AddDays(-1).Month, 1, 8, 0, 0);
-                DateTime dtYResultEnd = DateTime.Now.AddDays(-1); 
+                DateTime dtYResultEnd = DateTime.Now.AddDays(-1);
                 DateTime dtYPlanStart = new DateTime(dtYResultStart.AddDays(-11).Year, dtYResultStart.AddDays(-11).Month, dtYResultStart.AddDays(-11).Day, 8, 0, 0);
                 DateTime dtYPlanEnd = new DateTime(dtYResultEnd.AddDays(-11).Year, dtYResultEnd.AddDays(-11).Month, dtYResultEnd.AddDays(-11).Day, 8, 0, 0);
                 #endregion
@@ -854,7 +854,7 @@ namespace WebApplication1.Concrete
                             Accumulator_TP accumulator_Plan = new Accumulator_TP();
                             if (!(reader["pkgname"] is DBNull)) accumulator_Plan.PKG = reader["pkgname"].ToString().Trim();
                             if (!(reader["devicename"] is DBNull)) accumulator_Plan.DeviceName = reader["devicename"].ToString().Trim();
-                           
+
                             if (!(reader["input"] is DBNull)) accumulator_Plan.Kpcs_PlanT = (int)reader["input"];
                             if (!(reader["output"] is DBNull)) accumulator_Plan.Kpcs_ResultT = (int)reader["output"];
                             if (!(reader["summary"] is DBNull)) accumulator_Plan.Kpcs_SumT = (int)reader["summary"];
@@ -1051,7 +1051,7 @@ namespace WebApplication1.Concrete
                         {
                             // FTWip ftWip = new FTWip();
                             TPLotinMc tpinmc = new TPLotinMc();
-                            if (!(reader["lotId"] is DBNull)) tpinmc.LotID =(int)reader["lotId"];
+                            if (!(reader["lotId"] is DBNull)) tpinmc.LotID = (int)reader["lotId"];
                             if (!(reader["lotno"] is DBNull)) tpinmc.LotNo = reader["lotno"].ToString().Trim();
                             if (!(reader["devicename"] is DBNull)) tpinmc.DeviceName = reader["devicename"].ToString().Trim();
                             if (!(reader["mcname"] is DBNull)) tpinmc.McName = reader["mcname"].ToString().Trim();
@@ -1064,7 +1064,7 @@ namespace WebApplication1.Concrete
                                     tpinmc.ProcessState = TPSetup.State.Run;
 
                             }
-                            if (!(reader["update_time"] is DBNull)) tpinmc.UpDateTime =(DateTime)reader["update_time"];
+                            if (!(reader["update_time"] is DBNull)) tpinmc.UpDateTime = (DateTime)reader["update_time"];
                             if (!(reader["standardtime"] is DBNull)) tpinmc.StandardTime = (int)reader["standardtime"];
 
                             TPLotinMc.Add(tpinmc);
@@ -1128,6 +1128,35 @@ namespace WebApplication1.Concrete
                         conn.Close();
                     }
                     return limitFlows;
+                }
+            }
+        }
+        public IEnumerable<BMPMData> BMPMDatas
+        {
+            get
+            {
+                List<BMPMData> BMPMDatas = new List<BMPMData>();
+                var conn = new SqlConnection(Properties.Settings.Default.DBConnect);
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[StoredProcedureDB].[dbo].[sp_get_scheduler_bm]";
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            BMPMData bmpm = new BMPMData();
+                            if (!(reader["LotNo"] is DBNull)) bmpm.LotNo = reader["LotNo"].ToString().Trim();
+                            if (!(reader["MCName"] is DBNull)) bmpm.McName = reader["MCName"].ToString().Trim();
+                            if (!(reader["Process"] is DBNull)) bmpm.Process= reader["Process"].ToString().Trim();
+                            if (!(reader["CategoryID"] is DBNull)) bmpm.CategoryID = int.Parse(reader["CategoryID"].ToString().Trim());
+
+                            BMPMDatas.Add(bmpm);
+                        }
+                        conn.Close();
+                    }
+                    return BMPMDatas;
                 }
             }
         }

@@ -31,6 +31,7 @@ namespace WebApplication1.Abstract
         void MCSetup(string PKGname);
         void SetTPCalculate(); // test
         IEnumerable<LimitFlow> LimitFlows { get; }
+        IEnumerable<BMPMData> BMPMDatas { get; }
 
 
     }

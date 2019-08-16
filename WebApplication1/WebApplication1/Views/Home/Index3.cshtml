@@ -292,6 +292,16 @@
                                     @Html.DisplayFor(modelItem => item.Status)
                                 </td>
                                 break;
+                            case WebApplication1.Models.FTSetup.State.BM:
+                                <td class=" text-center" style="background-color : red; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                break;
+                            case WebApplication1.Models.FTSetup.State.PM:
+                                <td class=" text-center" style="background-color : orange ; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                break;
                             default:
                                 <td rowspan="2"></td>
                                 break;

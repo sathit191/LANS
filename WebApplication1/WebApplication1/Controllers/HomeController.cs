@@ -241,15 +241,29 @@ namespace WebApplication1.Controllers
                 item.Status = onMc.ProcessState;
 
                 List<LimitFlow> lstLimits = (List<LimitFlow>)repository.LimitFlows;
+                List<BMPMData> lstbmpm = (List<BMPMData>)repository.BMPMDatas;
                 //Set Status 
-                LimitFlow locks = lstLimits.Where(p => p.PKG == item.PKName && p.Flow == item.Flow).FirstOrDefault();
-                if(locks.IsAlarmed == 1)
+                if (item.Flow != "AUTO4")
                 {
-                    item.Status = FTSetup.State.Limit;
-                }
-                else if (true)
-                {
+                    LimitFlow locks = lstLimits.Where(p => p.PKG == item.PKName && p.Flow == item.Flow).FirstOrDefault(); //limitCheck
 
+                    if (locks.IsAlarmed == 1)
+                    {
+                        item.Status = FTSetup.State.Limit;
+                    }
+                }
+
+                BMPMData bmpm = lstbmpm.Where(p => p.McName == item.MCNo).FirstOrDefault(); //BMPM Check
+                if (bmpm is null)
+                    continue;
+
+                if (bmpm.CategoryID == 1)
+                {
+                    item.Status = FTSetup.State.BM;
+                }
+                else if(bmpm.CategoryID == 2)
+                {
+                    item.Status = FTSetup.State.PM;
                 }
                  
             }

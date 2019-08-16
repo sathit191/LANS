@@ -163,6 +163,7 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\Accumulator_Plan.cs" />
     <Compile Include="Models\Accumulator_TP.cs" />
+    <Compile Include="Models\BMPMData.cs" />
     <Compile Include="Models\FTDenpyo.cs" />
     <Compile Include="Models\FTMachineSchedulerSetup.cs" />
     <Compile Include="Models\FTSetup.cs" />
