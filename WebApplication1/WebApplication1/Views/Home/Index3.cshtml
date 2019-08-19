@@ -119,14 +119,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            @*@Html.ActionLink("xxxxx", "#", "#",
-                new
-                     {
-                         @class = "btn sendOprateGroup",
-                         @data_toggle = "modal",
-                         @data_target = "#OpRateSet",
-                         @data_groupid = 1
-                     })*@
+           
             <table id="iTable" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
@@ -288,7 +281,7 @@
                                 </td>
                                 break;
                             case WebApplication1.Models.FTSetup.State.Limit:
-                                <td class=" text-center" style="background-color : #CD5C5C; color: black; font : bold; vertical-align : middle; width : 15px;">
+                                <td class=" text-center" style="background-color : #C19494; color: black; font : bold; vertical-align : middle; width : 15px;">
                                     @Html.DisplayFor(modelItem => item.Status)
                                 </td>
                                 break;
@@ -450,7 +443,7 @@
                                     {
                                         if (item.A1_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Hold/@item.A1_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#C19494; border-color : #42BA53; border-width : 2px;">@item.A1_Calculate.ToString("0.0") H<p style=" color : black">@item.A1_Hold/@item.A1_Sum Lot.</p></td>
                                         }
                                         else
                                         {
@@ -461,7 +454,7 @@
                                     {
                                         if (item.A1_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;"> @item.A1_Calculate.ToString("0.0") H < p style = " color : black" > @item.A1_Hold / @item.A1_Sum Lot.</ p ></td>
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#C19494; color : blue;"> @item.A1_Calculate.ToString("0.0") H < p style = " color : black" > @item.A1_Hold / @item.A1_Sum Lot.</ p ></td>
                                         }
                                         else
                                         {
@@ -480,7 +473,7 @@
                                     {
                                         if (item.A2_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#C19494; border-color : #42BA53; border-width : 2px;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
                                         }
                                         else
                                         {
@@ -491,7 +484,7 @@
                                     {
                                         if (item.A2_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#C19494; color : blue;">@item.A2_Calculate.ToString("0.0") H<p style=" color : black">@item.A2_Hold/@item.A2_Sum Lot.</p></td>
                                         }
                                         else
                                         {
@@ -499,7 +492,7 @@
                                         }
                                     }
                                 }
-                                @if (@item.A3_Calculate == 0)
+                                @if (@item.A3_Calculate == 0 && item.A3_Hold == 0)
                                 {
                                     <td></td>
                                 }
@@ -517,7 +510,7 @@
                                     {
                                         if (item.A3_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#C19494; border-color : #42BA53; border-width : 2px;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
                                         }
                                         else
                                         {
@@ -528,7 +521,7 @@
                                     {
                                         if (item.A3_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#C19494; color : blue;">@item.A3_Calculate.ToString("0.0") H<p style=" color : black">@item.A3_Hold/@item.A3_Sum Lot.</p></td>
                                         }
                                         else
                                         {
@@ -536,7 +529,7 @@
                                         }
                                     }
                                 }
-                                @if (@item.A4_Calculate == 0)
+                                @if (@item.A4_Calculate == 0 && item.A4_Hold == 0)
                                 {
                                     <td></td>
                                 }
@@ -546,7 +539,7 @@
                                     {
                                         if (item.A4_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#CD5C5C; border-color : #42BA53; border-width : 2px;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; color : blue; background-color :#C19494; border-color : #42BA53; border-width : 2px;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
                                         }
                                         else
                                         {
@@ -557,7 +550,7 @@
                                     {
                                         if (item.A4_Hold != 0)
                                         {
-                                            <td style="font-size:smaller; vertical-align : middle; background-color :#CD5C5C; color : blue;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
+                                            <td style="font-size:smaller; vertical-align : middle; background-color :#C19494; color : blue;">@item.A4_Calculate.ToString("0.0") H<p style=" color : black">@item.A4_Hold/@item.A4_Sum Lot.</p></td>
                                         }
                                         else
                                         {

@@ -274,7 +274,7 @@ namespace WebApplication1.Controllers
             //-----------------------------------------------------------------------------------------------------
             //chart------------------------------------------------------------------------------------------------
             // Group the FTWip by DeviceName
-            var DeviceList = from Group in lstFTWips.Where(p=>p.qualitystate != 6 && p.NextJob == null)// lstFTWipOut
+            var DeviceList = from Group in lstFTWips.Where(p=>p.qualitystate == 0)// lstFTWipOut
                              group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
 
                              select new FTWipOutPlan
@@ -286,7 +286,7 @@ namespace WebApplication1.Controllers
                                  SumKpcs = list.Sum(p => p.Kpcs)
                              };
 
-            var Holdlot = from Group in lstFTWips.Where(p => p.qualitystate == 6 && p.NextJob == null)// listHoldlot
+            var Holdlot = from Group in lstFTWips.Where(p => p.qualitystate == 3 || p.qualitystate == 6)// listHoldlot
                              group Group by new { Group.JobName, Group.DeviceName, Group.FTDevice } into list
 
                              select new FTWipOutPlan
@@ -297,7 +297,7 @@ namespace WebApplication1.Controllers
                                  Count = list.Count(),
                                  SumKpcs = list.Sum(p => p.Kpcs)
                              };
-            var INSPLot = from Group in lstFTWips.Where(p => p.qualitystate == 4 && p.NextJob != null)// listINSP
+            var INSPLot = from Group in lstFTWips.Where(p => p.qualitystate == 4 )// listINSP
                           group Group by new { Group.NextJob, Group.DeviceName, Group.FTDevice } into list
 
                           select new FTWipOutPlan
@@ -318,7 +318,7 @@ namespace WebApplication1.Controllers
 
             
                 foreach (var item in DeviceGroup)
-            {
+                {
                 // List<FTWip> WipDevice = lstFTWipsAuto1.Where(x => x.DeviceName == deviceName.DeviceName).ToList();
                 string name = item.FTDevice.ToString();
 
@@ -461,23 +461,23 @@ namespace WebApplication1.Controllers
 
                 if (list.Flow == "AUTO1")
                 {
-                    row.A1 = list.Count;
+                    row.A1 += list.Count;
                     row.A1_Kpcs = (float)list.SumKpcs / 1000;
 
                 }
                 else if (list.Flow == "AUTO2")
                 {
-                    row.A2 = list.Count;
+                    row.A2 += list.Count;
                     row.A2_Kpcs = (float)list.SumKpcs / 1000;
                 }
                 else if (list.Flow == "AUTO3")
                 {
-                    row.A3 = list.Count;
+                    row.A3 += list.Count;
                     row.A3_Kpcs = (float)list.SumKpcs / 1000;
                 }
                 else if (list.Flow == "AUTO4")
                 {
-                    row.A4 = list.Count;
+                    row.A4 += list.Count;
                     row.A4_Kpcs = (float)list.SumKpcs / 1000;
                 }
             }
@@ -491,7 +491,7 @@ namespace WebApplication1.Controllers
                     command += "{";
                     command += "name: '" + item.Name + "',";
                     command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]," +
-                               "color : '#CD5C5C'},";
+                               "color : '#C19494'},";
                 }
                 else
                 {
@@ -545,26 +545,19 @@ namespace WebApplication1.Controllers
                         A3_Lot = 0,
                         A4_Calculate = 0,
                         A4_Lot = 0,
-
                         A1_Hold = 0,
-
                         A2_Hold = 0,
-                        
                         A3_Hold = 0,
-
                         A4_Hold = 0
 
                     };
                     Debug.Print("Create Denpyo:" + (DateTime.Now - dateTime).ToString());
 
                     var DeviceSetOnMc = lstFTSetup.Where(p=>p.Production_LotNo != null).Select(p => new { p.DeviceName ,p.Flow ,p.MCNo }).OrderBy(p => p.Flow).Distinct().ToList();
-                    //var DeviceOnMc = lstFTSetup.Where(p=> p.DeviceName ==  lstLotinMC.Where()).OrderBy(p => p.Flow).Distinct().ToList();
                     var lstSetupDeviceOnMC = DeviceSetOnMc.Where(p => p.DeviceName == item.DeviceName);
 
                     foreach (var taget in lstSetupDeviceOnMC)
                     {
-
-                        //var DeviceInMc = lstLotinMC.Where(p => p.Device == taget.DeviceName && p.MCName == taget.MCNo).Count();
                         if (item.DeviceName == lstSetupDeviceOnMC.FirstOrDefault().DeviceName )
                         {
                             switch (taget.Flow)
@@ -606,76 +599,73 @@ namespace WebApplication1.Controllers
                 DateTime dateS = DateTime.Now;
                 DateTime dateE = new DateTime(DateTime.Now.AddDays(1).Year, DateTime.Now.AddDays(1).Month, DateTime.Now.AddDays(1).Day, 8, 0, 0);
                 float countdownHours = (float)((dateE - dateS).TotalHours);
-
-
-                //List<string> mcNoList = new List<string>();
-                //var mcNoAuto4 = lstFTSetup.Where(x => x.Flow == "AUTO4").Select(y => new { y.MCNo }).ToList();
-                //foreach (var mcNo in mcNoAuto4)
-                //{
-                //    mcNoList.Add(mcNo.MCNo);
-                //}
                 Debug.Print("Get Denpyox:" + count.ToString() + "=>" + (DateTime.Now - dateTime).ToString());
-                // List<FTMachineSchedulerSetup> mcTypeChangeAuto4 = machineManualSetupList.Where(p=>p.jo)
-
                 Debug.Print("Get Denpyo1:" + count.ToString() + "=>" + (DateTime.Now - dateTime).ToString());
 
                 foreach (var row in listDenpyo)
                 {
                     var selectrow = fTDenpyo_Calculates.Where(p => p.PKGName == row.PKGName && p.DeviceName == row.DeviceName).SingleOrDefault();
                     //var selectTempSq = ft
-
-                    if (row.JobId == "106" && row.qualitystate != 6)
+                    if (row.qualitystate == 0) //normal
                     {
-                        selectrow.A1_Lot++;
-                        selectrow.A1_Calculate += row.StandardTime / 60;
+                        if (row.JobId == "106" )
+                        {
+                            selectrow.A1_Lot++;
+                            selectrow.A1_Calculate += row.StandardTime / 60;
+                            selectrow.A1_Sum = selectrow.A1_Lot + selectrow.A1_Hold;
+                        }
+                        else if (row.JobId == "108")
+                        {
+                            selectrow.A2_Lot++;
+                            selectrow.A2_Calculate += row.StandardTime / 60;
+                            selectrow.A2_Sum = selectrow.A2_Lot + selectrow.A2_Hold;
+                        }
+                        else if (row.JobId == "110" )
+                        {
+                            selectrow.A3_Lot++;
+                            selectrow.A3_Calculate += row.StandardTime / 60;
+                            selectrow.A3_Sum = selectrow.A3_Lot + selectrow.A3_Hold;
+                        }
+                        else if (row.JobId == "119")
+                        {
+                            selectrow.A4_Lot++;
+                            selectrow.A4_Calculate += row.StandardTime / 60;
+                            selectrow.A4_Sum = selectrow.A4_Lot + selectrow.A4_Hold;
+                        }
+                        else if (row.JobId == "87" || row.JobId == "88" || row.JobId == "278")
+                        {
+                            selectrow.FL_Lot++;
+                            selectrow.FL_Calculate += row.StandardTime / 60;
+                        }
                     }
-                    else if (row.JobId == "108" && row.qualitystate != 6)
+                    else if(row.qualitystate == 3 || row.qualitystate == 6) //Hold
                     {
-                        selectrow.A2_Lot++;
-                        selectrow.A2_Calculate += row.StandardTime / 60;
+                        if (row.JobId == "106")
+                        {
+                            selectrow.A1_Hold++;
+                            selectrow.A1_Sum = selectrow.A1_Lot + selectrow.A1_Hold;
+                            //selectrow.A1_Calculate += row.StandardTime / 60;
+                        }
+                        else if (row.JobId == "108")
+                        {
+                            selectrow.A2_Hold++;
+                            selectrow.A2_Sum = selectrow.A2_Lot + selectrow.A2_Hold;
+                            // selectrow.A2_Calculate += row.StandardTime / 60;
+                        }
+                        else if (row.JobId == "110")
+                        {
+                            selectrow.A3_Hold++;
+                            //selectrow.A3_Calculate += row.StandardTime / 60;
+                            selectrow.A3_Sum = selectrow.A3_Lot + selectrow.A3_Hold;
+                        }
+                        else if (row.JobId == "119")
+                        {
+                            selectrow.A4_Hold++;
+                            selectrow.A4_Sum = selectrow.A4_Lot + selectrow.A4_Hold;
+                            //selectrow.A4_Calculate += row.StandardTime / 60;
+                        }
                     }
-                    else if (row.JobId == "110" && row.qualitystate != 6)
-                    {
-                        selectrow.A3_Lot++;
-                        selectrow.A3_Calculate += row.StandardTime / 60;
-                    }
-                    else if (row.JobId == "119" && row.qualitystate != 6)
-                    {
-                        selectrow.A4_Lot++;
-                        selectrow.A4_Calculate += row.StandardTime / 60;
-                    }
-                    else if (row.JobId == "87" || row.JobId == "88" || row.JobId == "278")
-                    {
-                        selectrow.FL_Lot++;
-                        selectrow.FL_Calculate += row.StandardTime / 60;
-                    }
-
-                    /////////////////////////HOLD//////////////////////////////////////
-                    if (row.JobId == "106" && row.qualitystate == 6)
-                    {
-                        selectrow.A1_Hold++;
-                        selectrow.A1_Sum = selectrow.A1_Lot + selectrow.A1_Hold;
-                        //selectrow.A1_Calculate += row.StandardTime / 60;
-                    }
-                    else if (row.JobId == "108" && row.qualitystate == 6)
-                    {
-                        selectrow.A2_Hold++;
-                        selectrow.A2_Sum = selectrow.A2_Lot + selectrow.A2_Hold;
-                        // selectrow.A2_Calculate += row.StandardTime / 60;
-                    }
-                    else if (row.JobId == "110" && row.qualitystate == 6)
-                    {
-                        selectrow.A3_Hold++;
-                        //selectrow.A3_Calculate += row.StandardTime / 60;
-                        selectrow.A3_Sum = selectrow.A3_Lot + selectrow.A3_Hold;
-                    }
-                    else if (row.JobId == "119" && row.qualitystate == 6)
-                    {
-                        selectrow.A4_Hold++;
-                        selectrow.A4_Sum = selectrow.A4_Lot + selectrow.A4_Hold;
-                        //selectrow.A4_Calculate += row.StandardTime / 60;
-                    }
-                    ///////////////////////////////////////////////////////////////
+                    
                     if (row.JobId == "119" && row.MachineWip != null && countdownHours > row.StandardTime / 60) //WIP Plan 
                     {
                         selectrow.Result_today += (float)row.Kpcs / 1000;
