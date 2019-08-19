@@ -112,6 +112,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\imp\LANSLogo.png" />
+    <Content Include="Content\imp\schedule-120-744068.png" />
     <Content Include="Content\select2.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\toggle\bootstrap4-toggle.min.css" />

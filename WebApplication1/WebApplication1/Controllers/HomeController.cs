@@ -411,24 +411,24 @@ namespace WebApplication1.Controllers
 
                 if (list.Flow == "AUTO1")
                 {
-                    row.A1 = list.Count;
-                    row.A1_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A1 += list.Count;
+                    row.A1_Kpcs += (float)list.SumKpcs / 1000;
 
                 }
                 else if (list.Flow == "AUTO2")
                 {
-                    row.A2 = list.Count;
-                    row.A2_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A2 += list.Count;
+                    row.A2_Kpcs += (float)list.SumKpcs / 1000;
                 }
                 else if (list.Flow == "AUTO3")
                 {
-                    row.A3 = list.Count;
-                    row.A3_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A3 += list.Count;
+                    row.A3_Kpcs += (float)list.SumKpcs / 1000;
                 }
                 else if (list.Flow == "AUTO4")
                 {
-                    row.A4 = list.Count;
-                    row.A4_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A4 += list.Count;
+                    row.A4_Kpcs += (float)list.SumKpcs / 1000;
                 }
             }
             #endregion
@@ -462,23 +462,23 @@ namespace WebApplication1.Controllers
                 if (list.Flow == "AUTO1")
                 {
                     row.A1 += list.Count;
-                    row.A1_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A1_Kpcs += (float)list.SumKpcs / 1000;
 
                 }
                 else if (list.Flow == "AUTO2")
                 {
                     row.A2 += list.Count;
-                    row.A2_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A2_Kpcs += (float)list.SumKpcs / 1000;
                 }
                 else if (list.Flow == "AUTO3")
                 {
                     row.A3 += list.Count;
-                    row.A3_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A3_Kpcs += (float)list.SumKpcs / 1000;
                 }
                 else if (list.Flow == "AUTO4")
                 {
                     row.A4 += list.Count;
-                    row.A4_Kpcs = (float)list.SumKpcs / 1000;
+                    row.A4_Kpcs += (float)list.SumKpcs / 1000;
                 }
             }
             #endregion
@@ -493,6 +493,13 @@ namespace WebApplication1.Controllers
                     command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]," +
                                "color : '#C19494'},";
                 }
+                else if(item.Name == "INSP")
+                {
+                    command += "{";
+                    command += "name: '" + item.Name + "',";
+                    command += "data: [" + item.FL + "," + item.A1 + "," + item.A2 + "," + item.A3 + "," + item.A4 + "]," +
+                               "color : '#E1F5FE'},";
+                }
                 else
                 {
                     command += "{";
@@ -505,10 +512,20 @@ namespace WebApplication1.Controllers
 
             foreach (var item in flows)
             {
-                commandKpcs += "{";
-                commandKpcs += "name: '" + item.Name + "',";
-                commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," +
-                    item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "]},";
+                if (item.Name == "LotHold")
+                {
+                    commandKpcs += "{";
+                    commandKpcs += "name: '" + item.Name + "',";
+                    commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," +
+                        item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "],color : '#C19494'},";
+                }
+                else
+                {
+                    commandKpcs += "{";
+                    commandKpcs += "name: '" + item.Name + "',";
+                    commandKpcs += "data: [" + item.FL_Kpcs.ToString("00") + "," + item.A1_Kpcs.ToString("00") + "," + item.A2_Kpcs.ToString("00") + "," +
+                        item.A3_Kpcs.ToString("00") + "," + item.A4_Kpcs.ToString("00") + "]},";
+                }
             }
 
             
